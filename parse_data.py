@@ -16,9 +16,9 @@ def parse_raw_data(dir):
         """I have this bug that pandas converts strings up to 23:59:59 
         into datetime.time and strings >= 24:00:00 into time.timedelta.
         Conversion into string doesn't work (I tired a lot)."""
-        if type(i) == time:
+        if type(i) is time:
             ts.append(i.hour * 60 * 60 + i.minute * 60 + i.second)
-        elif type(i) == timedelta:
+        elif type(i) is timedelta:
             ts.append(i.total_seconds())
         else:
             print("Time is note in datetime.time or datetime.timedelat format.")
@@ -32,17 +32,21 @@ def parse_meta_data(dir):
     df = pd.read_excel(join(dir,'groups.xlsx'),index_col=0)
     sample_names = []
     for entry in df.to_numpy().flatten():
-        if entry[0] == 'S':
-            sample_names.append(entry)
+        if isinstance(entry,str):
+            if entry[0] == 'S':
+                sample_names.append(entry)
+        
 
-    meta = {key:{'samples':[],'blanks':[],'species':None} for key in set(sample_names)}
+    meta = {key:{'samples':[],'blanks':[],'species':None,'carbon_source':None} 
+            for key in set(sample_names)}
     #Storing well names of corresponding samples
     for c in df.columns:
         for i in df.index:
             well = i + str(c)
             entry = df.at[i,c]
-            if entry[0] == 'S':
-                meta[df.at[i,c]]['samples'].append(well)
+            if isinstance(entry,str):
+                if entry[0] == 'S':
+                    meta[df.at[i,c]]['samples'].append(well)
 
     #Stroring corresponding blank wells
     for sample in meta.keys():
@@ -58,9 +62,17 @@ def parse_meta_data(dir):
     df = pd.read_excel(join(dir,'species.xlsx'),index_col=0)
     for sample_name,sample in meta.items():
         well = sample['samples'][0]
-        i,c = well[0],int(well[1])
+        i,c = well[0],int(well[1:])
         species = df.at[i,c]
         meta[sample_name]['species'] = species
+
+    df = pd.read_excel(join(dir,'carbon_source.xlsx'),index_col=0)
+    for sample_name,sample in meta.items():
+        well = sample['samples'][0]
+        i,c = well[0],int(well[1:])
+        carbon_source = df.at[i,c]
+        meta[sample_name]['carbon_source'] = carbon_source
+
     return meta
 
 def annotate_data(dir):
@@ -69,7 +81,8 @@ def annotate_data(dir):
     meta = parse_meta_data(dir)
     dfs = []
     for sample_name,sample in meta.items():
-        df = pd.DataFrame(columns = ['Time','OD','well','sample','species'])
+        df = pd.DataFrame(columns = ['Time','OD','well','sample',
+                                     'species','carbon_source'])
         blank = raw[sample['blanks']].mean(axis=1)
         for well in sample['samples']:
             df['Time'] = raw['Time']
@@ -77,6 +90,8 @@ def annotate_data(dir):
             df['well'] = well
             df['sample'] = sample_name
             df['species'] = meta[sample_name]['species']
+            df['species'] = meta[sample_name]['species']
+            df['carbon_source'] = meta[sample_name]['carbon_source']
             dfs.append(df)
     out = pd.concat(dfs)
     out.to_csv(join('test_data','240619_alisson','data_annotated.csv'))
@@ -85,3 +100,4 @@ def annotate_data(dir):
 dir = join('test_data','240619_alisson')
 meta = parse_meta_data(dir)
 df = annotate_data(dir)
+
