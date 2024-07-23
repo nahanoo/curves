@@ -20,6 +20,9 @@ def parse_raw_data(dir):
             ts.append(i.hour * 60 * 60 + i.minute * 60 + i.second)
         elif type(i) is timedelta:
             ts.append(i.total_seconds())
+        elif type(i) is str:
+            hour,minute,second = i.split(':')
+            ts.append(int(hour) * 60 * 60 + int(minute) * 60 + int(second))
         else:
             print("Time is note in datetime.time or datetime.timedelat format.")
     df["Time"] = np.array(ts) / 60 / 60 
@@ -37,7 +40,8 @@ def parse_meta_data(dir):
                 sample_names.append(entry)
         
 
-    meta = {key:{'samples':[],'blanks':[],'species':None,'carbon_source':None} 
+    meta = {key:{'samples':[],'blanks':[],'species':None,
+                 'carbon_source':None,'concentration':None} 
             for key in set(sample_names)}
     #Storing well names of corresponding samples
     for c in df.columns:
@@ -50,7 +54,7 @@ def parse_meta_data(dir):
 
     #Stroring corresponding blank wells
     for sample in meta.keys():
-        blank = sample[2:]
+        blank = sample[sample.find('B'):]
         for c in df.columns:
             for i in df.index:
                 well = i + str(c)
@@ -66,13 +70,21 @@ def parse_meta_data(dir):
         species = df.at[i,c]
         meta[sample_name]['species'] = species
 
-    df = pd.read_excel(join(dir,'carbon_source.xlsx'),index_col=0)
+    #Parse carbon sources
+    df = pd.read_excel(join(dir,'carbon_sources.xlsx'),index_col=0)
     for sample_name,sample in meta.items():
         well = sample['samples'][0]
         i,c = well[0],int(well[1:])
         carbon_source = df.at[i,c]
         meta[sample_name]['carbon_source'] = carbon_source
 
+    #Parse concentrations
+    df = pd.read_excel(join(dir,'concentrations.xlsx'),index_col=0)
+    for sample_name,sample in meta.items():
+        well = sample['samples'][0]
+        i,c = well[0],int(well[1:])
+        concentration = df.at[i,c]
+        meta[sample_name]['concentration'] = concentration
     return meta
 
 def annotate_data(dir):
@@ -82,7 +94,7 @@ def annotate_data(dir):
     dfs = []
     for sample_name,sample in meta.items():
         df = pd.DataFrame(columns = ['Time','OD','well','sample',
-                                     'species','carbon_source'])
+                                     'species','carbon_source','concentration'])
         blank = raw[sample['blanks']].mean(axis=1)
         for well in sample['samples']:
             df['Time'] = raw['Time']
@@ -92,12 +104,13 @@ def annotate_data(dir):
             df['species'] = meta[sample_name]['species']
             df['species'] = meta[sample_name]['species']
             df['carbon_source'] = meta[sample_name]['carbon_source']
+            df['concentration'] = meta[sample_name]['concentration']
             dfs.append(df)
     out = pd.concat(dfs)
-    out.to_csv(join('test_data','240619_alisson','data_annotated.csv'))
+    out.to_csv(join(dir,'data_annotated.csv'))
     return out
     
-dir = join('test_data','240619_alisson')
+dir = join('data','240623_growth_phenotyping','at')
 meta = parse_meta_data(dir)
 df = annotate_data(dir)
 
