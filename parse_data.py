@@ -92,11 +92,14 @@ def annotate_data(dir):
     raw = parse_raw_data(dir)
     meta = parse_meta_data(dir)
     dfs = []
+    project = split(split(dir)[0])[1]
+    run = split(dir)[1]
     for sample_name,sample in meta.items():
-        df = pd.DataFrame(columns = ['Time','OD','well','sample',
-                                     'species','carbon_source','concentration'])
         blank = raw[sample['blanks']].mean(axis=1)
         for well in sample['samples']:
+            df = pd.DataFrame(columns = ['Time','OD','well','sample',
+                                     'species','carbon_source','concentration',
+                                     'project','run','linegroup'])
             df['Time'] = raw['Time']
             df['OD'] = raw[well] - blank
             df['well'] = well
@@ -105,12 +108,15 @@ def annotate_data(dir):
             df['species'] = meta[sample_name]['species']
             df['carbon_source'] = meta[sample_name]['carbon_source']
             df['concentration'] = meta[sample_name]['concentration']
+            df['project'] = project
+            df['run'] = run
+            df['linegroup'] = '_'.join([project,run,well])
             dfs.append(df)
     out = pd.concat(dfs)
-    out.to_csv(join(dir,'data_annotated.csv'))
+    out.to_csv(join(dir,'data_annotated.csv'),index=False)
     return out
     
-dir = join('data','240623_growth_phenotyping','at')
+dir = join('data','240623_growth_phenotyping','ml')
 meta = parse_meta_data(dir)
 df = annotate_data(dir)
 
