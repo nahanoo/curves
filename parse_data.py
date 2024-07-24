@@ -13,71 +13,110 @@ def parse_raw_data(dir):
     df = df.loc[0 : i - 1]
     ts = []
     for i in df["Time"]:
-        """I have this bug that pandas converts strings 
-        up to 23:59:59 into datetime.time strings >= 24:00:00 into time.timedelta.
+        """I have this bug that pandas converts strings up to 23:59:59 
+        into datetime.time and strings >= 24:00:00 into time.timedelta.
         Conversion into string doesn't work (I tired a lot)."""
-        if type(i) == time:
+        if type(i) is time:
             ts.append(i.hour * 60 * 60 + i.minute * 60 + i.second)
-        elif type(i) == timedelta:
+        elif type(i) is timedelta:
             ts.append(i.total_seconds())
+        elif type(i) is str:
+            hour,minute,second = i.split(':')
+            ts.append(int(hour) * 60 * 60 + int(minute) * 60 + int(second))
         else:
-            print("Time is note in datetime.time or datetime.timedelat format")
+            print("Time is note in datetime.time or datetime.timedelat format.")
     df["Time"] = np.array(ts) / 60 / 60 
     return df
 
 def parse_meta_data(dir):
     #Parses groups.xlsx file
-
+    #Sample IDs must be in form of S00B00.
+    #B00 corresponds to the blank name
     df = pd.read_excel(join(dir,'groups.xlsx'),index_col=0)
-    values = df.to_numpy().flatten()
-    samples = []
-    for v in values:
-        if v[0] == 'S':
-            samples.append(v)
-    samples = {key:{'samples':[],'blanks':[],'species':None} for key in set(samples)}
+    sample_names = []
+    for entry in df.to_numpy().flatten():
+        if isinstance(entry,str):
+            if entry[0] == 'S':
+                sample_names.append(entry)
+        
+
+    meta = {key:{'samples':[],'blanks':[],'species':None,
+                 'carbon_source':None,'concentration':None} 
+            for key in set(sample_names)}
+    #Storing well names of corresponding samples
     for c in df.columns:
         for i in df.index:
             well = i + str(c)
-            value = df.at[i,c]
-            if value[0] == 'S':
-                samples[df.at[i,c]]['samples'].append(well)
-    for sample in samples.keys():
-        blank = sample[2:]
+            entry = df.at[i,c]
+            if isinstance(entry,str):
+                if entry[0] == 'S':
+                    meta[df.at[i,c]]['samples'].append(well)
+
+    #Stroring corresponding blank wells
+    for sample in meta.keys():
+        blank = sample[sample.find('B'):]
         for c in df.columns:
             for i in df.index:
                 well = i + str(c)
-                value = df.at[i,c]
-                if value == blank:
-                    samples[sample]['blanks'].append(well)
+                entry = df.at[i,c]
+                if entry == blank:
+                    meta[sample]['blanks'].append(well)
 
     #Parses species
     df = pd.read_excel(join(dir,'species.xlsx'),index_col=0)
-    for name,sample in samples.items():
+    for sample_name,sample in meta.items():
         well = sample['samples'][0]
-        i,c = well[0],int(well[1])
+        i,c = well[0],int(well[1:])
         species = df.at[i,c]
-        samples[name]['species'] = species
-    return samples
+        meta[sample_name]['species'] = species
+
+    #Parse carbon sources
+    df = pd.read_excel(join(dir,'carbon_sources.xlsx'),index_col=0)
+    for sample_name,sample in meta.items():
+        well = sample['samples'][0]
+        i,c = well[0],int(well[1:])
+        carbon_source = df.at[i,c]
+        meta[sample_name]['carbon_source'] = carbon_source
+
+    #Parse concentrations
+    df = pd.read_excel(join(dir,'concentrations.xlsx'),index_col=0)
+    for sample_name,sample in meta.items():
+        well = sample['samples'][0]
+        i,c = well[0],int(well[1:])
+        concentration = df.at[i,c]
+        meta[sample_name]['concentration'] = concentration
+    return meta
 
 def annotate_data(dir):
     #Annotates raw data
     raw = parse_raw_data(dir)
-    samples = parse_meta_data(dir)
+    meta = parse_meta_data(dir)
     dfs = []
-    for name,sample in samples.items():
-        df = pd.DataFrame(columns = ['Time','OD','well','sample','species'])
+    project = split(split(dir)[0])[1]
+    run = split(dir)[1]
+    for sample_name,sample in meta.items():
         blank = raw[sample['blanks']].mean(axis=1)
         for well in sample['samples']:
+            df = pd.DataFrame(columns = ['Time','OD','well','sample',
+                                     'species','carbon_source','concentration',
+                                     'project','run','linegroup'])
             df['Time'] = raw['Time']
             df['OD'] = raw[well] - blank
             df['well'] = well
-            df['sample'] = name
-            df['species'] = samples[name]['species']
+            df['sample'] = sample_name
+            df['species'] = meta[sample_name]['species']
+            df['species'] = meta[sample_name]['species']
+            df['carbon_source'] = meta[sample_name]['carbon_source']
+            df['concentration'] = meta[sample_name]['concentration']
+            df['project'] = project
+            df['run'] = run
+            df['linegroup'] = '_'.join([project,run,well])
             dfs.append(df)
     out = pd.concat(dfs)
-    out.to_csv(join('test_data','240619_alisson','data_annotated.csv'))
+    out.to_csv(join(dir,'data_annotated.csv'),index=False)
     return out
     
-dir = join('test_data','240619_alisson')
+dir = join('data','240623_growth_phenotyping','ml')
 meta = parse_meta_data(dir)
 df = annotate_data(dir)
+
