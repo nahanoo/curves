@@ -22,26 +22,105 @@ species = list(set(df_species["species"]))
 
 # Create the Dash app
 app = Dash(__name__)
+app.css.append_css({"external_url": "assets/style.css"})
 
 # App layout
+
 app.layout = html.Div(
-    [
-        html.Div(children="Example data"),
+    className="container",
+    children=[
+        html.H1(children="Example Data"),
         html.Hr(),
-        dcc.Dropdown(cs, cs[0], id="cs-dropdown"),
-        dcc.Dropdown(species, species[0], id="species-dropdown"),
-        dcc.Graph(figure={}, id="controls-and-graph"),
-        dash_table.DataTable(
-            id="table",
-            columns=[
-                {"name": i, "id": i}
-                for i in df_joint_metadata[
-                    ["species", "carbon_source", "cs_conc", "comments"]
-                ].columns
-            ],
+        html.Div(
+            className="dropdown",
+            children=[
+                dcc.Dropdown(cs, cs[0], id="cs-dropdown"),
+                dcc.Dropdown(species, species[0], id="species-dropdown"),
+            ]
+        ),
+        html.Div(
+            className="graph",
+            children=[
+                dcc.Graph(figure={}, id="controls-and-graph"),
+            ]
+        ),
+        html.Div(
+            className="table",
+            children=[
+                dash_table.DataTable(
+                    id="table",
+                    columns=[
+                        {"name": i, "id": i}
+                        for i in df_joint_metadata[
+                            ["species", "carbon_source", "cs_conc", "comments"]
+                        ].columns
+                    ],
+                ),
+            ]
         ),
     ]
 )
+
+# app.layout = html.Div(
+#     style={
+#         "fontFamily": "Arial, sans-serif",
+#         "backgroundColor": "#f8f9fa",
+#         "margin": "0",
+#         "padding": "0"
+#     },
+#     children=[
+#         html.Div(
+#             className="container",
+#             style={
+#                 "margin": "20px",
+#                 "padding": "20px",
+#                 "backgroundColor": "#ffffff",
+#                 "borderRadius": "8px",
+#                 "boxShadow": "0 4px 8px rgba(0, 0, 0, 0.1)"
+#             },
+#             children=[
+#                 html.H1(
+#                     children="Example Data",
+#                     style={
+#                         "textAlign": "center",
+#                         "color": "#343a40"
+#                     }
+#                 ),
+#                 html.Hr(),
+#                 html.Div(
+#                     className="dropdown",
+#                     style={"margin": "10px 0"},
+#                     children=[
+#                         dcc.Dropdown(cs, cs[0], id="cs-dropdown"),
+#                         dcc.Dropdown(species, species[0], id="species-dropdown"),
+#                     ]
+#                 ),
+#                 html.Div(
+#                     className="graph",
+#                     style={"margin": "20px 0"},
+#                     children=[
+#                         dcc.Graph(figure={}, id="controls-and-graph"),
+#                     ]
+#                 ),
+#                 html.Div(
+#                     className="table",
+#                     style={"margin": "20px 0"},
+#                     children=[
+#                         dash_table.DataTable(
+#                             id="table",
+#                             columns=[
+#                                 {"name": i, "id": i}
+#                                 for i in df_joint_metadata[
+#                                     ["species", "carbon_source", "cs_conc", "comments"]
+#                                 ].columns
+#                             ],
+#                         ),
+#                     ]
+#                 ),
+#             ]
+#         ),
+#     ]
+# )
 
 
 # Add controls to build the interaction
