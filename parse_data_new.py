@@ -150,7 +150,8 @@ def parse_data(dataDir,project):
     return technical_data,run_data,carbon_source_data,species_data,inhibitor_data,comment_data,measurement_data
 
 def save_data(parsed_data,dataDir,project):
-    save_folder = "parsed_csvs"
+    os.mkdir(join(dataDir,"parsed_csvs",project))
+    save_folder = join("parsed_csvs",project)
     technical_data,run_data,carbon_source_data,species_data,inhibitor_data,comment_data,measurement_data = parsed_data
     technical_data.to_csv(join(dataDir,save_folder,project+"_technical_data.csv"),index=False)
     run_data.to_csv(join(dataDir,save_folder,project+"_run_data.csv"),index=False)
@@ -163,7 +164,8 @@ def save_data(parsed_data,dataDir,project):
 
 
 dataDir = "data"
-project = "240623_growth_phenotyping"
+# project = "240623_growth_phenotyping"
+project = "test_data"
 
 parsed_data = parse_data(dataDir,project)
 save_data(parsed_data,dataDir,project)
