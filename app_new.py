@@ -16,6 +16,8 @@ df_technical = pd.read_csv(join("data", "parsed_csvs", "240623_growth_phenotypin
 df_joint_technical = df_run.merge(df_technical, on="expID", how="outer")
 df_joint_metadata = reduce(lambda x,y: pd.merge(x,y, on='linegroup', how='outer'), [df_joint_technical,df_species,df_carbon_source,df_comments])
 
+to_show_in_table = ["project","Experimenter","Device","Temperature","species", "carbon_source", "cs_conc", "comments"]
+
 # Get unique carbon sources and species
 cs = list(set(df_carbon_source["carbon_source"]))
 species = list(set(df_species["species"]))
@@ -54,9 +56,7 @@ app.layout = html.Div(
                     id="table",
                     columns=[
                         {"name": i, "id": i}
-                        for i in df_joint_metadata[
-                            ["species", "carbon_source", "cs_conc", "comments"]
-                        ].columns
+                        for i in df_joint_metadata[to_show_in_table].columns
                     ],
                 ),
             ]
@@ -151,7 +151,7 @@ def update_carbon_source(col_chosen, species_chosen):
 
     filtered_metadata = df_joint_metadata[df_joint_metadata["linegroup"].isin(filtered_lg)]
     table_data = (
-        filtered_metadata[["species", "carbon_source", "cs_conc", "comments"]]
+        filtered_metadata[to_show_in_table]
         .drop_duplicates()
         .to_dict("records")
     )
