@@ -25,7 +25,7 @@ species.sort()
 
 # Create the Dash app
 app = Dash(__name__)
-app.css.append_css({"external_url": "assets/style.css"})
+app.css.append_css({"external_url": "assets/style_new.css"})
 
 # App layout
 
