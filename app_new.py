@@ -3,24 +3,34 @@ from dash import Dash, dcc, html, Input, Output, dash_table, callback
 import plotly.express as px
 from os.path import join
 from functools import reduce
+import os
+
+parsedDataDir = "data/parsed_csvs"
+parsedProjects = next(os.walk(parsedDataDir))[1]
+parsedProjects.sort()
+
+project = parsedProjects[0]
 
 # Load the data
-df_data = pd.read_csv(join("data", "parsed_csvs", "240623_growth_phenotyping_measurement_data.csv"))
-df_species = pd.read_csv(join("data", "parsed_csvs", "240623_growth_phenotyping_species_data.csv"))
-df_carbon_source = pd.read_csv(join("data", "parsed_csvs", "240623_growth_phenotyping_carbon_source_data.csv"))
-df_run = pd.read_csv(join("data", "parsed_csvs", "240623_growth_phenotyping_run_data.csv"))
-df_comments = pd.read_csv(join("data", "parsed_csvs", "240623_growth_phenotyping_comment_data.csv"))
-df_inhibitor = pd.read_csv(join("data", "parsed_csvs", "240623_growth_phenotyping_inhibitor_data.csv"))
-df_technical = pd.read_csv(join("data", "parsed_csvs", "240623_growth_phenotyping_technical_data.csv"))
+pooled_df_joint_metadata = pd.DataFrame()
 
-df_joint_technical = df_run.merge(df_technical, on="expID", how="outer")
-df_joint_metadata = reduce(lambda x,y: pd.merge(x,y, on='linegroup', how='outer'), [df_joint_technical,df_species,df_carbon_source,df_comments])
+for project in parsedProjects:
+    df_species = pd.read_csv(join("data", "parsed_csvs",project, project+"_species_data.csv"))
+    df_carbon_source = pd.read_csv(join("data", "parsed_csvs", project,project+"_carbon_source_data.csv"))
+    df_technical = pd.read_csv(join("data", "parsed_csvs", project,project+"_technical_data.csv"))
+    df_comments = pd.read_csv(join("data", "parsed_csvs",project, project+"_comment_data.csv"))
+    df_run = pd.read_csv(join("data", "parsed_csvs", project,project+"_run_data.csv"))
+    df_inhibitor = pd.read_csv(join("data", "parsed_csvs",project, project+"_inhibitor_data.csv"))
 
-to_show_in_table = ["project","Experimenter","Device","Temperature","species", "carbon_source", "cs_conc", "comments"]
+    df_joint_technical = df_run.merge(df_technical, on="expID", how="outer")
+    df_joint_metadata = reduce(lambda x,y: pd.merge(x,y, on='linegroup', how='outer'), [df_joint_technical,df_species,df_carbon_source,df_comments])
+    pooled_df_joint_metadata = pd.concat([pooled_df_joint_metadata,df_joint_metadata])
+
+to_show_in_table = ["Experimenter","Device","Temperature","species", "carbon_source", "cs_conc", "comments"]
 
 # Get unique carbon sources and species
-cs = list(set(df_carbon_source["carbon_source"]))
-species = list(set(df_species["species"]))
+cs = list(set(pooled_df_joint_metadata["carbon_source"]))
+species = list(set(pooled_df_joint_metadata["species"]))
 
 cs.sort()
 species.sort()
@@ -39,6 +49,7 @@ app.layout = html.Div(
         html.Div(
             className="dropdown",
             children=[
+                dcc.Dropdown(parsedProjects, parsedProjects[0], id="proj-dropdown"),
                 dcc.Dropdown(cs, cs[0], id="cs-dropdown"),
                 dcc.Dropdown(species, species[0], id="species-dropdown"),
             ]
@@ -56,74 +67,13 @@ app.layout = html.Div(
                     id="table",
                     columns=[
                         {"name": i, "id": i}
-                        for i in df_joint_metadata[to_show_in_table].columns
+                        for i in pooled_df_joint_metadata[to_show_in_table].columns
                     ],
                 ),
             ]
         ),
     ]
 )
-
-# app.layout = html.Div(
-#     style={
-#         "fontFamily": "Arial, sans-serif",
-#         "backgroundColor": "#f8f9fa",
-#         "margin": "0",
-#         "padding": "0"
-#     },
-#     children=[
-#         html.Div(
-#             className="container",
-#             style={
-#                 "margin": "20px",
-#                 "padding": "20px",
-#                 "backgroundColor": "#ffffff",
-#                 "borderRadius": "8px",
-#                 "boxShadow": "0 4px 8px rgba(0, 0, 0, 0.1)"
-#             },
-#             children=[
-#                 html.H1(
-#                     children="Example Data",
-#                     style={
-#                         "textAlign": "center",
-#                         "color": "#343a40"
-#                     }
-#                 ),
-#                 html.Hr(),
-#                 html.Div(
-#                     className="dropdown",
-#                     style={"margin": "10px 0"},
-#                     children=[
-#                         dcc.Dropdown(cs, cs[0], id="cs-dropdown"),
-#                         dcc.Dropdown(species, species[0], id="species-dropdown"),
-#                     ]
-#                 ),
-#                 html.Div(
-#                     className="graph",
-#                     style={"margin": "20px 0"},
-#                     children=[
-#                         dcc.Graph(figure={}, id="controls-and-graph"),
-#                     ]
-#                 ),
-#                 html.Div(
-#                     className="table",
-#                     style={"margin": "20px 0"},
-#                     children=[
-#                         dash_table.DataTable(
-#                             id="table",
-#                             columns=[
-#                                 {"name": i, "id": i}
-#                                 for i in df_joint_metadata[
-#                                     ["species", "carbon_source", "cs_conc", "comments"]
-#                                 ].columns
-#                             ],
-#                         ),
-#                     ]
-#                 ),
-#             ]
-#         ),
-#     ]
-# )
 
 
 # Add controls to build the interaction
@@ -133,13 +83,16 @@ app.layout = html.Div(
         Output(component_id="table", component_property="data"),
     ],
     [
+        Input(component_id="proj-dropdown", component_property="value"),
         Input(component_id="cs-dropdown", component_property="value"),
         Input(component_id="species-dropdown", component_property="value"),
     ],
 )
-def update_carbon_source(col_chosen, species_chosen):
-    lg_species_chosen = df_species[df_species["species"] == species_chosen]["linegroup"]
-    lg_carbon_source_chosen = df_carbon_source[df_carbon_source["carbon_source"] == col_chosen]["linegroup"]
+def update_carbon_source(proj_chosen,col_chosen, species_chosen):
+
+    df_data = pd.read_csv(join(parsedDataDir,proj_chosen, proj_chosen+"_measurement_data.csv"))
+    lg_species_chosen = pooled_df_joint_metadata[pooled_df_joint_metadata["species"] == species_chosen]["linegroup"]
+    lg_carbon_source_chosen = pooled_df_joint_metadata[pooled_df_joint_metadata["carbon_source"] == col_chosen]["linegroup"]
     filtered_lg = list(set(lg_species_chosen) & set(lg_carbon_source_chosen))
     df_data_filtered = df_data[df_data["linegroup"].isin(filtered_lg)].sort_values(by="time")
 
@@ -149,7 +102,7 @@ def update_carbon_source(col_chosen, species_chosen):
   
     fig = px.line(df_data_filtered, x="time", y="measurement", line_group="linegroup")
 
-    filtered_metadata = df_joint_metadata[df_joint_metadata["linegroup"].isin(filtered_lg)]
+    filtered_metadata = pooled_df_joint_metadata[pooled_df_joint_metadata["linegroup"].isin(filtered_lg)]
     table_data = (
         filtered_metadata[to_show_in_table]
         .drop_duplicates()
