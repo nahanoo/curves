@@ -1,18 +1,19 @@
 import dash
-from dash import html, Input, Output, ALL,dcc
+from dash import html, dcc, Input, Output, ALL, State
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import pandas as pd
+from io import BytesIO
 import os
 from os.path import join
 from functools import reduce
+import zipfile
 
 # Load data
 parsedDataDir = "data/parsed_csvs"
 parsedProjects = next(os.walk(parsedDataDir))[1]
 parsedProjects.sort()
 
-project = parsedProjects[0]
 pooled_df_joint_metadata = pd.DataFrame()
 
 for project in parsedProjects:
@@ -30,7 +31,6 @@ for project in parsedProjects:
 
 cs = list(set(pooled_df_joint_metadata["carbon_source"]))
 species = list(set(pooled_df_joint_metadata["species"]))
-
 cs.sort()
 species.sort()
 
@@ -67,20 +67,16 @@ app.layout = html.Div(
                 dcc.Graph(figure={}, id="controls-and-graph"),
             ]
         ),
-
         html.Button("Download Data", id="download-btn"),
         dcc.Download(id="download-data")
-        
     ]
 )
 
 @app.callback(
     Output(component_id="controls-and-graph", component_property="figure"),
     Input({'type': 'checkboxes', 'index': ALL}, 'value'),
-    
 )
-def update_div(value_in):
-
+def update_graph(value_in):
     if value_in is None or not any(value_in):
         return dash.no_update
 
@@ -100,25 +96,59 @@ def update_div(value_in):
 
     for project in projects_chosen:
         dfs.append(pd.read_csv(join("data", "parsed_csvs", project, project + "_measurement_data.csv")))
-        
+
     df_data = pd.concat(dfs)
-
     df_data = df_data[df_data["linegroup"].isin(common_lg)].sort_values(by="time")
-                        
-    fig = px.line(df_data, x="time", y="measurement", line_group="linegroup")
 
+    fig = px.line(df_data, x="time", y="measurement", line_group="linegroup")
     return fig
+
 
 
 @app.callback(
     Output("download-data", "data"),
     Input("download-btn", "n_clicks"),
+    State({'type': 'checkboxes', 'index': ALL}, 'value'),
     prevent_initial_call=True
 )
-def download_data(n_clicks):
+def download_data(n_clicks, checkbox_values):
     if n_clicks is None:
         return dash.no_update
+    
+    # Extract checkbox values
+    chosen_carbon_sources = checkbox_values[0] if checkbox_values[0] else []
+    chosen_species = checkbox_values[1] if checkbox_values[1] else []
 
+    # Filter data based on checkbox selection
+    filter_metadata = pooled_df_joint_metadata[
+        (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources)) &
+        (pooled_df_joint_metadata["species"].isin(chosen_species))
+    ]
+
+    # Assuming measurement data is stored separately or needs to be re-fetched
+    measurement_data_frames = []
+    for project in filter_metadata['project'].unique():
+        df_measurements = pd.read_csv(join(parsedDataDir, project, project + "_measurement_data.csv"))
+        measurement_data_frames.append(df_measurements)
+
+    # Combine measurement data from selected projects
+    df_measurements = pd.concat(measurement_data_frames)
+    df_measurements = df_measurements[df_measurements['linegroup'].isin(filter_metadata['linegroup'].unique())]
+    
+    # Pivot data to have linegroups as columns, indexed by time
+    measurement_pivot = df_measurements.pivot_table(index='time', columns='linegroup', values='measurement', aggfunc='first')
+
+    # Create a Bytes buffer to hold the ZIP file
+    zip_buffer = BytesIO()
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
+        # Save metadata CSV
+        zf.writestr('metadata.csv', filter_metadata.to_csv(index=False))
+        # Save measurement pivot CSV
+        zf.writestr('measurements.csv', measurement_pivot.to_csv())
+
+    # Prepare buffer for download
+    zip_buffer.seek(0)
+    return dcc.send_bytes(zip_buffer.getvalue(), "downloaded_data.zip")
 
 if __name__ == '__main__':
     app.run_server(debug=True)
