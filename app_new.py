@@ -20,9 +20,12 @@ df_joint_metadata = reduce(lambda x,y: pd.merge(x,y, on='linegroup', how='outer'
 cs = list(set(df_carbon_source["carbon_source"]))
 species = list(set(df_species["species"]))
 
+cs.sort()
+species.sort()
+
 # Create the Dash app
 app = Dash(__name__)
-app.css.append_css({"external_url": "assets/style.css"})
+app.css.append_css({"external_url": "assets/style_new.css"})
 
 # App layout
 
