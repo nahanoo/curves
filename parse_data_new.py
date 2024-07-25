@@ -37,7 +37,7 @@ def parse_meta_data(dataDir,project,plateName):
                 sample_names.append(entry)
         
 
-    meta = {key:{'samples':[],'blanks':[],'linegroup':None,'species':None,
+    meta = {key:{'samples':[],'blanks':[],'linegroup':[],'species':None,
                  'carbon_source':None,'cs_conc':None,'base_media':None,'inhibitor':None,'inhibitor_conc':None,'comments':None} 
             for key in set(sample_names)}
     #Storing well names of corresponding samples
@@ -48,7 +48,7 @@ def parse_meta_data(dataDir,project,plateName):
             if isinstance(entry,str):
                 if entry[0] == 'S':
                     meta[df.at[i,c]]['samples'].append(well)
-                    meta[df.at[i,c]]['linegroup'] = '_'.join([project,plateName,well])
+                    meta[df.at[i,c]]['linegroup'].append('_'.join([project,plateName,well]))
 
     #Stroring corresponding blank wells
     for sample in meta.keys():
@@ -109,15 +109,17 @@ def parse_meta_to_df(meta,raw,project,plateName):
 
     for sample_name,sample in meta.items():
         blank = raw[sample['blanks']].mean(axis=1)
-        for well in sample['samples']:
-            df_run = pd.concat([df_run,pd.DataFrame({"project":project,"expID":project + "_" + plateName,"linegroup":sample['linegroup']},index=[0])])
-            df_carbon_source = pd.concat([df_carbon_source,pd.DataFrame({"linegroup":sample['linegroup'],"carbon_source":sample['carbon_source'],"cs_conc":sample['cs_conc'],"base_media":sample['base_media']},index=[0])])
-            df_species = pd.concat([df_species,pd.DataFrame({"linegroup":sample['linegroup'],"species":sample['species']},index=[0])])
-            df_inhibitor = pd.concat([df_inhibitor,pd.DataFrame({"linegroup":sample['linegroup'],"inhibitor":sample['inhibitor'],"inhibitor_conc":sample['inhibitor_conc']},index=[0])])
-            df_comments = pd.concat([df_comments,pd.DataFrame({"linegroup":sample['linegroup'],"comments":sample['comments']},index=[0])])
+        for wellID in range(len(sample['samples'])):
+            well = sample['samples'][wellID]
+            linegroup = sample['linegroup'][wellID]
+            df_run = pd.concat([df_run,pd.DataFrame({"project":project,"expID":project + "_" + plateName,"linegroup":linegroup},index=[0])])
+            df_carbon_source = pd.concat([df_carbon_source,pd.DataFrame({"linegroup":linegroup,"carbon_source":sample['carbon_source'],"cs_conc":sample['cs_conc'],"base_media":sample['base_media']},index=[0])])
+            df_species = pd.concat([df_species,pd.DataFrame({"linegroup":linegroup,"species":sample['species']},index=[0])])
+            df_inhibitor = pd.concat([df_inhibitor,pd.DataFrame({"linegroup":linegroup,"inhibitor":sample['inhibitor'],"inhibitor_conc":sample['inhibitor_conc']},index=[0])])
+            df_comments = pd.concat([df_comments,pd.DataFrame({"linegroup":linegroup,"comments":sample['comments']},index=[0])])
 
             measurement = raw[well] - blank
-            cur_measurement_df = pd.DataFrame({"linegroup":sample['linegroup'],"time":raw["Time"],"measurement":measurement})
+            cur_measurement_df = pd.DataFrame({"linegroup":linegroup,"time":raw["Time"],"measurement":measurement})
             measurement_dfs.append(cur_measurement_df)
 
     df_measurement = pd.concat(measurement_dfs)
