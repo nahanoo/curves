@@ -95,10 +95,6 @@ def update_carbon_source(proj_chosen,col_chosen, species_chosen):
     lg_carbon_source_chosen = pooled_df_joint_metadata[pooled_df_joint_metadata["carbon_source"] == col_chosen]["linegroup"]
     filtered_lg = list(set(lg_species_chosen) & set(lg_carbon_source_chosen))
     df_data_filtered = df_data[df_data["linegroup"].isin(filtered_lg)].sort_values(by="time")
-
-    # dfs_filtered = []
-    # for i in range(len(filtered_lg)):
-    #     dfs_filtered.append(df_data[df_data["linegroup"] == filtered_lg[i]].sort_values(by="time"))
   
     fig = px.line(df_data_filtered, x="time", y="measurement", line_group="linegroup")
 
