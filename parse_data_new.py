@@ -1,5 +1,5 @@
 import pandas as pd
-from os.path import join,split
+from os.path import join,split,exists
 from datetime import time, timedelta
 import numpy as np
 import os
@@ -150,7 +150,8 @@ def parse_data(dataDir,project):
     return technical_data,run_data,carbon_source_data,species_data,inhibitor_data,comment_data,measurement_data
 
 def save_data(parsed_data,dataDir,project):
-    os.mkdir(join(dataDir,"parsed_csvs",project))
+    if not exists(join(dataDir,"parsed_csvs",project)):
+        os.mkdir(join(dataDir,"parsed_csvs",project))
     save_folder = join("parsed_csvs",project)
     technical_data,run_data,carbon_source_data,species_data,inhibitor_data,comment_data,measurement_data = parsed_data
     technical_data.to_csv(join(dataDir,save_folder,project+"_technical_data.csv"),index=False)
