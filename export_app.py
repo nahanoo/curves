@@ -17,6 +17,7 @@ parsedProjects.sort()
 pooled_df_joint_metadata = pd.DataFrame()
 
 for project in parsedProjects:
+    # Load data
     df_species = pd.read_csv(join("data", "parsed_csvs", project, project + "_species_data.csv"))
     df_carbon_source = pd.read_csv(join("data", "parsed_csvs", project, project + "_carbon_source_data.csv"))
     df_technical = pd.read_csv(join("data", "parsed_csvs", project, project + "_technical_data.csv"))
@@ -24,16 +25,21 @@ for project in parsedProjects:
     df_run = pd.read_csv(join("data", "parsed_csvs", project, project + "_run_data.csv"))
     df_inhibitor = pd.read_csv(join("data", "parsed_csvs", project, project + "_inhibitor_data.csv"))
 
+    # Merge data with expID as common columns
     df_joint_technical = df_run.merge(df_technical, on="expID", how="outer")
+
+    # Merge all metadata with linegroup as common reference
     df_joint_metadata = reduce(lambda x, y: pd.merge(x, y, on='linegroup', how='outer'),
                                [df_joint_technical, df_species, df_carbon_source, df_comments])
     pooled_df_joint_metadata = pd.concat([pooled_df_joint_metadata, df_joint_metadata])
 
+# Get unique carbon sources and species
 cs = list(set(pooled_df_joint_metadata["carbon_source"]))
 species = list(set(pooled_df_joint_metadata["species"]))
 cs.sort()
 species.sort()
 
+# Function to generate checklist for carbon source and species
 def generate_checklist(options, index):
     return dbc.Checklist(
         options=[{'label': opt, 'value': opt} for opt in options],
@@ -46,6 +52,7 @@ species_checklist = generate_checklist(species, 'species')
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
+# App layout with checklist, graph and download button
 app.layout = html.Div(
     [
         dbc.Table(
@@ -72,11 +79,13 @@ app.layout = html.Div(
     ]
 )
 
+# Update graph based on selected carbon sources and species
 @app.callback(
     Output(component_id="controls-and-graph", component_property="figure"),
     Input({'type': 'checkboxes', 'index': ALL}, 'value'),
 )
 def update_graph(value_in):
+    # Check for when no values are selected
     if value_in is None or not any(value_in):
         return dash.no_update
 
@@ -86,25 +95,28 @@ def update_graph(value_in):
     if not chosen_carbon_sources or not chosen_species:
         return dash.no_update
 
+    # Filter linegroup based on selected carbon sources and species
     lg_species = pooled_df_joint_metadata[pooled_df_joint_metadata["species"].isin(chosen_species)]
     lg_carbon_source = lg_species[lg_species["carbon_source"].isin(chosen_carbon_sources)]
     common_lg = list(set(lg_carbon_source["linegroup"]) & set(lg_species["linegroup"]))
 
+    # Choose projects based on linegroups
     projects_chosen = pooled_df_joint_metadata[pooled_df_joint_metadata["linegroup"].isin(common_lg)]["project"].unique()
 
+    # Load only selected projects
     dfs = []
-
     for project in projects_chosen:
         dfs.append(pd.read_csv(join("data", "parsed_csvs", project, project + "_measurement_data.csv")))
 
     df_data = pd.concat(dfs)
+    
+    # Plot data for visual representation
     df_data = df_data[df_data["linegroup"].isin(common_lg)].sort_values(by="time")
-
     fig = px.line(df_data, x="time", y="measurement", line_group="linegroup")
+
     return fig
 
-
-
+# Download data based on selected carbon sources and species
 @app.callback(
     Output("download-data", "data"),
     Input("download-btn", "n_clicks"),
@@ -112,6 +124,7 @@ def update_graph(value_in):
     prevent_initial_call=True
 )
 def download_data(n_clicks, checkbox_values):
+    # Check for when button is not clicked yet
     if n_clicks is None:
         return dash.no_update
     
