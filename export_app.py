@@ -10,13 +10,13 @@ from functools import reduce
 import zipfile
 
 # Load data
-parsedDataDir = "data/parsed_csvs"
-parsedProjects = next(os.walk(parsedDataDir))[1]
-parsedProjects.sort()
+parsed_data_dir = "data/parsed_csvs"
+parsed_projects = next(os.walk(parsed_data_dir))[1]
+parsed_projects.sort()
 
 pooled_df_joint_metadata = pd.DataFrame()
 
-for project in parsedProjects:
+for project in parsed_projects:
     # Load data
     df_species = pd.read_csv(join("data", "parsed_csvs", project, project + "_species_data.csv"))
     df_carbon_source = pd.read_csv(join("data", "parsed_csvs", project, project + "_carbon_source_data.csv"))
@@ -141,7 +141,7 @@ def download_data(n_clicks, checkbox_values):
     # Assuming measurement data is stored separately or needs to be re-fetched
     measurement_data_frames = []
     for project in filter_metadata['project'].unique():
-        df_measurements = pd.read_csv(join(parsedDataDir, project, project + "_measurement_data.csv"))
+        df_measurements = pd.read_csv(join(parsed_data_dir, project, project + "_measurement_data.csv"))
         measurement_data_frames.append(df_measurements)
 
     # Combine measurement data from selected projects
