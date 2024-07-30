@@ -46,7 +46,7 @@ def parse_technical_data(data_dir, project, plate_name, logger):
     temperature = df["Temperature"]
     shaking = df["Shaking (Y/N)"]
     co2 = df["CO2 (Y/N)"]
-    out = pd.DataFrame(
+    technical_data = pd.DataFrame(
         {
             "exp_ID": exp_ID,
             "Experimenter": experimenter,
@@ -57,11 +57,12 @@ def parse_technical_data(data_dir, project, plate_name, logger):
             "CO2": co2,
         }
     )
-    for column, value in out.items():
+    for column, value in technical_data.items():
         if pd.isna(value.loc[0]):
             logger.error(column + " field in the Metadata sheet is empty.")
             sys.exit()
     logger.info("Succesfully parsed technical metadata.")
+    return technical_data
 
 
 def parse_sheet(meta, data_dir, project, plate_name, sheet_name, key_name, logger):
