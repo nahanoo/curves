@@ -60,10 +60,11 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # App layout with checklist, graph and download button
 app.layout = html.Div(
-    [
+    [   html.H1(children="Data Export"),
+        html.Hr(),
         dbc.Table(
             [
-                html.Thead(html.Tr([html.Th("carbon_source"), html.Th("species")])),
+                html.Thead(html.Tr([html.Th("Carbon Source"), html.Th("Species")])),
                 html.Tbody(
                     html.Tr(
                         [html.Td(carbon_source_checklist), html.Td(species_checklist)]
@@ -185,4 +186,4 @@ def download_data(n_clicks, checkbox_values):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=True,port=8052)
