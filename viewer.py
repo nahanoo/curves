@@ -16,22 +16,14 @@ project = parsed_projects[0]
 # Load the data
 pooled_df_joint_metadata = pd.DataFrame()
 for project in parsed_projects:
-    df_species = pd.read_csv(
-        join(parsed_data_dir, project, project + "_species_data.csv")
-    )
+    df_species = pd.read_csv(join(parsed_data_dir, project, "species_data.csv"))
     df_carbon_source = pd.read_csv(
-        join(parsed_data_dir, project, project + "_carbon_source_data.csv")
+        join(parsed_data_dir, project, "carbon_source_data.csv")
     )
-    df_technical = pd.read_csv(
-        join(parsed_data_dir, project, project + "_technical_data.csv")
-    )
-    df_comments = pd.read_csv(
-        join(parsed_data_dir, project, project + "_comment_data.csv")
-    )
-    df_run = pd.read_csv(join(parsed_data_dir, project, project + "_run_data.csv"))
-    df_inhibitor = pd.read_csv(
-        join(parsed_data_dir, project, project + "_inhibitor_data.csv")
-    )
+    df_technical = pd.read_csv(join(parsed_data_dir, project, "technical_data.csv"))
+    df_comments = pd.read_csv(join(parsed_data_dir, project, "comment_data.csv"))
+    df_run = pd.read_csv(join(parsed_data_dir, project, "run_data.csv"))
+    df_inhibitor = pd.read_csv(join(parsed_data_dir, project, "inhibitor_data.csv"))
 
     # Merge data with expID as common columns
     df_joint_technical = df_run.merge(df_technical, on="exp_ID", how="outer")
@@ -61,8 +53,9 @@ cs.sort()
 species.sort()
 
 # Create the Dash app
-app = Dash(__name__)
-app.css.append_css({"external_url": "assets/style_new.css"})
+external_stylesheets = [join("assets", "style_new.css")]
+# Create the Dash app
+app = Dash(__name__, external_stylesheets=external_stylesheets)
 
 # App layout with dropdowns for project, carbon source and species
 app.layout = html.Div(
@@ -114,9 +107,7 @@ app.layout = html.Div(
 )
 def update_carbon_source(proj_chosen, col_chosen, species_chosen):
     # Read only data for selected project, species and carbon source
-    df_data = pd.read_csv(
-        join(parsed_data_dir, proj_chosen, proj_chosen + "_measurement_data.csv")
-    )
+    df_data = pd.read_csv(join(parsed_data_dir, proj_chosen, "measurement_data.csv"))
 
     # Filter the appropriate linegroups and associated data
     lg_species_chosen = pooled_df_joint_metadata[

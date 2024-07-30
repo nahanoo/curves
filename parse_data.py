@@ -357,21 +357,13 @@ def main(data_dir, project):
         measurement_data = pd.concat([measurement_data, measurement])
 
     # Stores parsed data in export directory
-    technical_data.to_csv(
-        join(save_folder, project + "_technical_data.csv"), index=False
-    )
-    run_data.to_csv(join(save_folder, project + "_run_data.csv"), index=False)
-    carbon_source_data.to_csv(
-        join(save_folder, project + "_carbon_source_data.csv"), index=False
-    )
-    species_data.to_csv(join(save_folder, project + "_species_data.csv"), index=False)
-    inhibitor_data.to_csv(
-        join(save_folder, project + "_inhibitor_data.csv"), index=False
-    )
-    comment_data.to_csv(join(save_folder, project + "_comment_data.csv"), index=False)
-    measurement_data.to_csv(
-        join(save_folder, project + "_measurement_data.csv"), index=False
-    )
+    technical_data.to_csv(join(save_folder, "technical_data.csv"), index=False)
+    run_data.to_csv(join(save_folder, "run_data.csv"), index=False)
+    carbon_source_data.to_csv(join(save_folder, "carbon_source_data.csv"), index=False)
+    species_data.to_csv(join(save_folder, "species_data.csv"), index=False)
+    inhibitor_data.to_csv(join(save_folder, "inhibitor_data.csv"), index=False)
+    comment_data.to_csv(join(save_folder, "comment_data.csv"), index=False)
+    measurement_data.to_csv(join(save_folder, "measurement_data.csv"), index=False)
 
 
 project = "240623_growth_phenotyping"
