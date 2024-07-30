@@ -18,22 +18,14 @@ pooled_df_joint_metadata = pd.DataFrame()
 
 for project in parsed_projects:
     # Load data
-    df_species = pd.read_csv(
-        join(parsed_data_dir, project, project + "_species_data.csv")
-    )
+    df_species = pd.read_csv(join(parsed_data_dir, project, "species_data.csv"))
     df_carbon_source = pd.read_csv(
-        join(parsed_data_dir, project, project + "_carbon_source_data.csv")
+        join(parsed_data_dir, project, "carbon_source_data.csv")
     )
-    df_technical = pd.read_csv(
-        join(parsed_data_dir, project, project + "_technical_data.csv")
-    )
-    df_comments = pd.read_csv(
-        join(parsed_data_dir, project, project + "_comment_data.csv")
-    )
-    df_run = pd.read_csv(join(parsed_data_dir, project, project + "_run_data.csv"))
-    df_inhibitor = pd.read_csv(
-        join(parsed_data_dir, project, project + "_inhibitor_data.csv")
-    )
+    df_technical = pd.read_csv(join(parsed_data_dir, project, "technical_data.csv"))
+    df_comments = pd.read_csv(join(parsed_data_dir, project, "comment_data.csv"))
+    df_run = pd.read_csv(join(parsed_data_dir, project, "run_data.csv"))
+    df_inhibitor = pd.read_csv(join(parsed_data_dir, project, "inhibitor_data.csv"))
 
     # Merge data with expID as common columns
     df_joint_technical = df_run.merge(df_technical, on="exp_ID", how="outer")
@@ -127,11 +119,7 @@ def update_graph(value_in):
     # Load only selected projects
     dfs = []
     for project in projects_chosen:
-        dfs.append(
-            pd.read_csv(
-                join(parsed_data_dir, project, project + "_measurement_data.csv")
-            )
-        )
+        dfs.append(pd.read_csv(join(parsed_data_dir, project, "measurement_data.csv")))
 
     df_data = pd.concat(dfs)
 
