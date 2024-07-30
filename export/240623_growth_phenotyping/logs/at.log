@@ -1,0 +1,9 @@
+2024-07-30 15:33:45,943 - INFO - Plate: at - Detected 31 samples and 3 blanks.
+2024-07-30 15:33:45,956 - INFO - Plate: at - Succesfully parsed Species metadata.
+2024-07-30 15:33:45,968 - INFO - Plate: at - Succesfully parsed Carbon Source metadata.
+2024-07-30 15:33:45,980 - INFO - Plate: at - Succesfully parsed CS Concentration metadata.
+2024-07-30 15:33:45,992 - INFO - Plate: at - Succesfully parsed Base Media metadata.
+2024-07-30 15:33:46,005 - INFO - Plate: at - Succesfully parsed Inhibitor metadata.
+2024-07-30 15:33:46,021 - INFO - Plate: at - Succesfully parsed Inhibitor Conc metadata.
+2024-07-30 15:33:46,033 - INFO - Plate: at - Succesfully parsed Comments metadata.
+2024-07-30 15:33:46,048 - INFO - Plate: at - Succesfully parsed technical metadata.
