@@ -2,6 +2,7 @@ import dash
 from dash import html, dcc, Input, Output, ALL, State
 import dash_bootstrap_components as dbc
 import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 from io import BytesIO
 import os
@@ -43,6 +44,10 @@ species = list(set(pooled_df_joint_metadata["species"]))
 cs.sort()
 species.sort()
 
+#Add option to select all carbon sources and species
+cs.insert(0, "All")
+species.insert(0, "All")
+
 
 # Function to generate checklist for carbon source and species
 def generate_checklist(options, index):
@@ -76,6 +81,13 @@ app.layout = html.Div(
             style={"width": "100vw"},
         ),
         html.Div(
+            children=[
+                html.Hr(),
+                html.H6(children="Color graph by:"),
+                dcc.Dropdown(["Carbon Source", "Species"],"Carbon Source", id="color-by"),
+            ]
+        ),
+        html.Div(
             className="graph",
             children=[
                 dcc.Graph(figure={}, id="controls-and-graph"),
@@ -89,10 +101,14 @@ app.layout = html.Div(
 
 # Update graph based on selected carbon sources and species
 @app.callback(
-    Output(component_id="controls-and-graph", component_property="figure"),
-    Input({"type": "checkboxes", "index": ALL}, "value"),
+        Output(component_id="controls-and-graph", component_property="figure"),
+    [
+        Input({"type": "checkboxes", "index": ALL}, "value"),
+        Input("color-by", "value"),
+    ],
 )
-def update_graph(value_in):
+
+def update_graph(value_in, color_by):
     # Check for when no values are selected
     if value_in is None or not any(value_in):
         return dash.no_update
@@ -103,14 +119,20 @@ def update_graph(value_in):
     if not chosen_carbon_sources or not chosen_species:
         return dash.no_update
 
-    # Filter linegroup based on selected carbon sources and species
-    lg_species = pooled_df_joint_metadata[
-        pooled_df_joint_metadata["species"].isin(chosen_species)
+    # Handle "All" option if implemented
+    if "All" in chosen_carbon_sources:
+        chosen_carbon_sources = cs[1:]  # Assuming 'cs' is your list of all carbon sources
+    if "All" in chosen_species:
+        chosen_species = species[1:]  # Assuming 'species' is your list of all species
+
+    # Filter metadata based on selected carbon sources and species
+    filtered_metadata = pooled_df_joint_metadata[
+        (pooled_df_joint_metadata["species"].isin(chosen_species)) &
+        (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources))
     ]
-    lg_carbon_source = lg_species[
-        lg_species["carbon_source"].isin(chosen_carbon_sources)
-    ]
-    common_lg = list(set(lg_carbon_source["linegroup"]) & set(lg_species["linegroup"]))
+
+    # Obtain the relevant linegroups from the filtered metadata
+    common_lg = filtered_metadata["linegroup"].unique()
 
     # Choose projects based on linegroups
     projects_chosen = pooled_df_joint_metadata[
@@ -123,13 +145,56 @@ def update_graph(value_in):
         dfs.append(pd.read_csv(join(parsed_data_dir, project, "measurement_data.csv")))
 
     df_data = pd.concat(dfs)
-
-    # Plot data for visual representation
     df_data = df_data[df_data["linegroup"].isin(common_lg)].sort_values(by="time")
-    fig = px.line(df_data, x="time", y="measurement", line_group="linegroup")
+
+    # Merge the measurement data with the filtered metadata to include carbon source and species info
+    df_merged = df_data.merge(filtered_metadata, on="linegroup")
+
+    # Initialize figure
+    fig = go.Figure()
+
+    # Color plotting based on carbon source or species
+    if color_by == "Carbon Source":
+        colors = px.colors.qualitative.Plotly if len(chosen_carbon_sources) > 1 else ["blue"]
+        for i, cur_cs in enumerate(chosen_carbon_sources):
+            df_cs = df_merged[df_merged["carbon_source"] == cur_cs]
+            for lg_id,lg in enumerate(df_cs["linegroup"].unique()):
+                df_lg = df_cs[df_cs["linegroup"] == lg]
+                cur_metadata = pooled_df_joint_metadata[pooled_df_joint_metadata["linegroup"] == lg]
+                sp_lg = cur_metadata["species"].values[0]
+                cs_conc_lg = cur_metadata["cs_conc"].values[0]
+                fig.add_trace(
+                    go.Scatter(
+                        x=df_lg["time"],
+                        y=df_lg["measurement"],
+                        mode="lines",
+                        line=dict(color=colors[i % len(colors)]),
+                        name=f'{cur_cs}',
+                        hovertemplate=f'<b>Species:</b> {sp_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cs_conc_lg}<extra></extra>',
+                        hoverlabel={"bgcolor": "#FFFFFF"},
+                        showlegend=True if lg_id == 0 else False,
+                    )
+                )
+    elif color_by == "Species":
+        colors = px.colors.qualitative.Set2 if len(chosen_species) > 1 else ["magenta"]
+        for i, cur_sp in enumerate(chosen_species):
+            df_sp = df_merged[df_merged["species"] == cur_sp]
+            for lg_id,lg in enumerate(df_sp["linegroup"].unique()):
+                df_lg = df_sp[df_sp["linegroup"] == lg]
+                cs_lg = pooled_df_joint_metadata[pooled_df_joint_metadata["linegroup"] == lg]["carbon_source"].values[0]
+                fig.add_trace(
+                    go.Scatter(
+                        x=df_lg["time"],
+                        y=df_lg["measurement"],
+                        mode="lines",
+                        line=dict(color=colors[i % len(colors)]),
+                        name=f'{cur_sp}',
+                        hovertemplate=f'<b>Carbon Source:</b> {cs_lg}<br>',
+                        showlegend=True if lg_id == 0 else False,
+                    )
+                )
 
     return fig
-
 
 # Download data based on selected carbon sources and species
 @app.callback(
