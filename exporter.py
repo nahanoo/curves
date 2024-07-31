@@ -181,7 +181,9 @@ def update_graph(value_in, color_by):
             df_sp = df_merged[df_merged["species"] == cur_sp]
             for lg_id,lg in enumerate(df_sp["linegroup"].unique()):
                 df_lg = df_sp[df_sp["linegroup"] == lg]
-                cs_lg = pooled_df_joint_metadata[pooled_df_joint_metadata["linegroup"] == lg]["carbon_source"].values[0]
+                cur_metadata = pooled_df_joint_metadata[pooled_df_joint_metadata["linegroup"] == lg]
+                cs_lg = cur_metadata["carbon_source"].values[0]
+                cur_cs_conc = cur_metadata["cs_conc"].values[0]
                 fig.add_trace(
                     go.Scatter(
                         x=df_lg["time"],
@@ -189,7 +191,8 @@ def update_graph(value_in, color_by):
                         mode="lines",
                         line=dict(color=colors[i % len(colors)]),
                         name=f'{cur_sp}',
-                        hovertemplate=f'<b>Carbon Source:</b> {cs_lg}<br>',
+                        hovertemplate=f'<b>Carbon Source:</b> {cs_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cur_cs_conc}<extra></extra>',
+                        hoverlabel={"bgcolor": "#FFFFFF"},
                         showlegend=True if lg_id == 0 else False,
                     )
                 )
