@@ -1,6 +1,7 @@
 import pandas as pd
-from dash import Dash, dcc, html, Input, Output, dash_table, callback
+from dash import Dash, dcc, html, Input, Output, dash_table, callback,no_update
 import plotly.express as px
+import plotly.graph_objects as go
 from os.path import join
 from functools import reduce
 import os
@@ -12,6 +13,8 @@ parsed_projects.sort()
 
 # Choose the first project as default
 project = parsed_projects[0]
+dropdown_list_projects = parsed_projects.copy()
+# dropdown_list_projects.insert(0, "All")
 
 # Load the data
 pooled_df_joint_metadata = pd.DataFrame()
@@ -66,10 +69,18 @@ app.layout = html.Div(
         html.Div(
             className="dropdown",
             children=[
-                dcc.Dropdown(parsed_projects, parsed_projects[0], id="proj-dropdown"),
-                dcc.Dropdown(cs, cs[0], id="cs-dropdown"),
-                dcc.Dropdown(species, species[0], id="species-dropdown"),
+                dcc.Dropdown(dropdown_list_projects, "Select Project", id="proj-dropdown",multi=True),
+                dcc.Dropdown(cs, "Select Carbon Source", id="cs-dropdown",multi=True),
+                dcc.Dropdown(species, "Select Species", id="species-dropdown",multi=True),
             ],
+        ),
+        html.Hr(),
+        html.Div(
+            children=[
+                html.Hr(),
+                html.H6(children="Color graph by:"),
+                dcc.Dropdown(["Carbon Source", "Species"],"Carbon Source", id="color-by"),
+            ]
         ),
         html.Div(
             className="graph",
@@ -103,9 +114,97 @@ app.layout = html.Div(
         Input(component_id="proj-dropdown", component_property="value"),
         Input(component_id="cs-dropdown", component_property="value"),
         Input(component_id="species-dropdown", component_property="value"),
+        Input("color-by", "value"),
     ],
 )
-def update_carbon_source(proj_chosen, col_chosen, species_chosen):
+def update_carbon_source(proj_chosen, chosen_carbon_sources, chosen_species,color_by):
+    if(proj_chosen == "Select Project" or proj_chosen == None):
+        return no_update
+    if(chosen_carbon_sources == "Select Carbon Source" or chosen_carbon_sources == None):
+        return no_update
+    if(chosen_species == "Select Species" or chosen_species == None):
+        return no_update
+
+    # Filter metadata based on selected carbon sources and species
+    filtered_metadata = pooled_df_joint_metadata[
+        (pooled_df_joint_metadata["species"].isin(chosen_species)) &
+        (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources))
+    ]
+
+    # Obtain the relevant linegroups from the filtered metadata
+    common_lg = filtered_metadata["linegroup"].unique()
+
+    # Choose projects based on linegroups
+    projects_chosen = pooled_df_joint_metadata[
+        pooled_df_joint_metadata["linegroup"].isin(common_lg)
+    ]["project"].unique()
+
+    # Load only selected projects
+    dfs = []
+    for project in projects_chosen:
+        dfs.append(pd.read_csv(join(parsed_data_dir, project, "measurement_data.csv")))
+
+    try:
+        df_data = pd.concat(dfs)
+    except:
+        return no_update
+    df_data = df_data[df_data["linegroup"].isin(common_lg)].sort_values(by="time")
+
+    # Merge the measurement data with the filtered metadata to include carbon source and species info
+    df_merged = df_data.merge(filtered_metadata, on="linegroup")
+
+    # Initialize figure
+    fig = go.Figure()
+
+    # Color plotting based on carbon source or species
+    if color_by == "Carbon Source":
+        colors = px.colors.qualitative.Plotly if len(chosen_carbon_sources) > 1 else ["blue"]
+        for i, cur_cs in enumerate(chosen_carbon_sources):
+            df_cs = df_merged[df_merged["carbon_source"] == cur_cs]
+            for lg_id,lg in enumerate(df_cs["linegroup"].unique()):
+                df_lg = df_cs[df_cs["linegroup"] == lg]
+                cur_metadata = pooled_df_joint_metadata[pooled_df_joint_metadata["linegroup"] == lg]
+                sp_lg = cur_metadata["species"].values[0]
+                cs_conc_lg = cur_metadata["cs_conc"].values[0]
+                fig.add_trace(
+                    go.Scatter(
+                        x=df_lg["time"],
+                        y=df_lg["measurement"],
+                        mode="lines",
+                        line=dict(color=colors[i % len(colors)]),
+                        name=f'{cur_cs}',
+                        hovertemplate=f'<b>Species:</b> {sp_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cs_conc_lg}<extra></extra>',
+                        hoverlabel={"bgcolor": "#FFFFFF"},
+                        showlegend=True if lg_id == 0 else False,
+                    )
+                )
+    elif color_by == "Species":
+        colors = px.colors.qualitative.Set2 if len(chosen_species) > 1 else ["magenta"]
+        for i, cur_sp in enumerate(chosen_species):
+            df_sp = df_merged[df_merged["species"] == cur_sp]
+            for lg_id,lg in enumerate(df_sp["linegroup"].unique()):
+                df_lg = df_sp[df_sp["linegroup"] == lg]
+                cur_metadata = pooled_df_joint_metadata[pooled_df_joint_metadata["linegroup"] == lg]
+                cs_lg = cur_metadata["carbon_source"].values[0]
+                cur_cs_conc = cur_metadata["cs_conc"].values[0]
+                fig.add_trace(
+                    go.Scatter(
+                        x=df_lg["time"],
+                        y=df_lg["measurement"],
+                        mode="lines",
+                        line=dict(color=colors[i % len(colors)]),
+                        name=f'{cur_sp}',
+                        hovertemplate=f'<b>Carbon Source:</b> {cs_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cur_cs_conc}<extra></extra>',
+                        hoverlabel={"bgcolor": "#FFFFFF"},
+                        showlegend=True if lg_id == 0 else False,
+                    )
+                )
+    table_data = (
+    filtered_metadata[to_show_in_table].drop_duplicates().to_dict("records")
+    )
+
+    return fig, table_data
+
     # Read only data for selected project, species and carbon source
     df_data = pd.read_csv(join(parsed_data_dir, proj_chosen, "measurement_data.csv"))
 
