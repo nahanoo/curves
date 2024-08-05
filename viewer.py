@@ -205,34 +205,7 @@ def update_carbon_source(proj_chosen, chosen_carbon_sources, chosen_species,colo
 
     return fig, table_data
 
-    # Read only data for selected project, species and carbon source
-    df_data = pd.read_csv(join(parsed_data_dir, proj_chosen, "measurement_data.csv"))
-
-    # Filter the appropriate linegroups and associated data
-    lg_species_chosen = pooled_df_joint_metadata[
-        pooled_df_joint_metadata["species"] == species_chosen
-    ]["linegroup"]
-    lg_carbon_source_chosen = pooled_df_joint_metadata[
-        pooled_df_joint_metadata["carbon_source"] == col_chosen
-    ]["linegroup"]
-    filtered_lg = list(set(lg_species_chosen) & set(lg_carbon_source_chosen))
-    df_data_filtered = df_data[df_data["linegroup"].isin(filtered_lg)].sort_values(
-        by="time"
-    )
-
-    # Plot the data
-    fig = px.line(df_data_filtered, x="time", y="measurement", line_group="linegroup")
-
-    # Add chosen metadata as table
-    filtered_metadata = pooled_df_joint_metadata[
-        pooled_df_joint_metadata["linegroup"].isin(filtered_lg)
-    ]
-    table_data = (
-        filtered_metadata[to_show_in_table].drop_duplicates().to_dict("records")
-    )
-    return fig, table_data
-
 
 # Run the Dash app
 if __name__ == "__main__":
-    app.run_server(debug=True, port=8051)
+    app.run_server(port=8051)

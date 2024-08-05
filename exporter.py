@@ -90,7 +90,7 @@ app.layout = html.Div(
         html.Div(
             className="graph",
             children=[
-                dcc.Graph(figure={}, id="controls-and-graph"),
+                dcc.Graph(figure={}, id="controls-and-graph", style={"height": "90vh"}),
             ],
         ),
         html.Button("Download Data", id="download-btn"),
@@ -170,7 +170,7 @@ def update_graph(value_in, color_by):
                         mode="lines",
                         line=dict(color=colors[i % len(colors)]),
                         name=f'{cur_cs}',
-                        hovertemplate=f'<b>Species:</b> {sp_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cs_conc_lg}<extra></extra>',
+                        hovertemplate=f'<b>Species:</b> {sp_lg}<br><b>Carbon Source:</b> {cur_cs}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cs_conc_lg}<extra></extra>',
                         hoverlabel={"bgcolor": "#FFFFFF"},
                         showlegend=True if lg_id == 0 else False,
                     )
@@ -191,7 +191,7 @@ def update_graph(value_in, color_by):
                         mode="lines",
                         line=dict(color=colors[i % len(colors)]),
                         name=f'{cur_sp}',
-                        hovertemplate=f'<b>Carbon Source:</b> {cs_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cur_cs_conc}<extra></extra>',
+                        hovertemplate=f'<b>Species:</b> {cur_sp}<br><b>Carbon Source:</b> {cs_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cur_cs_conc}<extra></extra>',
                         hoverlabel={"bgcolor": "#FFFFFF"},
                         showlegend=True if lg_id == 0 else False,
                     )
@@ -215,6 +215,11 @@ def download_data(n_clicks, checkbox_values):
     chosen_carbon_sources = checkbox_values[0] if checkbox_values[0] else []
     chosen_species = checkbox_values[1] if checkbox_values[1] else []
 
+    if("All" in chosen_carbon_sources):
+        chosen_carbon_sources = cs[1:]
+    if("All" in chosen_species):
+        chosen_species = species[1:]
+
     # Filter data based on checkbox selection
     filter_metadata = pooled_df_joint_metadata[
         (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources))
@@ -225,7 +230,7 @@ def download_data(n_clicks, checkbox_values):
     measurement_data_frames = []
     for project in filter_metadata["project"].unique():
         df_measurements = pd.read_csv(
-            join(parsed_data_dir, project, project + "_measurement_data.csv")
+            join(parsed_data_dir, project, "measurement_data.csv")
         )
         measurement_data_frames.append(df_measurements)
 
