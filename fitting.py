@@ -1,37 +1,80 @@
 import pandas as pd
 import numpy as np
 import scipy.optimize as optimize
-import numba
+from os.path import join
 from matplotlib import pyplot as plt
 from scipy.integrate import odeint
 from scipy.stats import linregress
 
 
-def get_df(path):
-    return pd.read_csv(path)
+def get_dfs(path):
+    meta = pd.read_csv(join(path, "metadata.csv"))
+    raw = pd.read_csv(join(path, "measurements.csv"))
+    return meta, raw
 
 
-def mask_df(df, wells):
-    return df[["time"] + wells]
+def mask_df(df, t1, t2):
+    for i, row in df.iterrows():
+        if row["time"] >= t1:
+            t0 = row["time"]
+            break
+    df = df[(df["time"] >= t1) & (df["time"] <= t2)]
+    df.loc[:, "time"] = df.loc[:, "time"] - t0
+    return df
 
 
-def get_n0(series):
+def plot_OD(df, t1=None, t2=None):
+    if (t1 is not None) | (t2 is not None):
+        df = df[(df["time"] > t1) & (df["time"] < t2)]
+    for c in df.columns[1:]:
+        plt.plot(df["time"], df[c], label=c)
+    plt.xlabel("Time [h]"), plt.ylabel("OD")
+    plt.legend()
+    plt.show()
+
+
+def get_n0_series(series):
     for value in series:
         if value > 0:
             return value
 
 
-def get_yield(series, c0):
-    return (max(series) - get_n0(series)) / c0
+def get_n0(df):
+    n0s = []
+    for c in df.columns[1:]:
+        n0s.append(get_n0_series(df[c]))
+    return np.average(n0s)
 
 
-def get_max_growth_rate(series, intervals):
-    return max(np.gradient(series) / series) * intervals
+def get_yield_series(series, c0):
+    return (max(series) - get_n0_series(series)) / c0
 
 
-def lin_regression(t, series):
-    slope, intercept, r_value, p_value, std_err = linregress(t, np.log(series))
-    return slope
+def get_yield(df, c0):
+    qs = []
+    for c in df.columns[1:]:
+        qs.append(get_yield_series(df[c], c0))
+    return np.average(qs)
+
+
+def fit_max_growth_rate(df, t1, t2, plot=True):
+    vs = []
+    df = df[(df["time"] >= t1) & (df["time"] <= t2)]
+    for c in df.columns[1:]:
+        slope, intercept, r_value, p_value, std_err = linregress(
+            df["time"].to_numpy(), np.log(df[c].to_numpy())
+        )
+        vs.append(slope)
+    v = np.average(vs)
+    if plot:
+        n0 = get_n0(df)
+        fit = [n0 * np.exp(v * t) for t in df["time"]]
+        for c in df.columns[1:]:
+            plt.plot(df["time"], df[c], label=c)
+        plt.plot(df["time"], fit, label="Model", linestyle="--")
+        plt.legend()
+        plt.show()
+    return v
 
 
 def monod(y, t, v, Km, q):
@@ -44,20 +87,6 @@ def monod(y, t, v, Km, q):
 def simulate_monod(Km, v, t, q, n, c0, n0):
     y = odeint(monod, [n0, c0], t, args=(v, Km[0], q))
     return np.sum((n - y[:, 0]) ** 2)
-
-
-def fit_yield(df, c0):
-    qs = []
-    for c in df.columns[1:]:
-        qs.append(get_yield(df[c], c0))
-    return np.average(qs)
-
-
-def fit_n0(df):
-    n0s = []
-    for c in df.columns[1:]:
-        n0s.append(get_n0(df[c]))
-    return np.average(n0s)
 
 
 def get_Km(t, series, c0, n0, v, q):
@@ -77,33 +106,15 @@ def get_Km(t, series, c0, n0, v, q):
     return Km[0]
 
 
-def plot_OD(df, t1=None, t2=None):
-    if (t1 is not None) | (t2 is not None):
-        df = df[(df["time"] > t1) & (df["time"] < t2)]
+def fit_Km(df, v, c0):
+    Kms = []
     for c in df.columns[1:]:
-        plt.plot(df["time"], df[c], label=c)
-    plt.legend()
-    plt.show()
-
-
-def fit_max_growth_rate(df, t1, t2, n0, plot=True):
-    vs = []
-    df = df[(df["time"] > t1) & (df["time"] < t2)]
-    for c in df.columns[1:]:
-        vs.append(lin_regression(df["time"], df[c].to_numpy()))
-    v = np.average(vs)
-    fit = [n0 * np.exp(v * t) for t in df["time"]]
-    if plot:
-        for c in df.columns[1:]:
-            plt.plot(df["time"], df[c], label=c)
-        plt.plot(df["time"], fit)
-        plt.legend()
-        plt.show()
-    return v
+        n0, q = get_n0_series(df[c]), get_yield_series(df[c], c0)
+        Kms.append(get_Km(df["time"].to_numpy(), df[c].to_numpy(), c0, n0, v, q))
+    return np.average(Kms)
 
 
 def plot_fit(df, Km, v, n0, q, c0):
-    # Plotting
     plt.figure(figsize=(10, 6))
     for c in df.columns[1:]:
         plt.plot(df["time"].to_numpy(), df[c], label=c)
@@ -120,43 +131,3 @@ def plot_fit(df, Km, v, n0, q, c0):
     plt.ylabel("OD")
     plt.legend()
     plt.show()
-
-
-meta = pd.read_csv(
-    "~/ChiBioFlow/data/at_oa/240808_ct_oa_plate_reader/metadata.csv", index_col=0
-)
-raw = pd.read_csv("~/ChiBioFlow/data/at_oa/240808_ct_oa_plate_reader/measurements.csv")
-df = pd.DataFrame(columns=["time", "OD", "well"])
-
-
-def ct():
-    species = "Comamonas testosteroni"
-    conc = 15
-    mask = (meta["species"] == species) & (meta["cs_conc"] == 15)
-    columns = list(set(meta[mask]["linegroup"]))
-    ct15 = raw[["time"] + columns]
-    ct15 = ct15.dropna()
-    ct15 = ct15[ct15["time"] < 30]
-    n0 = fit_n0(ct15)
-    q = fit_yield(ct15, 15)
-    v = fit_max_growth_rate(ct15, 0, 6, n0)
-    Km = get_Km(ct15["time"].to_numpy(), ct15[ct15.columns[2]], 15, 0.01, v, q)
-    plot_fit(ct15, Km, v, n0, q, 15)
-
-
-species = "Ochrobactrum anthropi"
-conc = 15
-mask = (meta["species"] == species) & (meta["cs_conc"] == 15)
-columns = list(set(meta[mask]["linegroup"]))
-ct15 = raw[["time"] + columns]
-ct15 = ct15.dropna()
-ct15 = ct15[(ct15["time"] < 30) & (ct15["time"] > 13)]
-n0 = fit_n0(ct15)
-q = fit_yield(ct15, 15)
-v = fit_max_growth_rate(ct15, 13, 18, n0, plot=False)
-Km = get_Km(ct15["time"].to_numpy(), ct15[ct15.columns[2]], 15, 0.01, v, q)
-plot_fit(ct15, Km, v, n0, q, 15)
-
-
-# Km, n0, q = fit_params(ct15, 15, v)
-# plot_max_growth_rate(ct15, 6, vline=3.5)
