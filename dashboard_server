@@ -423,6 +423,6 @@ def download_data(n_clicks, checkbox_values):
     return dcc.send_bytes(zip_buffer.getvalue(), "downloaded_data.zip")
 
 
-# # Run the Dash app
-# if __name__ == "__main__":
-#     app.run_server(debug=True)
+# Run the Dash app
+if __name__ == "__main__":
+    app.run_server(debug=True)
