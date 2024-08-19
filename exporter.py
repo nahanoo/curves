@@ -131,6 +131,11 @@ def update_graph(value_in, color_by):
         (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources))
     ]
 
+    if filtered_metadata.empty:
+        fig = go.Figure()
+        fig.update_layout(title="No data found for selected species and carbon sources")
+        return fig
+
     # Obtain the relevant linegroups from the filtered metadata
     common_lg = filtered_metadata["linegroup"].unique()
 
@@ -240,10 +245,16 @@ def download_data(n_clicks, checkbox_values):
         df_measurements["linegroup"].isin(filter_metadata["linegroup"].unique())
     ]
 
-    # Pivot data to have linegroups as columns, indexed by time
-    measurement_pivot = df_measurements.pivot_table(
-        index="time", columns="linegroup", values="measurement", aggfunc="first"
-    )
+    # Prepare data for export with time and measurement columns for each linegroup
+    df_export = pd.DataFrame()
+    lg_list = filter_metadata["linegroup"].unique()
+    for lg in lg_list:
+        time_values = df_measurements[df_measurements["linegroup"] == lg]["time"].to_numpy()
+        measurement_values = df_measurements[df_measurements["linegroup"] == lg]["measurement"].to_numpy()
+        df_export = pd.concat(
+            [df_export, pd.DataFrame({f"{lg}_time": time_values, f"{lg}_measurement": measurement_values})],
+            axis=1,
+        )
 
     # Create a Bytes buffer to hold the ZIP file
     zip_buffer = BytesIO()
@@ -251,7 +262,7 @@ def download_data(n_clicks, checkbox_values):
         # Save metadata CSV
         zf.writestr("metadata.csv", filter_metadata.to_csv(index=False))
         # Save measurement pivot CSV
-        zf.writestr("measurements.csv", measurement_pivot.to_csv())
+        zf.writestr("measurements.csv", df_export.to_csv())
 
     # Prepare buffer for download
     zip_buffer.seek(0)
