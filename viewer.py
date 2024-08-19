@@ -14,7 +14,7 @@ parsed_projects.sort()
 # Choose the first project as default
 project = parsed_projects[0]
 dropdown_list_projects = parsed_projects.copy()
-# dropdown_list_projects.insert(0, "All")
+dropdown_list_projects.insert(0, "All")
 
 # Load the data
 pooled_df_joint_metadata = pd.DataFrame()
@@ -119,11 +119,14 @@ app.layout = html.Div(
 )
 def update_carbon_source(proj_chosen, chosen_carbon_sources, chosen_species,color_by):
     if(proj_chosen == "Select Project" or proj_chosen == None):
-        return no_update
+        return go.Figure(), []
     if(chosen_carbon_sources == "Select Carbon Source" or chosen_carbon_sources == None):
-        return no_update
+        return go.Figure(), []
     if(chosen_species == "Select Species" or chosen_species == None):
-        return no_update
+        return go.Figure(), []
+    
+    if(proj_chosen == ["All"]):
+        proj_chosen = parsed_projects.copy()
 
     # Filter metadata based on selected carbon sources and species
     filtered_metadata = pooled_df_joint_metadata[
@@ -135,13 +138,20 @@ def update_carbon_source(proj_chosen, chosen_carbon_sources, chosen_species,colo
     common_lg = filtered_metadata["linegroup"].unique()
 
     # Choose projects based on linegroups
-    projects_chosen = pooled_df_joint_metadata[
+    projects_needed = pooled_df_joint_metadata[
         pooled_df_joint_metadata["linegroup"].isin(common_lg)
     ]["project"].unique()
 
+    # Get the common projects
+    projects_common = list(set(proj_chosen).intersection(set(projects_needed)))
+    if len(projects_common) == 0:
+        fig = go.Figure()
+        fig.update_layout(title="No data found")
+        return fig, []
+
     # Load only selected projects
     dfs = []
-    for project in projects_chosen:
+    for project in projects_common:
         dfs.append(pd.read_csv(join(parsed_data_dir, project, "measurement_data.csv")))
 
     try:
@@ -208,4 +218,4 @@ def update_carbon_source(proj_chosen, chosen_carbon_sources, chosen_species,colo
 
 # Run the Dash app
 if __name__ == "__main__":
-    app.run_server(port=8051)
+    app.run_server(port=8051, debug=True)
