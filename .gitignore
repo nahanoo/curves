@@ -2,3 +2,4 @@ credentials.csv
 testing_notebook.ipynb
 .DS_Store
 **/.DS_Store
+export/
