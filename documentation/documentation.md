@@ -34,12 +34,195 @@ The combined_metadata contains multiple sheets which need to be filled out.
 
 #### Metadata
 
-Contains technical information about the plate reader, and the basic conditions of the experiment. All fields are mandatory.
+The Metadata sheet contains mandatory information about the experiment.
 
-| Experimenter's Name 	| Date of Experiment (DD/MM/YY) 	| Device Used         	| Temperature 	| Shaking (Y/N) 	| CO2 (Y/N) 	|
-|---------------------	|-------------------------------	|---------------------	|-------------	|---------------	|-----------	|
-| Snorre Sulheim      	| 26.6.2024                     	| Biotek Synergy 2408 	| 28          	| Y             	| N         	|
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+</style>
+<table class="tg"><thead>
+  <tr>
+    <th class="tg-0pky">Experimenter's Name</th>
+    <th class="tg-0pky">Date of Experiment (DD/MM/YY)</th>
+    <th class="tg-0pky">Device Used</th>
+    <th class="tg-0pky">Temperature</th>
+    <th class="tg-0pky">Shaking (Y/N)</th>
+    <th class="tg-0pky">CO2 (Y/N)</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky">Snorre Sulheim</td>
+    <td class="tg-0pky">26.6.2024</td>
+    <td class="tg-0pky">Biotek Synergy 2408</td>
+    <td class="tg-0pky">28</td>
+    <td class="tg-0pky">Y</td>
+    <td class="tg-0pky">N</td>
+  </tr>
+</tbody>
+</table>
+
+#### Groups
+
+In this mandatory groups sheet, one specifies in which well the samples are located and which blanks corresponds to the samples. One sample can have multiple replicates.  
+Samples start with a sample ID which has to start with `S`, followed by the blank ID which has to start with `B`, for example `S1B1`. Wells that are not used must be left empty.
+
+In the example below, Sample 1 has three replicates in A1-A3, with corresponding blanks in H1-H3.
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+</style>
+<table class="tg"><thead>
+  <tr>
+    <th class="tg-0pky"></th>
+    <th class="tg-0pky">1</th>
+    <th class="tg-0pky">2</th>
+    <th class="tg-0pky">3</th>
+    <th class="tg-0pky">4</th>
+    <th class="tg-0pky">5</th>
+    <th class="tg-0pky">6</th>
+    <th class="tg-0pky">7</th>
+    <th class="tg-0pky">8</th>
+    <th class="tg-0pky">9</th>
+    <th class="tg-0pky">10</th>
+    <th class="tg-0pky">11</th>
+    <th class="tg-0pky">12</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky">A</td>
+    <td class="tg-0pky">S1B1</td>
+    <td class="tg-0pky">S1B1</td>
+    <td class="tg-0pky">S1B1</td>
+    <td class="tg-0pky">S2B2</td>
+    <td class="tg-0pky">S2B2</td>
+    <td class="tg-0pky">S2B2</td>
+    <td class="tg-0pky">S3B3</td>
+    <td class="tg-0pky">S3B3</td>
+    <td class="tg-0pky">S3B3</td>
+    <td class="tg-0pky">S4B4</td>
+    <td class="tg-0pky">S4B4</td>
+    <td class="tg-0pky">S4B4</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">B</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">C</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">D</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">E</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">F</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">G</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">H</td>
+    <td class="tg-0pky">B1</td>
+    <td class="tg-0pky">B1</td>
+    <td class="tg-0pky">B1</td>
+    <td class="tg-0pky">B2</td>
+    <td class="tg-0pky">B2</td>
+    <td class="tg-0pky">B2</td>
+    <td class="tg-0pky">B3</td>
+    <td class="tg-0pky">B3</td>
+    <td class="tg-0pky">B3</td>
+    <td class="tg-0pky">B4</td>
+    <td class="tg-0pky">B4</td>
+    <td class="tg-0pky">B4</td>
+  </tr>
+</tbody></table>
+
+#### Species
+
+
+
 ## Local data parsing and plotting
 
-<iframe src="screenshots/Metadata.html" style="border:none; width:100%; height:300px;"></iframe>
 
