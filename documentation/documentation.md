@@ -30,6 +30,16 @@ To submit data go to the curves `data` directory on the `NAS` located in `FAC/FB
 
 ### Filling out the combined_metadata table
 
+The combined_metadata contains multiple sheets which need to be filled out.
 
+#### Metadata
 
+Contains technical information about the plate reader, and the basic conditions of the experiment. All fields are mandatory.
+
+| Experimenter's Name 	| Date of Experiment (DD/MM/YY) 	| Device Used         	| Temperature 	| Shaking (Y/N) 	| CO2 (Y/N) 	|
+|---------------------	|-------------------------------	|---------------------	|-------------	|---------------	|-----------	|
+| Snorre Sulheim      	| 26.6.2024                     	| Biotek Synergy 2408 	| 28          	| Y             	| N         	|
 ## Local data parsing and plotting
+
+<iframe src="screenshots/Metadata.html" style="border:none; width:100%; height:300px;"></iframe>
+
