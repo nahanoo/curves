@@ -11,7 +11,7 @@ You can also use the dashboard to browse existing growth curve data for various 
 
 The code for `curves` is on [GitHub](https://github.com/nahanoo/curves). This repository is cloned in the `NAS` from where data is submitted. If you want to parse and plot data yourself without submitting it, clone the repository locally. See the section [Local data parsing and plotting](#local-data-parsing-and-plotting). 
 
-`Curves` treats each well plate as a single experiment. For every experiment a metadata file called `combined_metadata.xlsx` and a data file called `data.xlsx` are required to fill out. Multiple experiments are grouped into projects and data is parsed per project. This grouping is reflected in the file structure: 
+`Curves` treats each well plate as a single experiment. For every experiment, a metadata file called `combined_metadata.xlsx` and a data file called `data.xlsx` are required to fill out. Multiple experiments are grouped into projects and data is parsed per project. This grouping is reflected in the file structure: 
 
 ```data/
 ├─ project/
@@ -20,7 +20,7 @@ The code for `curves` is on [GitHub](https://github.com/nahanoo/curves). This re
 │  │  ├─ data.xlsx
 ```
 
-To submit data, create a new project within the `data` directory. It is suggested to include the date in the `YY/MM/DD` format a long with a short meaningful name, for example `240820_ct_oa_acetate`. Within the project folder create a new folder for your experiment with a meaningful name for example `concentration_gradient`. Within the experiment folder, copy the `combined_metadata.xlsx` and the `data.xlsx` data from the template experiment located in 
+To submit data go to the curves `data` directory on the `NAS` located in `FAC/FBM/DMF/smitri/default/D2c/curves/data`. Within the data directory, create a new folder representing the project. It is suggested to include the date in the `YY/MM/DD` format a long with a short meaningful name, for example `240820_ct_oa_acetate`. Within the project folder create a new folder for your experiment with a meaningful name, for example `concentration_gradient`. Within the experiment folder, copy the `combined_metadata.xlsx` and the `data.xlsx` data from the template experiment located in 
 ```data/
 ├─ TEMPLATE_PROJECT
 │  ├─ TEMPLATE_EXPERIMENT
