@@ -228,7 +228,7 @@ def parse_meta_to_df(meta, raw, project, plate_name):
     measurement_dfs = []
 
     for sample_name, sample in meta.items():
-        if(len(sample["blanks"]) == 0):
+        if len(sample["blanks"]) == 0:
             blank = 0
         else:
             blank = raw[sample["blanks"]].mean(axis=1)
