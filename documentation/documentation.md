@@ -34,7 +34,7 @@ The combined_metadata contains multiple sheets which need to be filled out.
 
 #### Metadata
 
-The Metadata sheet contains mandatory information about the experiment.
+The Metadata sheet contains mandatory information about the experiment.  
 
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
@@ -70,7 +70,7 @@ The Metadata sheet contains mandatory information about the experiment.
 In this mandatory groups sheet, one specifies in which well the samples are located and which blanks corresponds to the samples. One sample can have multiple replicates.  
 Samples start with a sample ID which has to start with `S`, followed by the blank ID which has to start with `B`, for example `S1B1`. Wells that are not used must be left empty.
 
-In the example below, Sample 1 has three replicates in A1-A3, with corresponding blanks in H1-H3.
+In the example below, Sample 1 has three replicates in A1-A3, with corresponding blanks in H1-H3.  
 
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
@@ -221,7 +221,154 @@ In the example below, Sample 1 has three replicates in A1-A3, with corresponding
 
 #### Species
 
+The Species sheet is used to parse which species was grown in which well. So far `curves` only works with monoculture data. For every well specified in `Group` one must define the full name of the grown bacteria. In the example below, all samples filled out before in `Groups` are Agrobacterium tumefaciens.  
 
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+</style>
+<table class="tg"><thead>
+  <tr>
+    <th class="tg-0pky"></th>
+    <th class="tg-0pky">1</th>
+    <th class="tg-0pky">2</th>
+    <th class="tg-0pky">3</th>
+    <th class="tg-0pky">4</th>
+    <th class="tg-0pky">5</th>
+    <th class="tg-0pky">6</th>
+    <th class="tg-0pky">7</th>
+    <th class="tg-0pky">8</th>
+    <th class="tg-0pky">9</th>
+    <th class="tg-0pky">10</th>
+    <th class="tg-0pky">11</th>
+    <th class="tg-0pky">12</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky">A</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+    <td class="tg-0pky">Agrobacterium tumefaciens</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">B</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">C</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">D</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">E</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">F</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">G</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">H</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky"></td>
+  </tr>
+</tbody></table>
 
 ## Local data parsing and plotting
 
