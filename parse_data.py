@@ -366,5 +366,5 @@ def main(data_dir, project):
     measurement_data.to_csv(join(save_folder, "measurement_data.csv"), index=False)
 
 
-project = "240623_growth_phenotyping"
+project = "240808_acetate_glutarate_l-glutamate"
 main("data", project)
