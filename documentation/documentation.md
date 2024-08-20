@@ -44,7 +44,6 @@ The Metadata sheet contains mandatory information about the experiment.
     <th>Temperature</th>
     <th>Shaking (Y/N)</th>
     <th>CO2 (Y/N)</th>
-    <th></th>
   </tr></thead>
 <tbody>
   <tr>
@@ -54,7 +53,6 @@ The Metadata sheet contains mandatory information about the experiment.
     <td>28</td>
     <td>Y</td>
     <td>N</td>
-    <td></td>
   </tr>
 </tbody>
 </table>
