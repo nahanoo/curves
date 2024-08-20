@@ -36,31 +36,25 @@ The combined_metadata contains multiple sheets which need to be filled out.
 
 The Metadata sheet contains mandatory information about the experiment.  
 
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
-</style>
-<table class="tg"><thead>
+<table><thead>
   <tr>
-    <th class="tg-0pky">Experimenter's Name</th>
-    <th class="tg-0pky">Date of Experiment (DD/MM/YY)</th>
-    <th class="tg-0pky">Device Used</th>
-    <th class="tg-0pky">Temperature</th>
-    <th class="tg-0pky">Shaking (Y/N)</th>
-    <th class="tg-0pky">CO2 (Y/N)</th>
+    <th>Experimenter's Name</th>
+    <th>Date of Experiment (DD/MM/YY)</th>
+    <th>Device Used</th>
+    <th>Temperature</th>
+    <th>Shaking (Y/N)</th>
+    <th>CO2 (Y/N)</th>
+    <th></th>
   </tr></thead>
 <tbody>
   <tr>
-    <td class="tg-0pky">Snorre Sulheim</td>
-    <td class="tg-0pky">26.6.2024</td>
-    <td class="tg-0pky">Biotek Synergy 2408</td>
-    <td class="tg-0pky">28</td>
-    <td class="tg-0pky">Y</td>
-    <td class="tg-0pky">N</td>
+    <td>Snorre Sulheim</td>
+    <td>26.6.2024</td>
+    <td>Biotek Synergy 2408</td>
+    <td>28</td>
+    <td>Y</td>
+    <td>N</td>
+    <td></td>
   </tr>
 </tbody>
 </table>
@@ -72,150 +66,142 @@ Samples start with a sample ID which has to start with `S`, followed by the blan
 
 In the example below, Sample 1 has three replicates in A1-A3, with corresponding blanks in H1-H3.  
 
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
-</style>
-<table class="tg"><thead>
+<<table><thead>
   <tr>
-    <th class="tg-0pky"></th>
-    <th class="tg-0pky">1</th>
-    <th class="tg-0pky">2</th>
-    <th class="tg-0pky">3</th>
-    <th class="tg-0pky">4</th>
-    <th class="tg-0pky">5</th>
-    <th class="tg-0pky">6</th>
-    <th class="tg-0pky">7</th>
-    <th class="tg-0pky">8</th>
-    <th class="tg-0pky">9</th>
-    <th class="tg-0pky">10</th>
-    <th class="tg-0pky">11</th>
-    <th class="tg-0pky">12</th>
+    <th></th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+    <th>10</th>
+    <th>11</th>
+    <th>12</th>
   </tr></thead>
 <tbody>
   <tr>
-    <td class="tg-0pky">A</td>
-    <td class="tg-0pky">S1B1</td>
-    <td class="tg-0pky">S1B1</td>
-    <td class="tg-0pky">S1B1</td>
-    <td class="tg-0pky">S2B2</td>
-    <td class="tg-0pky">S2B2</td>
-    <td class="tg-0pky">S2B2</td>
-    <td class="tg-0pky">S3B3</td>
-    <td class="tg-0pky">S3B3</td>
-    <td class="tg-0pky">S3B3</td>
-    <td class="tg-0pky">S4B4</td>
-    <td class="tg-0pky">S4B4</td>
-    <td class="tg-0pky">S4B4</td>
+    <td>A</td>
+    <td>S1B1</td>
+    <td>S1B1</td>
+    <td>S1B1</td>
+    <td>S2B2</td>
+    <td>S2B2</td>
+    <td>S2B2</td>
+    <td>S3B3</td>
+    <td>S3B3</td>
+    <td>S3B3</td>
+    <td>S4B4</td>
+    <td>S4B4</td>
+    <td>S4B4</td>
   </tr>
   <tr>
-    <td class="tg-0pky">B</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
+    <td>B</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr>
-    <td class="tg-0pky">C</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
+    <td>C</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr>
-    <td class="tg-0pky">D</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
+    <td>D</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr>
-    <td class="tg-0pky">E</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
+    <td>E</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr>
-    <td class="tg-0pky">F</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
+    <td>F</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr>
-    <td class="tg-0pky">G</td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
-    <td class="tg-0pky"></td>
+    <td>G</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr>
-    <td class="tg-0pky">H</td>
-    <td class="tg-0pky">B1</td>
-    <td class="tg-0pky">B1</td>
-    <td class="tg-0pky">B1</td>
-    <td class="tg-0pky">B2</td>
-    <td class="tg-0pky">B2</td>
-    <td class="tg-0pky">B2</td>
-    <td class="tg-0pky">B3</td>
-    <td class="tg-0pky">B3</td>
-    <td class="tg-0pky">B3</td>
-    <td class="tg-0pky">B4</td>
-    <td class="tg-0pky">B4</td>
-    <td class="tg-0pky">B4</td>
+    <td>H</td>
+    <td>B1</td>
+    <td>B1</td>
+    <td>B1</td>
+    <td>B2</td>
+    <td>B2</td>
+    <td>B2</td>
+    <td>B3</td>
+    <td>B3</td>
+    <td>B3</td>
+    <td>B4</td>
+    <td>B4</td>
+    <td>B4</td>
   </tr>
 </tbody></table>
 
