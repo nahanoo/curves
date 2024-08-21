@@ -784,7 +784,7 @@ If you used an inhibitor for your experiments, such as antibiotics, enter the na
 
 #### Comments 
 
-Here you can provide additional information for the different wells, such as protocols, observations or other useful information. 
+Here you can provide additional information for the different wells, such as protocols, observations or other useful information. If you have no comments, add None for the used wells.
 
 ### Filling out the data table
 
