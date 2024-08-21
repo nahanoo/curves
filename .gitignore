@@ -2,5 +2,7 @@ credentials.csv
 testing_notebook.ipynb
 .DS_Store
 **/.DS_Store
+notebooks/
+__pycache__/
 **/fitting_tests/*
 fitting_tests
