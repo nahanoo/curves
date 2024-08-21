@@ -349,7 +349,8 @@ The Species sheet is used to indicate which species was grown in each well. Curr
 
 #### Base media
 
-If you conduct your experiments in simple media, a base media containing all necessary resources in excess—except for the carbon source—is used. This base media is specified in this sheet. You can provide additional information in the `Comments` sheet. In the example above, the experiment was done in a simple media with M9 and HMB as base media.
+If you conduct your experiments in simple media, a base media containing all necessary resources in excess—except for the carbon source—is used. This base media is specified in this sheet. You can provide additional information in the `Comments` sheet. In the example above, the experiment was done in a simple media with M9 and HMB as base media.  
+If you did your experiments in rich media such as TSB, enter TSB.
 
 <table><thead>
   <tr>
@@ -492,6 +493,400 @@ If you conduct your experiments in simple media, a base media containing all nec
 
 #### Carbon source
 
+This sheet stores the information which carbon source was used in which well. If the experiment was done in rich media, enter the name of the rich media.
+
+<table><thead>
+  <tr>
+    <th></th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+    <th>10</th>
+    <th>11</th>
+    <th>12</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td>A</td>
+    <td>Acetate</td>
+    <td>Acetate</td>
+    <td>Acetate</td>
+    <td>Adenosine</td>
+    <td>Adenosine</td>
+    <td>Adenosine</td>
+    <td>Cysteine</td>
+    <td>Cysteine</td>
+    <td>Cysteine</td>
+    <td>D-arabinose</td>
+    <td>D-arabinose</td>
+    <td>D-arabinose</td>
+  </tr>
+  <tr>
+    <td>B</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>C</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>D</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>E</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>F</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>G</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>H</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody></table>
+
+#### CS Concnetration
+
+Provide the information about the concentration of the carbon source used in millimolar.
+If you used rich media, put the name of the rich media.
+
+<table><thead>
+  <tr>
+    <th></th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+    <th>10</th>
+    <th>11</th>
+    <th>12</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td>A</td>
+    <td>45</td>
+    <td>45</td>
+    <td>45</td>
+    <td>9</td>
+    <td>9</td>
+    <td>9</td>
+    <td>30</td>
+    <td>30</td>
+    <td>30</td>
+    <td>18</td>
+    <td>18</td>
+    <td>18</td>
+  </tr>
+  <tr>
+    <td>B</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>C</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>D</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>E</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>F</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>G</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>H</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody></table>
+
+#### Inhibitor and Inhibitor Conc
+
+If you used an inhibitor for your experiments, such as antibiotics, enter the name of the inhibitor in the according wells and state the concentration in the `Inhibitor Conc` sheet. The concentration in the `Inhibitor Conc` is in µM. If you didn't use any inhibitors, enter None in the `Inhibitor` and 0 in the `Inhibitor Conc` sheets for the wells you used. 
+
+#### Comments 
+
+Here you can provide additional information for the different wells, such as protocols, observations or other useful information. 
+
+### Filling out the data table
+
+The `data.xlsx` contains the time series OD data with time and the different wells as columns. You can find the data in this format for most plate readers if you export your data in excel.  
+Below you can find an example for three wells for the first 5 hours.  
+
+<table><thead>
+  <tr>
+    <th>Time</th>
+    <th>A1</th>
+    <th>A2</th>
+    <th>A3</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td>0:29:10</td>
+    <td>0.0983</td>
+    <td>0.1039</td>
+    <td>0.0987</td>
+  </tr>
+  <tr>
+    <td>0:59:10</td>
+    <td>0.0984</td>
+    <td>0.1037</td>
+    <td>0.099</td>
+  </tr>
+  <tr>
+    <td>1:29:10</td>
+    <td>0.098</td>
+    <td>0.103</td>
+    <td>0.0981</td>
+  </tr>
+  <tr>
+    <td>1:59:10</td>
+    <td>0.0978</td>
+    <td>0.1022</td>
+    <td>0.0976</td>
+  </tr>
+  <tr>
+    <td>2:29:10</td>
+    <td>0.0978</td>
+    <td>0.1018</td>
+    <td>0.0974</td>
+  </tr>
+  <tr>
+    <td>2:59:10</td>
+    <td>0.097</td>
+    <td>0.1012</td>
+    <td>0.0968</td>
+  </tr>
+  <tr>
+    <td>3:29:10</td>
+    <td>0.0972</td>
+    <td>0.101</td>
+    <td>0.0966</td>
+  </tr>
+  <tr>
+    <td>3:59:10</td>
+    <td>0.0974</td>
+    <td>0.1009</td>
+    <td>0.0965</td>
+  </tr>
+  <tr>
+    <td>4:29:10</td>
+    <td>0.0969</td>
+    <td>0.1007</td>
+    <td>0.0962</td>
+  </tr>
+  <tr>
+    <td>4:59:10</td>
+    <td>0.0968</td>
+    <td>0.1005</td>
+    <td>0.096</td>
+  </tr>
+</tbody></table>
+
+## Submitting data to the database
+
+For now you can contact [Prajwal Padmanabha](prajwal.padmanabha@unil.ch) or [Eric Ulrich](eric.ulrich@unil.ch) to add the data to the dashboard for visualization.
+
 ## Local data parsing and plotting
 
+If you want to parse and visualize the data yourself you can do that by cloning the [curves](https://github.com/nahanoo/curves) repository locally.
+
+```bash
+git clone https://github.com/nahanoo/curves.git
+```
+
+You fill out the `combined_metadata.xlsx` and the `data.xlsx` file as explained in the section [Adding data within the Mitri lab](#adding-data-within-the-mitri-lab) within an experiment folder belonging to a project.  
+
+```
+data/
+├─ your_project_name/
+│  ├─ your_experiment_name/
+│  │  ├─ combined_metadata.xlsx
+│  │  ├─ data.xlsx
+parse_data.py
+
+```
+
+Next execute the `parse_data.py` script with the project name as an argument.
+```python
+python parse_data.py your_project_name
+```
 
