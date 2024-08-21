@@ -2,26 +2,29 @@
 
 ## Introduction
 
-Curves let's you parse 96 well plate OD data along with relevant meta. Adding the metadata to your growth curves not only makes data analysis easier, but also increases the reproducibility of your experiments. Curves also comes with the option that your data is accessible and downloadable online via an interactive dash board allowing for quick analysis and data sharing.  
-You can also use the dashboard to browse existing growth curve data for various bacteria and carbon sources, allowing to streamline you experimental planning or deciding on conditions to test your hypothesis experimentally. 
+Curves lets you parse 96-well plate OD time series along with relevant metadata. Adding metadata to your growth curves not only simplifies data analysis but also enhances the reproducibility of your experiments. Additionally, Curves makes your data accessible and downloadable online through an interactive dashboard, enabling quick analysis and easy data sharing.  
+You can also use the dashboard to browse existing growth curve data for various bacteria and carbon sources, allowing you to streamline your experimental planning and assisting in deciding on conditions to test your hypothesis experimentally.
+Future versions will also include the ability to fit various growth models, with the goal of creating a database of experimentally determined growth parameters that can be used for theoretical modeling.
 
 ## Adding data within the Mitri lab
 
 ### Preparing data sumission
 
-The code for `curves` is on [GitHub](https://github.com/nahanoo/curves). This repository is cloned in the `NAS` from where data is submitted. If you want to parse and plot data yourself without submitting it, clone the repository locally. See the section [Local data parsing and plotting](#local-data-parsing-and-plotting). 
+The code for `curves` is on [GitHub](https://github.com/nahanoo/curves). This repository is cloned in the `NAS` from where data is submitted. If you want to parse and visualize data yourself without submitting it, clone the repository locally. See the section [Local data parsing and plotting](#local-data-parsing-and-plotting). 
 
-`Curves` treats each well plate as a single experiment. For every experiment, a metadata file called `combined_metadata.xlsx` and a data file called `data.xlsx` are required to fill out. Multiple experiments are grouped into projects and data is parsed per project. This grouping is reflected in the file structure: 
+Curves treats each 96-well plate as a single experiment. For every experiment, you are required to complete a metadata file called combined_metadata.xlsx and a data file called data.xlsx. Multiple experiments can be grouped into projects, with data parsed on a per-project basis. This grouping is reflected in the file structure as follows: 
 
-```data/
+```
+data/
 ├─ project/
 │  ├─ experiment/
 │  │  ├─ combined_metadata.xlsx
 │  │  ├─ data.xlsx
 ```
 
-To submit data go to the curves `data` directory on the `NAS` located in `FAC/FBM/DMF/smitri/default/D2c/curves/data`. Within the data directory, create a new folder representing the project. It is suggested to include the date in the `YY/MM/DD` format a long with a short meaningful name, for example `240820_ct_oa_acetate`. Within the project folder create a new folder for your experiment with a meaningful name, for example `concentration_gradient`. Within the experiment folder, copy the `combined_metadata.xlsx` and the `data.xlsx` data from the template experiment located in 
-```data/
+To submit data, go to the curves `data` directory on the `NAS` located in `FAC/FBM/DMF/smitri/default/D2c/curves/data`. Within the data directory, create a new folder representing the project. It is suggested to include the date in the `YY/MM/DD` format a long with a short meaningful name, for example `240820_ct_oa_acetate`. Within the project folder create a new folder for your experiment with a meaningful name, for example `concentration_gradient`. Within the experiment folder, copy the `combined_metadata.xlsx` and the `data.xlsx` data from the templates located in:
+```
+data/
 ├─ TEMPLATE_PROJECT
 │  ├─ TEMPLATE_EXPERIMENT
 │  │  ├─ combined_metadata.xlsx
@@ -30,11 +33,11 @@ To submit data go to the curves `data` directory on the `NAS` located in `FAC/FB
 
 ### Filling out the combined_metadata table
 
-The combined_metadata contains multiple sheets which need to be filled out.
+The `combined_metadata.xlsx` contains multiple sheets which includes all the metadata of your experiment. Below is explained how each sheet needs to be filled out.
 
 #### Metadata
 
-The Metadata sheet contains mandatory information about the experiment.  
+The Metadata sheet contains mandatory information about the technical aspects of your experiment.
 
 <table><thead>
   <tr>
@@ -59,12 +62,10 @@ The Metadata sheet contains mandatory information about the experiment.
 
 #### Groups
 
-In this mandatory groups sheet, one specifies in which well the samples are located and which blanks corresponds to the samples. One sample can have multiple replicates.  
-Samples start with a sample ID which has to start with `S`, followed by the blank ID which has to start with `B`, for example `S1B1`. Wells that are not used must be left empty.
-
+In this sheet, you specify the wells where replicates of a sample and the corresponding blanks are located. Sample IDs must start with `S`, followed by the blank ID, which must start with `B`, for example, S1B1. Replicates of the same sample share the same name. Wells that are not used must be left empty.  
 In the example below, Sample 1 has three replicates in A1-A3, with corresponding blanks in H1-H3.  
 
-<<table><thead>
+<table><thead>
   <tr>
     <th></th>
     <th>1</th>
@@ -205,7 +206,7 @@ In the example below, Sample 1 has three replicates in A1-A3, with corresponding
 
 #### Species
 
-The Species sheet is used to parse which species was grown in which well. So far `curves` only works with monoculture data. For every well specified in `Group` one must define the full name of the grown bacteria. In the example below, all samples filled out before in `Groups` are Agrobacterium tumefaciens.  
+The Species sheet is used to indicate which species was grown in each well. Currently, Curves only supports monoculture data. For every well specified in the Groups sheet, you must define the full name of the grown bacteria. In the example below, all samples previously specified in Groups are Agrobacterium tumefaciens. 
 
 <table><thead>
   <tr>
@@ -345,6 +346,151 @@ The Species sheet is used to parse which species was grown in which well. So far
     <td></td>
   </tr>
 </tbody></table>
+
+#### Base media
+
+If you conduct your experiments in simple media, a base media containing all necessary resources in excess—except for the carbon source—is used. This base media is specified in this sheet. You can provide additional information in the `Comments` sheet. In the example above, the experiment was done in a simple media with M9 and HMB as base media.
+
+<table><thead>
+  <tr>
+    <th></th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+    <th>10</th>
+    <th>11</th>
+    <th>12</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td>A</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+    <td>M9 + HMB</td>
+  </tr>
+  <tr>
+    <td>B</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>C</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>D</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>E</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>F</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>G</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>H</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody></table>
+
+#### Carbon source
 
 ## Local data parsing and plotting
 
