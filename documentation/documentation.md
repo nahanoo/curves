@@ -780,7 +780,7 @@ If you used rich media, put the name of the rich media.
 
 #### Inhibitor and Inhibitor Conc
 
-If you used an inhibitor for your experiments, such as antibiotics, enter the name of the inhibitor in the according wells and state the concentration in the `Inhibitor Conc` sheet. The concentration in the `Inhibitor Conc` is in µM. If you didn't use any inhibitors, enter None in the `Inhibitor` and 0 in the `Inhibitor Conc` sheets for the wells you used. 
+If you used inhibitors for your experiments, such as antibiotics, enter the names of the inhibitors in the according wells and state the concentration in the `Inhibitor Conc` sheet. The concentration in the `Inhibitor Conc` is in µM. If you didn't use any inhibitors, enter None in the `Inhibitor` and 0 in the `Inhibitor Conc` sheets for the wells you used. 
 
 #### Comments 
 
@@ -863,11 +863,11 @@ Below you can find an example for three wells for the first 5 hours.
 
 ## Submitting data to the database
 
-For now you can contact [Prajwal Padmanabha](prajwal.padmanabha@unil.ch) or [Eric Ulrich](eric.ulrich@unil.ch) to add the data to the dashboard for visualization and exporting. Shortly, the data will be available for exploration and exportation udder [https://curves.onrender.com/](https://curves.onrender.com/).
+For now you can contact [Prajwal Padmanabha](prajwal.padmanabha@unil.ch) or [Eric Ulrich](eric.ulrich@unil.ch) to add the data to the dashboard for visualization and exporting. Shortly after, the data will be available for exploration and exportation udder [https://curves.onrender.com/](https://curves.onrender.com/).
 
 ## Local data parsing and plotting
 
-If you want to parse and visualize the data yourself you can do that by cloning the [curves](https://github.com/nahanoo/curves) repository locally.
+If you want to parse and visualize the data yourself you can do so by cloning the [curves](https://github.com/nahanoo/curves) repository locally.
 
 ```bash
 git clone https://github.com/nahanoo/curves.git
@@ -891,7 +891,7 @@ python parse_data.py your_project_name
 ```
 The logger of the script will provide you with information about the success of the parsing and tell you if you forgot to provide certain information for a well in the `combined_metadata.xlsx` file. 
 
-The exported parsed data is located in several files under the following project.
+The exported parsed data is located in several files under the following directory.
 ```
 export/
 ├─ your_project_name/
