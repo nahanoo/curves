@@ -4,3 +4,5 @@ testing_notebook.ipynb
 **/.DS_Store
 notebooks/
 __pycache__/
+**/fitting_tests/*
+fitting_tests

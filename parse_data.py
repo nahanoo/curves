@@ -229,7 +229,10 @@ def parse_meta_to_df(meta, raw, project, plate_name):
     measurement_dfs = []
 
     for sample_name, sample in meta.items():
-        blank = raw[sample["blanks"]].mean(axis=1)
+        if len(sample["blanks"]) == 0:
+            blank = 0
+        else:
+            blank = raw[sample["blanks"]].mean(axis=1)
         for wellID in range(len(sample["samples"])):
             well = sample["samples"][wellID]
             linegroup = sample["linegroup"][wellID]

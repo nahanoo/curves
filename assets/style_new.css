@@ -6,11 +6,9 @@ body {
 }
 
 .container {
-    margin: 20px;
-    padding: 20px;
+    padding-top: 5vh;
     background-color: rgba(241, 250, 255, 0.9);
     border-radius: 10px;
-    box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
