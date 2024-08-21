@@ -12,7 +12,7 @@ Future versions will also include the ability to fit various growth models, with
 
 The code for `curves` is on [GitHub](https://github.com/nahanoo/curves). This repository is cloned in the `NAS` from where data is submitted. If you want to parse and visualize data yourself without submitting it, clone the repository locally. See the section [Local data parsing and plotting](#local-data-parsing-and-plotting). 
 
-Curves treats each 96-well plate as a single experiment. For every experiment, you are required to complete a metadata file called combined_metadata.xlsx and a data file called data.xlsx. Multiple experiments can be grouped into projects, with data parsed on a per-project basis. This grouping is reflected in the file structure as follows: 
+`Curves` treats each 96-well plate as a single experiment. For every experiment, you are required to complete a metadata file called `combined_metadata.xlsx` and a data file called `data.xlsx`. Multiple experiments can be grouped into projects, with data parsed on a per-project basis. This grouping is reflected in the file structure as follows: 
 
 ```
 data/
@@ -22,7 +22,7 @@ data/
 │  │  ├─ data.xlsx
 ```
 
-To submit data, go to the curves `data` directory on the `NAS` located in `FAC/FBM/DMF/smitri/default/D2c/curves/data`. Within the data directory, create a new folder representing the project. It is suggested to include the date in the `YY/MM/DD` format a long with a short meaningful name, for example `240820_ct_oa_acetate`. Within the project folder create a new folder for your experiment with a meaningful name, for example `concentration_gradient`. Within the experiment folder, copy the `combined_metadata.xlsx` and the `data.xlsx` data from the templates located in:
+To submit data, navigate the curves `data` directory on the `NAS` located in `FAC/FBM/DMF/smitri/default/D2c/curves/data`. Within the data directory, create a new folder for your project.  It is recommended to include the date in YY/MM/DD format along with a short, meaningful name. For example, you might name the folder `240820_at_phenotyping`. Within the project folder create a new folder for your experiment with a meaningful name, for example `acetate_adenosine_cysteine_arabinose`. Within the experiment folder, copy the `combined_metadata.xlsx` and the `data.xlsx` data from the templates located in:
 ```
 data/
 ├─ TEMPLATE_PROJECT
@@ -62,7 +62,7 @@ The Metadata sheet contains mandatory information about the technical aspects of
 
 #### Groups
 
-In this sheet, you specify the wells where replicates of a sample and the corresponding blanks are located. Sample IDs must start with `S`, followed by the blank ID, which must start with `B`, for example, S1B1. Replicates of the same sample share the same name. Wells that are not used must be left empty.  
+In this sheet, you specify in which wells replicates of a sample and the corresponding blanks are located. Sample IDs must start with `S`, followed by the blank ID, which must start with `B`, for example, S1B1. Replicates of the same sample share the same name. Wells that are not used must be left empty.  
 In the example below, Sample 1 has three replicates in A1-A3, with corresponding blanks in H1-H3.  
 
 <table><thead>
@@ -206,7 +206,7 @@ In the example below, Sample 1 has three replicates in A1-A3, with corresponding
 
 #### Species
 
-The Species sheet is used to indicate which species was grown in each well. Currently, Curves only supports monoculture data. For every well specified in the Groups sheet, you must define the full name of the grown bacteria. In the example below, all samples previously specified in Groups are Agrobacterium tumefaciens. 
+The Species sheet is used to indicate which species was grown in each well. Currently, Curves only supports monoculture data. For every well specified in the `Groups` sheet, you must define the full name of the grown bacteria. In the example below, all samples previously specified in Groups are Agrobacterium tumefaciens. 
 
 <table><thead>
   <tr>
@@ -863,7 +863,7 @@ Below you can find an example for three wells for the first 5 hours.
 
 ## Submitting data to the database
 
-For now you can contact [Prajwal Padmanabha](prajwal.padmanabha@unil.ch) or [Eric Ulrich](eric.ulrich@unil.ch) to add the data to the dashboard for visualization.
+For now you can contact [Prajwal Padmanabha](prajwal.padmanabha@unil.ch) or [Eric Ulrich](eric.ulrich@unil.ch) to add the data to the dashboard for visualization and exporting. Shortly, the data will be available for exploration and exportation udder [https://curves.onrender.com/](https://curves.onrender.com/).
 
 ## Local data parsing and plotting
 
@@ -885,8 +885,50 @@ parse_data.py
 
 ```
 
-Next execute the `parse_data.py` script with the project name as an argument.
+Next, execute the `parse_data.py` script with the project name as an argument.
 ```python
 python parse_data.py your_project_name
 ```
+The logger of the script will provide you with information about the success of the parsing and tell you if you forgot to provide certain information for a well in the `combined_metadata.xlsx` file. 
 
+The exported parsed data is located in several files under the following project.
+```
+export/
+├─ your_project_name/
+│  ├─ carbon_source_data.csv
+│  ├─ comment_data.csv
+│  ├─ inhibitor_data.csv
+│  ├─ measurement_data.csv
+│  ├─ species_data.csv
+│  ├─ run_data.csv
+│  ├─ technical_data.csv
+```
+
+This acts as a backbone for the dasbhoard and is for now a little bit clumsy to work with directly. You can join the different tables via the `linegroup` column. For now it's easier to work with the data exported from the dashboard. See also [Working with data exported via the dasboard](#working-with-data-exported-via-the-dasboard).
+
+## Local data visualization
+
+After you parsed your data, you can execute the `dashboard.py` script for data visualization.
+
+```python
+python dashboard.py
+```
+Select your project and start exploring the data in the `View Data` tab. If you switch to the `Export Data` tab, you can export the curves that are interesting for you.
+
+## Working with data exported via the dashboard
+
+After you selected the conditions that are interesting for you in the `Export Data` tab, you can download the data by clicking the Download Data button.
+This gives you a zip file containing two files, `measurements.csv` and `metadata.csv`. You can filter the Metadata according to your interests and mask the measurements. Below is a short example how this can be done.
+
+```python
+# Load dataframes
+meta = pd.read_csv(join(path, "metadata.csv"))
+raw = pd.read_csv(join(path, "measurements.csv"))
+# Filtering meta data for species and carbon source
+mask = (meta["species"] == 'Agrobacterium tumefaciens') & (meta["carbon_source"] == 'Acetate')
+# This stores all unique wells across experiment and projects that fulfill your filtering criteria. 
+columns = list(set(meta[mask]["linegroup"]))
+# Filter measurements data according to the fitler
+df_acetate =  raw[["time"] + columns].dropna()
+
+```
