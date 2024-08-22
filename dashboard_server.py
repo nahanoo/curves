@@ -132,7 +132,7 @@ app.layout = html.Div([
                     ],
                     bordered=True,
                     responsive=True,
-                    style={"width": "100vw"},
+                    style={"width": "90vw"},
                 ),
                 html.Div(
                     children=[
@@ -231,7 +231,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species,color_b
                         mode="lines",
                         line=dict(color=colors[i % len(colors)]),
                         name=f'{cur_cs}',
-                        hovertemplate=f'<b>Species:</b> {sp_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cs_conc_lg}<extra></extra><br>Project: {cur_metadata["project"].values[0]}',
+                        hovertemplate=f'<b>Species:</b> {sp_lg}<br><b>Carbon Source:</b> {cur_cs}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cs_conc_lg}<extra></extra><br>Project: {cur_metadata["project"].values[0]}',
                         hoverlabel={"bgcolor": "#FFFFFF"},
                         showlegend=True if lg_id == 0 else False,
                     )
@@ -252,7 +252,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species,color_b
                         mode="lines",
                         line=dict(color=colors[i % len(colors)]),
                         name=f'{cur_sp}',
-                        hovertemplate=f'<b>Carbon Source:</b> {cs_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cur_cs_conc}<extra></extra><br>Project: {cur_metadata["project"].values[0]}',
+                        hovertemplate=f'<b>Species:</b> {cur_sp}<br><b>Carbon Source:</b> {cs_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cur_cs_conc}<extra></extra><br>Project: {cur_metadata["project"].values[0]}',
                         hoverlabel={"bgcolor": "#FFFFFF"},
                         showlegend=True if lg_id == 0 else False,
                     )
@@ -424,7 +424,7 @@ def download_data(n_clicks, checkbox_values):
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
         zf.writestr("metadata.csv", filter_metadata.to_csv(index=False))
-        zf.writestr("measurements.csv", df_export.to_csv())
+        zf.writestr("measurements.csv", (df_export.drop(columns=["Unnamed: 0"])).to_csv())
 
     zip_buffer.seek(0)
     return dcc.send_bytes(zip_buffer.getvalue(), "downloaded_data.zip")
