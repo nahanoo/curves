@@ -123,10 +123,10 @@ app.layout = html.Div([
                 html.Hr(),
                 dbc.Table(
                     [
-                        html.Thead(html.Tr([html.Th("Carbon Source"), html.Th("Species")])),
+                        html.Thead(html.Tr([html.Th("Project"),html.Th("Carbon Source"), html.Th("Species")])),
                         html.Tbody(
                             html.Tr(
-                                [html.Td(generate_checklist(cs, "carbon_source")), html.Td(generate_checklist(species, "species"))]
+                                [html.Td(generate_checklist(dropdown_list_projects,"project_chosen")),html.Td(generate_checklist(cs, "carbon_source")), html.Td(generate_checklist(species, "species"))]
                             )
                         ),
                     ],
@@ -175,11 +175,11 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species,color_b
     if(chosen_species == "Select Species" or chosen_species == None):
         return go.Figure(), []
     
-    if(["All"] in proj_chosen):
+    if("All" in proj_chosen):
         proj_chosen = parsed_projects.copy()
-    if(["All"] in chosen_carbon_sources):
+    if("All" in chosen_carbon_sources):
         chosen_carbon_sources = cs[1:]
-    if(["All"] in chosen_species):
+    if("All" in chosen_species):
         chosen_species = species[1:]
 
     # Filter metadata based on selected carbon sources and species
@@ -231,7 +231,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species,color_b
                         mode="lines",
                         line=dict(color=colors[i % len(colors)]),
                         name=f'{cur_cs}',
-                        hovertemplate=f'<b>Species:</b> {sp_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cs_conc_lg}<extra></extra>',
+                        hovertemplate=f'<b>Species:</b> {sp_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cs_conc_lg}<extra></extra><br>Project: {cur_metadata["project"].values[0]}',
                         hoverlabel={"bgcolor": "#FFFFFF"},
                         showlegend=True if lg_id == 0 else False,
                     )
@@ -252,7 +252,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species,color_b
                         mode="lines",
                         line=dict(color=colors[i % len(colors)]),
                         name=f'{cur_sp}',
-                        hovertemplate=f'<b>Carbon Source:</b> {cs_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cur_cs_conc}<extra></extra>',
+                        hovertemplate=f'<b>Carbon Source:</b> {cs_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cur_cs_conc}<extra></extra><br>Project: {cur_metadata["project"].values[0]}',
                         hoverlabel={"bgcolor": "#FFFFFF"},
                         showlegend=True if lg_id == 0 else False,
                     )
@@ -275,10 +275,12 @@ def update_graph_export(value_in, color_by):
     if value_in is None or not any(value_in):
         return dash.no_update
 
-    chosen_carbon_sources = value_in[0] if value_in[0] else []
-    chosen_species = value_in[1] if value_in[1] else []
+    chosen_projects = value_in[0] if value_in[0] else []
+    chosen_carbon_sources = value_in[1] if value_in[1] else []
+    chosen_species = value_in[2] if value_in[2] else []
+    
 
-    if not chosen_carbon_sources or not chosen_species:
+    if not chosen_carbon_sources or not chosen_species or not chosen_projects:
         return dash.no_update
 
     # Handle "All" option if implemented
@@ -286,11 +288,14 @@ def update_graph_export(value_in, color_by):
         chosen_carbon_sources = cs[1:]  # Assuming 'cs' is your list of all carbon sources
     if "All" in chosen_species:
         chosen_species = species[1:]  # Assuming 'species' is your list of all species
+    if "All" in chosen_projects:
+        chosen_projects = parsed_projects.copy()
 
     # Filter metadata based on selected carbon sources and species
     filtered_metadata = pooled_df_joint_metadata[
         (pooled_df_joint_metadata["species"].isin(chosen_species)) &
-        (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources))
+        (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources)) &
+        (pooled_df_joint_metadata["project"].isin(chosen_projects))
     ]
 
     if filtered_metadata.empty:
@@ -337,7 +342,7 @@ def update_graph_export(value_in, color_by):
                         mode="lines",
                         line=dict(color=colors[i % len(colors)]),
                         name=f'{cur_cs}',
-                        hovertemplate=f'<b>Species:</b> {sp_lg}<br><b>Carbon Source:</b> {cur_cs}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cs_conc_lg}<extra></extra>',
+                        hovertemplate=f'<b>Species:</b> {sp_lg}<br><b>Carbon Source:</b> {cur_cs}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cs_conc_lg}<extra></extra><br>Project: {cur_metadata["project"].values[0]}',
                         hoverlabel={"bgcolor": "#FFFFFF"},
                         showlegend=True if lg_id == 0 else False,
                     )
@@ -358,7 +363,7 @@ def update_graph_export(value_in, color_by):
                         mode="lines",
                         line=dict(color=colors[i % len(colors)]),
                         name=f'{cur_sp}',
-                        hovertemplate=f'<b>Species:</b> {cur_sp}<br><b>Carbon Source:</b> {cs_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cur_cs_conc}<extra></extra>',
+                        hovertemplate=f'<b>Species:</b> {cur_sp}<br><b>Carbon Source:</b> {cs_lg}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>CS Concentration: {cur_cs_conc}<extra></extra><br>Project: {cur_metadata["project"].values[0]}',
                         hoverlabel={"bgcolor": "#FFFFFF"},
                         showlegend=True if lg_id == 0 else False,
                     )
@@ -377,17 +382,21 @@ def download_data(n_clicks, checkbox_values):
     if n_clicks is None:
         return dash.no_update
 
-    chosen_carbon_sources = checkbox_values[0] if checkbox_values[0] else []
-    chosen_species = checkbox_values[1] if checkbox_values[1] else []
+    chosen_projects = checkbox_values[0] if checkbox_values[0] else []
+    chosen_carbon_sources = checkbox_values[1] if checkbox_values[1] else []
+    chosen_species = checkbox_values[2] if checkbox_values[2] else []
 
     if "All" in chosen_carbon_sources:
         chosen_carbon_sources = cs[1:]
     if "All" in chosen_species:
         chosen_species = species[1:]
+    if "All" in chosen_projects:
+        chosen_projects = parsed_projects.copy()
 
     filter_metadata = pooled_df_joint_metadata[
         (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources)) &
-        (pooled_df_joint_metadata["species"].isin(chosen_species))
+        (pooled_df_joint_metadata["species"].isin(chosen_species)) &
+        (pooled_df_joint_metadata["project"].isin(chosen_projects))
     ]
 
     measurement_data_frames = []
