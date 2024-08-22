@@ -9,3 +9,4 @@ fitting_tests
 
 praj_testing_data/
 **/praj_testing_data/*
+fitting_praj.py
