@@ -175,29 +175,27 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species,color_b
     if(chosen_species == "Select Species" or chosen_species == None):
         return go.Figure(), []
     
-    if(proj_chosen == ["All"]):
+    if(["All"] in proj_chosen):
         proj_chosen = parsed_projects.copy()
+    if(["All"] in chosen_carbon_sources):
+        chosen_carbon_sources = cs[1:]
+    if(["All"] in chosen_species):
+        chosen_species = species[1:]
 
     # Filter metadata based on selected carbon sources and species
     filtered_metadata = pooled_df_joint_metadata[
         (pooled_df_joint_metadata["species"].isin(chosen_species)) &
-        (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources))
+        (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources)) &
+        (pooled_df_joint_metadata["project"].isin(proj_chosen))
     ]
 
     # Obtain the relevant linegroups from the filtered metadata
     common_lg = filtered_metadata["linegroup"].unique()
 
     # Choose projects based on linegroups
-    projects_needed = pooled_df_joint_metadata[
+    projects_common = pooled_df_joint_metadata[
         pooled_df_joint_metadata["linegroup"].isin(common_lg)
     ]["project"].unique()
-
-    # Get the common projects
-    projects_common = list(set(proj_chosen).intersection(set(projects_needed)))
-    if len(projects_common) == 0:
-        fig = go.Figure()
-        fig.update_layout(title="No data found")
-        return fig, []
 
     # Load only selected projects
     dfs = []
