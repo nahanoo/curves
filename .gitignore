@@ -4,3 +4,6 @@ testing_notebook.ipynb
 **/.DS_Store
 **/fitting_tests/*
 fitting_tests
+
+praj_testing_data/
+**/praj_testing_data/*
