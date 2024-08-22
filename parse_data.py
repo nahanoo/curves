@@ -1,10 +1,11 @@
 import pandas as pd
-from os.path import join, exists
+from os.path import join
 from os import walk, makedirs
 from datetime import time, timedelta
 import numpy as np
 import sys
 from logging import getLogger, DEBUG, INFO, StreamHandler, FileHandler, Formatter
+from argparse import ArgumentParser
 
 
 def create_log(name, log_file):
@@ -369,5 +370,14 @@ def main(data_dir, project):
     measurement_data.to_csv(join(save_folder, "measurement_data.csv"), index=False)
 
 
-project = "190523_shaking"
-main("data", project)
+if __name__ == "__main__":
+    parser = ArgumentParser(
+        description="""Parse your 96-well plate data with this script. 
+        Checkout https://github.com/nahanoo/curves for documentation and more information."""
+    )
+    parser.add_argument(
+        "project",
+        help="""This is the project name which corresponds to the folder name in the data directory.""",
+    )
+    args = parser.parse_args()
+    main("data", args.project)
