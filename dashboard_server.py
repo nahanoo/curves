@@ -424,7 +424,7 @@ def download_data(n_clicks, checkbox_values):
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
         zf.writestr("metadata.csv", filter_metadata.to_csv(index=False))
-        zf.writestr("measurements.csv", (df_export.drop(columns=["Unnamed: 0"])).to_csv())
+        zf.writestr("measurements.csv", df_export.to_csv())
 
     zip_buffer.seek(0)
     return dcc.send_bytes(zip_buffer.getvalue(), "downloaded_data.zip")
