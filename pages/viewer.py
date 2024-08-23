@@ -134,16 +134,16 @@ def add_trace(fig,cur_time,cur_measurement,color_dict,legendgroup,name,hovertext
 
 def generate_legend_params(cur_sp,cur_cs,color_by,plot_replicates,i,j,k,l=None):
     if(color_by == "Carbon Source"):
-        if(plot_replicates == None or plot_replicates == []):
-            showlegend= True if (k==0) else False
+        if(plot_replicates == None or len(plot_replicates) == 0):
+            showlegend= True if (i==0 and k==0) else False
         else:
-            showlegend=  True if (k==0 and l == 0) else False
+            showlegend=  True if (i==0 and k==0 and l == 0) else False
         legendgroup,name = cur_cs,cur_cs
     else:
-        if(plot_replicates == None or plot_replicates == []):
-            showlegend=  True if (i==0) else False
+        if(plot_replicates == None or len(plot_replicates) == 0):
+            showlegend=  True if (j==0 and k==0) else False
         else:
-            showlegend=  True if (i==0 and l == 0) else False
+            showlegend=  True if (j==0 and k==0 and  l == 0) else False
         legendgroup,name = cur_sp,cur_sp
     return showlegend,legendgroup,name
 
@@ -164,7 +164,7 @@ def plot_data(df_merged,filtered_metadata,color_by,plot_replicates):
                 cur_lgs = lg_replicates[i][j][k]
                 experimenter = df_merged[df_merged["linegroup"] == cur_lgs[0]]["Experimenter"].values[0]
                 hovertext = f"<b>Species:</b> {cur_sp}<br><b>Carbon Source:</b> {cur_cs}<br>CS Concentration: {cur_conc}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>Experimenter: {experimenter}<extra></extra>"
-                if(plot_replicates == None):
+                if(plot_replicates == None or len(plot_replicates) == 0):
                     showlegend,legendgroup,name = generate_legend_params(cur_sp,cur_cs,color_by,plot_replicates,i,j,k)
                     common_time = np.array([df_merged[df_merged["linegroup"] == cur_lgs[i]]["time"] for i in range(len(cur_lgs))])
                     common_measurement = np.array([df_merged[df_merged["linegroup"] == cur_lgs[i]]["measurement"] for i in range(len(cur_lgs))])
