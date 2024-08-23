@@ -53,46 +53,65 @@ layout = html.Div(
     [
         dbc.Col(
             [
-                dcc.Dropdown(
-                    options=dropdown_list_projects,
-                    placeholder="Select Project",
-                    id="proj-dropdown",
-                    multi=True,
-                ),
-                dcc.Dropdown(
-                    options=cs,
-                    placeholder="Select Carbon Source",
-                    id="cs-dropdown",
-                    multi=True,
-                ),
-                dcc.Dropdown(
-                    options=species,
-                    placeholder="Select Species",
-                    id="species-dropdown",
-                    multi=True,
+                dbc.Row(
+                    [
+                        dcc.Dropdown(
+                            options=dropdown_list_projects,
+                            placeholder="Select Project",
+                            id="proj-dropdown",
+                            multi=True,
+                        ),
+                        dcc.Dropdown(
+                            options=cs,
+                            placeholder="Select Carbon Source",
+                            id="cs-dropdown",
+                            multi=True,
+                        ),
+                        dcc.Dropdown(
+                            options=species,
+                            placeholder="Select Species",
+                            id="species-dropdown",
+                            multi=True,
+                        ),
+                    ],
+                    class_name="pb-4",
                 ),
                 dcc.Dropdown(
                     ["Carbon Source", "Species"],
                     "Carbon Source",
                     id="color-by",
                 ),
-                dcc.Graph(figure={}, id="controls-and-graph"),
-                dash_table.DataTable(
-                    id="table",
-                    columns=[
-                        {"name": i, "id": i}
-                        for i in pooled_df_joint_metadata[
-                            [
-                                "Experimenter",
-                                "Device",
-                                "Temperature",
-                                "species",
-                                "carbon_source",
-                                "cs_conc",
-                                "comments",
-                            ]
-                        ].columns
+                dbc.Row([dcc.Graph(figure={}, id="controls-and-graph")]),
+                dbc.Row(
+                    [
+                        dash_table.DataTable(
+                            id="table",
+                            columns=[
+                                {"name": i, "id": j}
+                                for i, j in zip(
+                                    [
+                                        "Experimenter",
+                                        "Device",
+                                        "Temperature",
+                                        "Species",
+                                        "Carbon source",
+                                        "Carbon concentration [mM]",
+                                        "Comments",
+                                    ],
+                                    [
+                                        "Experimenter",
+                                        "Device",
+                                        "Temperature",
+                                        "species",
+                                        "carbon_source",
+                                        "cs_conc",
+                                        "comments",
+                                    ],
+                                )
+                            ],
+                        ),
                     ],
+                    class_name="pt-4",
                 ),
             ],
         ),
@@ -238,7 +257,6 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
     ],
 )
 def update_dropwdown(chosen_project):
-    print(chosen_project)
     df = pooled_df_joint_metadata
     if chosen_project is None:
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
