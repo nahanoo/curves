@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, callback, Output, Input, dash_table, no_update
+from dash import dcc, html, callback, Output, Input, dash_table, no_update, State, ALL
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import plotly.express as px
@@ -7,6 +7,8 @@ import pandas as pd
 import os
 from os.path import join
 from functools import reduce
+import zipfile
+from io import BytesIO
 
 
 # Data directory with the subfolders for each project
@@ -82,6 +84,10 @@ layout = html.Div(
                     id="color-by",
                 ),
                 dbc.Row([dcc.Graph(figure={}, id="controls-and-graph")]),
+                dbc.Row([
+                    html.Button("Download Data", id="download-btn"),
+                    dcc.Download(id="download-data"),
+            ]),
                 dbc.Row(
                     [
                         dash_table.DataTable(
@@ -267,3 +273,70 @@ def update_dropwdown(chosen_project):
     else:
         df = df[df["project"] == chosen_project[0]]
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+
+@callback(
+    Output("download-data", "data"),
+    Input("download-btn", "n_clicks"),
+    State("proj-dropdown", "value"),
+    State("cs-dropdown", "value"),
+    State("species-dropdown", "value"),
+    prevent_initial_call=True,
+)
+def download_data(n_clicks, proj_chosen, chosen_carbon_sources, chosen_species):
+    if n_clicks is None:
+        return dash.no_update
+
+    if len(proj_chosen) == 0 or len(chosen_carbon_sources) == 0 or len(chosen_species) == 0:
+        return dash.no_update
+
+    if "All" in chosen_carbon_sources:
+        chosen_carbon_sources = cs[1:]
+    if "All" in chosen_species:
+        chosen_species = species[1:]
+    if "All" in proj_chosen:
+        proj_chosen = parsed_projects.copy()
+
+    filter_metadata = pooled_df_joint_metadata[
+        (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources))
+        & (pooled_df_joint_metadata["species"].isin(chosen_species)) &
+        (pooled_df_joint_metadata["project"].isin(proj_chosen))
+    ]
+
+    measurement_data_frames = []
+    for project in filter_metadata["project"].unique():
+        df_measurements = pd.read_csv(
+            join(parsed_data_dir, project, "measurement_data.csv")
+        )
+        measurement_data_frames.append(df_measurements)
+
+    df_measurements = pd.concat(measurement_data_frames)
+    df_measurements = df_measurements[
+        df_measurements["linegroup"].isin(filter_metadata["linegroup"].unique())
+    ]
+
+    df_export = pd.DataFrame()
+    lg_list = filter_metadata["linegroup"].unique()
+    for lg in lg_list:
+        time_values = df_measurements[df_measurements["linegroup"] == lg][
+            "time"
+        ].to_numpy()
+        measurement_values = df_measurements[df_measurements["linegroup"] == lg][
+            "measurement"
+        ].to_numpy()
+        df_export = pd.concat(
+            [
+                df_export,
+                pd.DataFrame(
+                    {f"{lg}_time": time_values, f"{lg}_measurement": measurement_values}
+                ),
+            ],
+            axis=1,
+        )
+
+    zip_buffer = BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr("metadata.csv", filter_metadata.to_csv(index=False))
+        zf.writestr("measurements.csv", df_export.to_csv())
+
+    zip_buffer.seek(0)
+    return dcc.send_bytes(zip_buffer.getvalue(), "downloaded_data.zip")

@@ -11,7 +11,7 @@ import zipfile
 from io import BytesIO
 
 
-dash.register_page(__name__, path="/export", name="Export")  # '/' is home page
+# dash.register_page(__name__, path="/export", name="Export")  # '/' is home page
 
 # Data directory with the subfolders for each project
 parsed_data_dir = "export"
