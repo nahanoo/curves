@@ -7,6 +7,7 @@ app = dash.Dash(
     use_pages=True,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
 )
+server = app.server
 sidebar = dbc.Nav(
     [
         dbc.NavLink(
