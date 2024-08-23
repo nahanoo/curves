@@ -8,7 +8,6 @@ import os
 from os.path import join
 from functools import reduce
 
-dash.register_page(__name__, path="/", name="Home")  # '/' is home page
 
 # Data directory with the subfolders for each project
 parsed_data_dir = "export"
@@ -47,25 +46,28 @@ species.sort()
 cs.insert(0, "All")
 species.insert(0, "All")
 
+dash.register_page(__name__, path="/", name="Home")  # '/' is home page
+
+
 layout = html.Div(
     [
         dbc.Col(
             [
                 dcc.Dropdown(
-                    dropdown_list_projects,
-                    "Select Project",
+                    options=dropdown_list_projects,
+                    placeholder="Select Project",
                     id="proj-dropdown",
                     multi=True,
                 ),
                 dcc.Dropdown(
-                    cs,
-                    "Select Carbon Source",
+                    options=cs,
+                    placeholder="Select Carbon Source",
                     id="cs-dropdown",
                     multi=True,
                 ),
                 dcc.Dropdown(
-                    species,
-                    "Select Species",
+                    options=species,
+                    placeholder="Select Species",
                     id="species-dropdown",
                     multi=True,
                 ),
@@ -222,4 +224,28 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
         filtered_metadata[to_show_in_table].drop_duplicates().to_dict("records")
     )
 
-    return fig, table_data
+    return (
+        fig,
+        table_data,
+    )
+
+
+@callback(
+    [Output(component_id="cs-dropdown", component_property="options")],
+    [Output(component_id="species-dropdown", component_property="options")],
+    [
+        Input("proj-dropdown", "value"),
+    ],
+)
+def update_dropwdown(chosen_project):
+    print(chosen_project)
+    df = pooled_df_joint_metadata
+    if chosen_project is None:
+        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+    if len(chosen_project) == 0:
+        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+    elif chosen_project[0] == "All":
+        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+    else:
+        df = df[df["project"] == chosen_project[0]]
+        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
