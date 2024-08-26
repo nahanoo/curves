@@ -149,10 +149,8 @@ def generate_legend_params(cur_sp,cur_cs,color_by,plot_replicates,i,j,k,l=None):
 
 def plot_data(df_merged,filtered_metadata,color_by,plot_replicates):
     species_selected, carbon_source_selected, concentrations_present, lg_replicates = restructure_metadata(filtered_metadata)
-
-    # print(species_selected, carbon_source_selected, concentrations_present, lg_replicates)
-    print(plot_replicates)
     color_palette = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728","#9467bd", "#8c564b", "#e377c2", "#7f7f7f","#bcbd22", "#17becf"]
+    
     fig = go.Figure()
     for i in range(len(species_selected)):
         cur_sp = species_selected[i]
