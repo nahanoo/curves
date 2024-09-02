@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, callback, Output, Input, dash_table, no_update
+from dash import dcc, html, callback, Output, Input, dash_table, no_update, State
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import plotly.express as px
@@ -54,68 +54,106 @@ layout = html.Div(
         dbc.Col(
             [
                 dbc.Row(
-                    [
-                        dcc.Dropdown(
-                            options=dropdown_list_projects,
-                            placeholder="Select Project",
-                            id="proj-dropdown",
-                            multi=True,
-                        ),
-                        dcc.Dropdown(
-                            options=cs,
-                            placeholder="Select Carbon Source",
-                            id="cs-dropdown",
-                            multi=True,
-                        ),
-                        dcc.Dropdown(
-                            options=species,
-                            placeholder="Select Species",
-                            id="species-dropdown",
-                            multi=True,
-                        ),
-                    ],
-                    class_name="pb-4",
+                    html.Span("Select projects and conditions:"), class_name="pb-1"
                 ),
-                dcc.Dropdown(
-                    ["Carbon Source", "Species"],
-                    "Carbon Source",
-                    id="color-by",
-                ),
-                dbc.Row([dcc.Graph(figure={}, id="controls-and-graph")]),
                 dbc.Row(
-                    [
-                        dash_table.DataTable(
-                            id="table",
-                            columns=[
-                                {"name": i, "id": j}
-                                for i, j in zip(
-                                    [
-                                        "Experimenter",
-                                        "Device",
-                                        "Temperature",
-                                        "Species",
-                                        "Carbon source",
-                                        "Carbon concentration [mM]",
-                                        "Comments",
-                                    ],
-                                    [
-                                        "Experimenter",
-                                        "Device",
-                                        "Temperature",
-                                        "species",
-                                        "carbon_source",
-                                        "cs_conc",
-                                        "comments",
-                                    ],
-                                )
-                            ],
-                        ),
-                    ],
-                    class_name="pt-4",
+                    dcc.Dropdown(
+                        options=dropdown_list_projects,
+                        placeholder="Select Project",
+                        id="proj-dropdown",
+                        multi=True,
+                    ),
+                    class_name="pb-1",
+                ),
+                dbc.Row(
+                    dcc.Dropdown(
+                        options=cs,
+                        placeholder="Select Carbon Source",
+                        id="cs-dropdown",
+                        multi=True,
+                    ),
+                    class_name="pb-1",
+                ),
+                dbc.Row(
+                    dcc.Dropdown(
+                        options=species,
+                        placeholder="Select Species",
+                        id="species-dropdown",
+                        multi=True,
+                    ),
+                    class_name="pb-1",
                 ),
             ],
+            width=3,
         ),
-    ],
+        dbc.Col(
+            [
+                dbc.Row(html.Span("Color graph by:"), class_name="pt-4"),
+                dbc.Row(
+                    dcc.Dropdown(
+                        options=["Carbon Source", "Species"],
+                        value="Carbon Source",
+                        id="color-by",
+                    ),
+                    class_name="pt-1",
+                ),
+            ],
+            width=2,
+        ),
+        dbc.Col(
+            dbc.Row(
+                [
+                    dcc.Graph(
+                        figure={},
+                        id="controls-and-graph",
+                    )
+                ]
+            ),
+            class_name="",
+            width=8,
+        ),
+        dbc.Col(
+            dbc.Row(
+                dbc.Button("Show meta data", id="collapse-button", n_clicks=0),
+            ),
+            width=1,
+            class_name="pt-3",
+        ),
+        dbc.Col(
+            dbc.Row(
+                dbc.Collapse(
+                    id="collapse-table",
+                    is_open=False,
+                    children=dash_table.DataTable(
+                        id="table",
+                        columns=[
+                            {"name": i, "id": j}
+                            for i, j in zip(
+                                [
+                                    "Experimenter",
+                                    "Device",
+                                    "Temperature",
+                                    "Species",
+                                    "Carbon source",
+                                    "Carbon concentration [mM]",
+                                    "Comments",
+                                ],
+                                [
+                                    "Experimenter",
+                                    "Device",
+                                    "Temperature",
+                                    "species",
+                                    "carbon_source",
+                                    "cs_conc",
+                                    "comments",
+                                ],
+                            )
+                        ],
+                    ),
+                )
+            ),
+        ),
+    ]
 )
 
 
@@ -133,12 +171,15 @@ layout = html.Div(
     ],
 )
 def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_by):
+    layout = go.Layout(
+        margin=dict(l=0, r=10, t=20, b=10),  # Reducing margins
+    )
     if proj_chosen == "Select Project" or proj_chosen == None:
-        return go.Figure(), []
+        return go.Figure(layout=layout), []
     if chosen_carbon_sources == "Select Carbon Source" or chosen_carbon_sources == None:
-        return go.Figure(), []
+        return go.Figure(layout=layout), []
     if chosen_species == "Select Species" or chosen_species == None:
-        return go.Figure(), []
+        return go.Figure(layout=layout), []
 
     if proj_chosen == ["All"]:
         proj_chosen = parsed_projects.copy()
@@ -160,7 +201,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
     # Get the common projects
     projects_common = list(set(proj_chosen).intersection(set(projects_needed)))
     if len(projects_common) == 0:
-        fig = go.Figure()
+        fig = go.Figure(layout=layout)
         fig.update_layout(title="No data found")
         return fig, []
 
@@ -179,7 +220,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
     df_merged = df_data.merge(filtered_metadata, on="linegroup")
 
     # Initialize figure
-    fig = go.Figure()
+    fig = go.Figure(layout=layout)
 
     # Color plotting based on carbon source or species
     if color_by == "Carbon Source":
@@ -230,6 +271,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
                         showlegend=True if lg_id == 0 else False,
                     )
                 )
+
     to_show_in_table = [
         "Experimenter",
         "Device",
@@ -267,3 +309,14 @@ def update_dropwdown(chosen_project):
     else:
         df = df[df["project"] == chosen_project[0]]
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+
+
+@callback(
+    Output("collapse-table", "is_open"),
+    [Input("collapse-button", "n_clicks")],
+    [State("collapse-table", "is_open")],
+)
+def toggle_collapse(n, is_open):
+    if n:
+        return not is_open
+    return is_open
