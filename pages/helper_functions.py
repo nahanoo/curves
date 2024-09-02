@@ -6,6 +6,18 @@ import dash_bootstrap_components as dbc
 
 # Helper functions
 
+def load_dropdown_data(pooled_df_joint_metadata):
+    cs = list(set(pooled_df_joint_metadata["carbon_source"]))
+    species = list(set(pooled_df_joint_metadata["species"]))
+    projects = list(set(pooled_df_joint_metadata["project"]))
+
+    cs.sort()
+    species.sort()
+    cs.insert(0, "All")
+    species.insert(0, "All")
+    projects.insert(0, "All")
+    return projects,cs,species
+
 def load_selected_metadata(proj_chosen, chosen_carbon_sources, chosen_species,args):
     parsed_projects,species,cs,pooled_df_joint_metadata,parsed_data_dir = args
     if "All" in proj_chosen:

@@ -1,53 +1,14 @@
 import dash
-from dash import dcc, html, callback, Output, Input, dash_table, no_update, State, ALL
+from dash import dcc, html, callback, Output, Input, State
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
-import plotly.express as px
 import pandas as pd
-import os
-from os.path import join
-from functools import reduce
 import zipfile
 from io import BytesIO
-import numpy as np
 from . import helper_functions as hf
 
-# Data directory with the subfolders for each project
-parsed_data_dir = "export"
-parsed_projects = next(os.walk(parsed_data_dir))[1]
-parsed_projects.sort()
-
-# Choose the first project as default
-project = parsed_projects[0]
-dropdown_list_projects = parsed_projects.copy()
-dropdown_list_projects.insert(0, "All")
-
-# Load the data
-pooled_df_joint_metadata = pd.DataFrame()
-for project in parsed_projects:
-    df_species = pd.read_csv(join(parsed_data_dir, project, "species_data.csv"))
-    df_carbon_source = pd.read_csv(
-        join(parsed_data_dir, project, "carbon_source_data.csv")
-    )
-    df_technical = pd.read_csv(join(parsed_data_dir, project, "technical_data.csv"))
-    df_comments = pd.read_csv(join(parsed_data_dir, project, "comment_data.csv"))
-    df_run = pd.read_csv(join(parsed_data_dir, project, "run_data.csv"))
-    df_inhibitor = pd.read_csv(join(parsed_data_dir, project, "inhibitor_data.csv"))
-
-    df_joint_technical = df_run.merge(df_technical, on="exp_ID", how="outer")
-    df_joint_metadata = reduce(
-        lambda x, y: pd.merge(x, y, on="linegroup", how="outer"),
-        [df_joint_technical, df_species, df_carbon_source, df_comments],
-    )
-    pooled_df_joint_metadata = pd.concat([pooled_df_joint_metadata, df_joint_metadata])
-
-cs = list(set(pooled_df_joint_metadata["carbon_source"]))
-species = list(set(pooled_df_joint_metadata["species"]))
-
-cs.sort()
-species.sort()
-cs.insert(0, "All")
-species.insert(0, "All")
+pooled_df_joint_metadata = pd.read_csv("metadata/pooled_df_joint_metadata.csv")
+projects,cs,species = hf.load_dropdown_data(pooled_df_joint_metadata)
 
 loaded_data = []
 loaded_metadata = []
@@ -64,7 +25,7 @@ layout = html.Div(
                 ),
                 dbc.Row(
                     dcc.Dropdown(
-                        options=dropdown_list_projects,
+                        options=projects,
                         placeholder="Select Project",
                         id="proj-dropdown",
                         multi=True,
@@ -175,6 +136,7 @@ layout = html.Div(
     ],
 )
 def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_by,plot_replicates):
+    parsed_data_dir = "export"  
     if proj_chosen == "Select Project" or proj_chosen == None:
         return go.Figure(), [],False
     if chosen_carbon_sources == "Select Carbon Source" or chosen_carbon_sources == None:
@@ -182,7 +144,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
     if chosen_species == "Select Species" or chosen_species == None:
         return go.Figure(), [],False
     
-    args = parsed_projects,species,cs,pooled_df_joint_metadata,parsed_data_dir
+    args = projects[1:],species,cs,pooled_df_joint_metadata,parsed_data_dir
     filtered_metadata = hf.load_selected_metadata(proj_chosen, chosen_carbon_sources, chosen_species,args)
     if(len(filtered_metadata) == 0):
         fig = go.Figure()
@@ -268,7 +230,6 @@ def download_data(n_clicks):
     [State("collapse-table", "is_open")],
 )
 def toggle_collapse(n, is_open):
-    print(n)
     if n == 0:
         return is_open, ["Show meta data"]
     elif n % 2 == 0:
