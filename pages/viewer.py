@@ -316,6 +316,10 @@ def update_dropwdown(chosen_project):
     [State("collapse-table", "is_open")],
 )
 def toggle_collapse(n, is_open):
-    if n:
+    print(n)
+    if n == 0:
+        return is_open, ["Show meta data"]
+    elif n % 2 == 0:
+        return not is_open, ["Show meta data"]
+    elif n % 2 != 0:
         return not is_open, ["Hide meta data"]
-    return is_open, ["Show meta data"]
