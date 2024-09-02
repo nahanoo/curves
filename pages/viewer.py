@@ -114,7 +114,12 @@ layout = html.Div(
         ),
         dbc.Col(
             dbc.Row(
-                dbc.Button("Show meta data", id="collapse-button", n_clicks=0),
+                dbc.Button(
+                    children=["Show meta data"],
+                    id="collapse-button",
+                    n_clicks=0,
+                    disabled=True,
+                ),
             ),
             width=1,
             class_name="pt-3",
@@ -129,7 +134,7 @@ layout = html.Div(
                 ),
                 class_name="pt-3",
             ),
-            width=10,
+            width=8,
         ),
     ]
 )
@@ -140,6 +145,7 @@ layout = html.Div(
     [
         Output(component_id="controls-and-graph", component_property="figure"),
         Output(component_id="collapse-table", component_property="children"),
+        Output(component_id="collapse-button", component_property="disabled"),
     ],
     [
         Input(component_id="proj-dropdown", component_property="value"),
@@ -155,11 +161,11 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
         yaxis=dict(title="OD"),  # Reducing margins
     )
     if proj_chosen == "Select Project" or proj_chosen == None:
-        return go.Figure(layout=layout), []
+        return go.Figure(layout=layout), [], True
     if chosen_carbon_sources == "Select Carbon Source" or chosen_carbon_sources == None:
-        return go.Figure(layout=layout), []
+        return go.Figure(layout=layout), [], True
     if chosen_species == "Select Species" or chosen_species == None:
-        return go.Figure(layout=layout), []
+        return go.Figure(layout=layout), [], True
 
     if proj_chosen == ["All"]:
         proj_chosen = parsed_projects.copy()
@@ -183,7 +189,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
     if len(projects_common) == 0:
         fig = go.Figure(layout=layout)
         fig.update_layout(title="No data found")
-        return fig, []
+        return fig, [], False
 
     # Load only selected projects
     dfs = []
@@ -279,6 +285,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
                 "Comments",
             ],
         ),
+        False,
     )
 
 
@@ -303,11 +310,12 @@ def update_dropwdown(chosen_project):
 
 
 @callback(
-    Output("collapse-table", "is_open"),
+    [Output("collapse-table", "is_open")],
+    [Output("collapse-button", "children")],
     [Input("collapse-button", "n_clicks")],
     [State("collapse-table", "is_open")],
 )
 def toggle_collapse(n, is_open):
     if n:
-        return not is_open
-    return is_open
+        return not is_open, ["Hide meta data"]
+    return is_open, ["Show meta data"]
