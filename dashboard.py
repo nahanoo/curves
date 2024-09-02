@@ -1,14 +1,13 @@
 import dash
 from dash import html, dcc
 import dash_bootstrap_components as dbc
+from os.path import join
 
 app = dash.Dash(
     __name__,
     use_pages=True,
-    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    external_stylesheets=[dbc.themes.BOOTSTRAP, join("assets", "style_new.css")],
 )
-server = app.server
-
 sidebar = dbc.Nav(
     [
         dbc.NavLink(
@@ -27,28 +26,14 @@ sidebar = dbc.Nav(
 
 app.layout = dbc.Container(
     [
+        dbc.Col(
+            dbc.Row(html.H1("Interactive growth curve exploration"), class_name="pt-4"),
+            class_name="ps-5",
+        ),
         dbc.Row(
             [
-                dbc.Col(
-                    [sidebar],
-                    xs=4,
-                    sm=4,
-                    md=2,
-                    lg=2,
-                    xl=2,
-                    xxl=2,
-                    class_name="ps-5 pt-4",
-                ),
-                dbc.Col(
-                    [dash.page_container],
-                    xs=8,
-                    sm=8,
-                    md=10,
-                    lg=10,
-                    xl=10,
-                    xxl=9,
-                    class_name="ps-5 pt-4",
-                ),
+                dbc.Col([sidebar], class_name="ps-5 pt-4", width=2),
+                dbc.Col([dash.page_container], class_name="ps-5 pt-4", width=8),
             ]
         ),
     ],
