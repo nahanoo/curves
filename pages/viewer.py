@@ -123,35 +123,13 @@ layout = html.Div(
             dbc.Row(
                 dbc.Collapse(
                     id="collapse-table",
+                    class_name="data-table",
                     is_open=False,
-                    children=dash_table.DataTable(
-                        id="table",
-                        columns=[
-                            {"name": i, "id": j}
-                            for i, j in zip(
-                                [
-                                    "Experimenter",
-                                    "Device",
-                                    "Temperature",
-                                    "Species",
-                                    "Carbon source",
-                                    "Carbon concentration [mM]",
-                                    "Comments",
-                                ],
-                                [
-                                    "Experimenter",
-                                    "Device",
-                                    "Temperature",
-                                    "species",
-                                    "carbon_source",
-                                    "cs_conc",
-                                    "comments",
-                                ],
-                            )
-                        ],
-                    ),
-                )
+                    children=[],
+                ),
+                class_name="pt-3",
             ),
+            width=10,
         ),
     ]
 )
@@ -161,7 +139,7 @@ layout = html.Div(
 @callback(
     [
         Output(component_id="controls-and-graph", component_property="figure"),
-        Output(component_id="table", component_property="data"),
+        Output(component_id="collapse-table", component_property="children"),
     ],
     [
         Input(component_id="proj-dropdown", component_property="value"),
@@ -172,7 +150,9 @@ layout = html.Div(
 )
 def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_by):
     layout = go.Layout(
-        margin=dict(l=0, r=10, t=20, b=10),  # Reducing margins
+        margin=dict(l=0, r=10, t=20, b=10),
+        xaxis=dict(title="Time [h]"),
+        yaxis=dict(title="OD"),  # Reducing margins
     )
     if proj_chosen == "Select Project" or proj_chosen == None:
         return go.Figure(layout=layout), []
@@ -287,7 +267,18 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
 
     return (
         fig,
-        table_data,
+        dbc.Table.from_dataframe(
+            pd.DataFrame(table_data, index=range(len(table_data))),
+            header=[
+                "Experimenter",
+                "Device",
+                "Temperature",
+                "Species",
+                "Carbon source",
+                "Concentration [mM]",
+                "Comments",
+            ],
+        ),
     )
 
 
