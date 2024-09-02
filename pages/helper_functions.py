@@ -38,6 +38,7 @@ def load_selected_metadata(proj_chosen, chosen_carbon_sources, chosen_species,ar
 
 def load_data_from_metadata(filtered_metadata,args):
     parsed_projects,species,cs,pooled_df_joint_metadata,parsed_data_dir = args
+
     # Obtain the relevant linegroups from the filtered metadata
     common_lg = filtered_metadata["linegroup"].unique()
 
@@ -76,10 +77,6 @@ def restructure_metadata(df_metadata):
             for j in range(len(carbon_source_selected)):
                 cs_filtered_metadata = species_filtered_metadata[species_filtered_metadata["carbon_source"] == carbon_source_selected[j]]
                 unique_cs_concs = cs_filtered_metadata["cs_conc"].unique()
-                # linegroup_carbon_source = cs_filtered_metadata["linegroup"].unique()
-                # projects_present = cs_filtered_metadata["project"].unique()
-                # if(len(projects_present)>1):
-                #     print("Warning: %s with %s has data from multiple projects."%(species_selected[i],carbon_source_selected[j]))
                 cur_species_concs.append(unique_cs_concs)
                 lg_conc_replicates = []
                 for k in range(len(unique_cs_concs)):
