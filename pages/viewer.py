@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, callback, Output, Input, State
+from dash import dcc, html, callback, Output, Input, State,no_update
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import pandas as pd
@@ -139,20 +139,22 @@ layout = html.Div(
 def update_graph_view(
     proj_chosen, chosen_carbon_sources, chosen_species, color_by, plot_replicates
 ):
+    fig_layout = go.Layout(
+        margin=dict(l=0, r=10, t=100, b=10),
+        xaxis=dict(title="Time [h]"),
+        yaxis=dict(title="OD"),
+    )
     parsed_data_dir = "export"
-    if proj_chosen == "Select Project" or proj_chosen == None:
-        return go.Figure(), [], False
-    if chosen_carbon_sources == "Select Carbon Source" or chosen_carbon_sources == None:
-        return go.Figure(), [], False
-    if chosen_species == "Select Species" or chosen_species == None:
-        return go.Figure(), [], False
+    if(proj_chosen == "Select Project" or proj_chosen == None or chosen_carbon_sources == "Select Carbon Source" or chosen_carbon_sources == None or chosen_species == "Select Species" or chosen_species == None):
+        fig = go.Figure(layout=fig_layout)
+        return fig, [], True
 
     args = projects[1:], species, cs, pooled_df_joint_metadata, parsed_data_dir
     filtered_metadata = utils.load_selected_metadata(
         proj_chosen, chosen_carbon_sources, chosen_species, args
     )
     if len(filtered_metadata) == 0:
-        fig = go.Figure()
+        fig = go.Figure(layout=fig_layout)
         fig.update_layout(title="No data found")
         return fig, [], False
 
@@ -163,7 +165,7 @@ def update_graph_view(
     global loaded_metadata
     loaded_metadata = filtered_metadata.copy()
 
-    fig = utils.plot_data(df_merged, filtered_metadata, color_by, plot_replicates)
+    fig = utils.plot_data(df_merged, filtered_metadata, color_by, plot_replicates,fig_layout)
     table_df = utils.show_table(filtered_metadata)
 
     return (fig, table_df, False)
@@ -183,7 +185,7 @@ def update_dropwdown(chosen_project):
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
     if len(chosen_project) == 0:
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
-    elif chosen_project[0] == "All":
+    elif "All" in chosen_project:
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
     else:
         df = df[df["project"] == chosen_project[0]]
