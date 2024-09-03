@@ -1,10 +1,11 @@
-2024-08-08 16:40:22,919 - INFO - Plate: 1_min_shaking - Detected 23 samples and 0 blanks.
-2024-08-08 16:40:22,919 - WARNING - Plate: 1_min_shaking - No blanks found in the Groups sheet.
-2024-08-08 16:40:22,923 - INFO - Plate: 1_min_shaking - Succesfully parsed Species metadata.
-2024-08-08 16:40:22,927 - INFO - Plate: 1_min_shaking - Succesfully parsed Carbon Source metadata.
-2024-08-08 16:40:22,931 - INFO - Plate: 1_min_shaking - Succesfully parsed CS Concentration metadata.
-2024-08-08 16:40:22,935 - INFO - Plate: 1_min_shaking - Succesfully parsed Base Media metadata.
-2024-08-08 16:40:22,939 - INFO - Plate: 1_min_shaking - Succesfully parsed Inhibitor metadata.
-2024-08-08 16:40:22,943 - INFO - Plate: 1_min_shaking - Succesfully parsed Inhibitor Conc metadata.
-2024-08-08 16:40:22,946 - INFO - Plate: 1_min_shaking - Succesfully parsed Comments metadata.
-2024-08-08 16:40:22,950 - INFO - Plate: 1_min_shaking - Succesfully parsed technical metadata.
+2024-09-03 12:14:59,068 - INFO - Plate: 1_min_shaking - Detected 23 samples and 0 blanks.
+2024-09-03 12:14:59,068 - WARNING - Plate: 1_min_shaking - No blanks found in the Groups sheet.
+2024-09-03 12:14:59,072 - INFO - Plate: 1_min_shaking - Succesfully parsed Species metadata.
+2024-09-03 12:14:59,076 - INFO - Plate: 1_min_shaking - Succesfully parsed Carbon Source metadata.
+2024-09-03 12:14:59,080 - INFO - Plate: 1_min_shaking - Succesfully parsed CS Concentration metadata.
+2024-09-03 12:14:59,084 - INFO - Plate: 1_min_shaking - Succesfully parsed Base Media metadata.
+2024-09-03 12:14:59,088 - INFO - Plate: 1_min_shaking - Succesfully parsed Inhibitor metadata.
+2024-09-03 12:14:59,091 - INFO - Plate: 1_min_shaking - Succesfully parsed Inhibitor Conc metadata.
+2024-09-03 12:14:59,095 - INFO - Plate: 1_min_shaking - Succesfully parsed Comments metadata.
+2024-09-03 12:14:59,099 - INFO - Plate: 1_min_shaking - Succesfully parsed technical metadata.
+2024-09-03 12:14:59,281 - INFO - Plate: 1_min_shaking - Updated metadata successfully
