@@ -1,5 +1,5 @@
 import dash
-from dash import html, dcc
+from dash import html
 import dash_bootstrap_components as dbc
 from os.path import join
 
@@ -28,7 +28,10 @@ sidebar = dbc.Nav(
 app.layout = dbc.Container(
     [
         dbc.Col(
-            dbc.Row(html.H1("Interactive growth curve exploration"), class_name="pt-4"),
+            dbc.Row(
+                html.H1("MonOD - Interactive growth curve exploration"),
+                class_name="pt-4",
+            ),
             class_name="ps-5",
         ),
         dbc.Row(

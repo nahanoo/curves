@@ -1,14 +1,14 @@
 import dash
-from dash import dcc, html, callback, Output, Input, dash_table, no_update, State
+from dash import dcc, html, callback, Output, Input, State
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import pandas as pd
 import zipfile
 from io import BytesIO
-from . import helper_functions as hf
+from . import utils
 
 pooled_df_joint_metadata = pd.read_csv("metadata/pooled_df_joint_metadata.csv")
-projects, cs, species = hf.load_dropdown_data(pooled_df_joint_metadata)
+projects, cs, species = utils.load_dropdown_data(pooled_df_joint_metadata)
 
 loaded_data = []
 loaded_metadata = []
@@ -148,7 +148,7 @@ def update_graph_view(
         return go.Figure(), [], False
 
     args = projects[1:], species, cs, pooled_df_joint_metadata, parsed_data_dir
-    filtered_metadata = hf.load_selected_metadata(
+    filtered_metadata = utils.load_selected_metadata(
         proj_chosen, chosen_carbon_sources, chosen_species, args
     )
     if len(filtered_metadata) == 0:
@@ -156,15 +156,15 @@ def update_graph_view(
         fig.update_layout(title="No data found")
         return fig, [], False
 
-    df_merged = hf.load_data_from_metadata(filtered_metadata, args)
+    df_merged = utils.load_data_from_metadata(filtered_metadata, args)
 
     global loaded_data
     loaded_data = df_merged.copy()
     global loaded_metadata
     loaded_metadata = filtered_metadata.copy()
 
-    fig = hf.plot_data(df_merged, filtered_metadata, color_by, plot_replicates)
-    table_df = hf.show_table(filtered_metadata)
+    fig = utils.plot_data(df_merged, filtered_metadata, color_by, plot_replicates)
+    table_df = utils.show_table(filtered_metadata)
 
     return (fig, table_df, False)
 
