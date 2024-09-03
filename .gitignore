@@ -11,3 +11,4 @@ praj_testing_data/
 **/praj_testing_data/*
 fitting_praj.py
 viewer_eric.py
+pool_metadata.py
