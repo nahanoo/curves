@@ -84,7 +84,7 @@ layout = html.Div(
                     class_name="pb-1",
                 ),
             ],
-            width=3,
+            width=4,
         ),
         dbc.Col(
             [
@@ -110,16 +110,18 @@ layout = html.Div(
                 ]
             ),
             class_name="",
-            width=8,
+            width=12,
         ),
         dbc.Col(
             dbc.Row(
-                dbc.Button(
-                    children=["Show meta data"],
-                    id="collapse-button",
-                    n_clicks=0,
-                    disabled=True,
-                ),
+                [
+                    dbc.Button(
+                        children=["Show meta data"],
+                        id="collapse-button",
+                        n_clicks=0,
+                        disabled=True,
+                    ),
+                ],
             ),
             width=1,
             class_name="pt-3",
@@ -316,7 +318,6 @@ def update_dropwdown(chosen_project):
     [State("collapse-table", "is_open")],
 )
 def toggle_collapse(n, is_open):
-    print(n)
     if n == 0:
         return is_open, ["Show meta data"]
     elif n % 2 == 0:
