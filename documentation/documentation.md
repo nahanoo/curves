@@ -8,8 +8,6 @@ Future versions will also include the ability to fit various growth models, with
 
 ## Adding data within the Mitri lab
 
-![test](documentation/screenshots/test.png)
-
 ### Preparing data sumission
 
 The code for `curves` is on [GitHub](https://github.com/nahanoo/curves). This repository is cloned in the `NAS` from where data is submitted. If you want to parse and visualize data yourself without submitting it, clone the repository locally. See the section [Local data parsing and plotting](#local-data-parsing-and-plotting). 
@@ -59,7 +57,7 @@ If you did your experiments in rich media such as TSB, enter TSB.
 
 This sheet stores the information which carbon source was used in which well. If the experiment was done in rich media, enter the name of the rich media.
 
-#### CS Concnetration
+#### CS Concentration
 
 Provide the information about the concentration of the carbon source used in millimolar.
 If you used rich media, put the name of the rich media.
