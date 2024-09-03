@@ -5,10 +5,10 @@ import plotly.graph_objects as go
 import pandas as pd
 import zipfile
 from io import BytesIO
-from . import helper_functions as hf
+from . import utils
 
 pooled_df_joint_metadata = pd.read_csv("metadata/pooled_df_joint_metadata.csv")
-projects,cs,species = hf.load_dropdown_data(pooled_df_joint_metadata)
+projects, cs, species = utils.load_dropdown_data(pooled_df_joint_metadata)
 
 loaded_data = []
 loaded_metadata = []
@@ -78,9 +78,7 @@ layout = html.Div(
                         figure={},
                         id="controls-and-graph",
                     ),
-
                 ]
-
             ),
             class_name="",
             width=10,
@@ -96,15 +94,17 @@ layout = html.Div(
                     ),
                     width="auto",
                     class_name="pt-3",
-                    ),
-                dbc.Col([
-                    dbc.Button("Download Data", id="download-btn"),
-                    dcc.Download(id="download-data"),],
+                ),
+                dbc.Col(
+                    [
+                        dbc.Button("Download Data", id="download-btn"),
+                        dcc.Download(id="download-data"),
+                    ],
                     width="auto",
                     class_name="pt-3",
-                    ),
-                    
-            ]),
+                ),
+            ]
+        ),
         dbc.Col(
             dbc.Row(
                 dbc.Collapse(
@@ -119,6 +119,7 @@ layout = html.Div(
         ),
     ]
 )
+
 
 # Callback for plotting the selected data
 @callback(
@@ -135,38 +136,38 @@ layout = html.Div(
         Input("plot-replicates", "value"),
     ],
 )
-def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_by,plot_replicates):
-    fig_layout = go.Layout(
-        margin=dict(l=0, r=10, t=20, b=10),
-        xaxis=dict(title="Time [h]"),
-        yaxis=dict(title="OD"),  # Reducing margins
-    )
-    parsed_data_dir = "export"  
+def update_graph_view(
+    proj_chosen, chosen_carbon_sources, chosen_species, color_by, plot_replicates
+):
+    parsed_data_dir = "export"
     if proj_chosen == "Select Project" or proj_chosen == None:
-        return go.Figure(), [],False
+        return go.Figure(), [], False
     if chosen_carbon_sources == "Select Carbon Source" or chosen_carbon_sources == None:
-        return go.Figure(), [],False
+        return go.Figure(), [], False
     if chosen_species == "Select Species" or chosen_species == None:
-        return go.Figure(), [],False
-    
-    args = projects[1:],species,cs,pooled_df_joint_metadata,parsed_data_dir
-    filtered_metadata = hf.load_selected_metadata(proj_chosen, chosen_carbon_sources, chosen_species,args)
-    if(len(filtered_metadata) == 0):
-        fig = go.Figure(layout=fig_layout)
+        return go.Figure(), [], False
+
+    args = projects[1:], species, cs, pooled_df_joint_metadata, parsed_data_dir
+    filtered_metadata = utils.load_selected_metadata(
+        proj_chosen, chosen_carbon_sources, chosen_species, args
+    )
+    if len(filtered_metadata) == 0:
+        fig = go.Figure()
         fig.update_layout(title="No data found")
-        return fig, [],False
+        return fig, [], False
 
-    df_merged = hf.load_data_from_metadata(filtered_metadata,args)
+    df_merged = utils.load_data_from_metadata(filtered_metadata, args)
 
-    global loaded_data 
+    global loaded_data
     loaded_data = df_merged.copy()
     global loaded_metadata
     loaded_metadata = filtered_metadata.copy()
 
-    fig = hf.plot_data(df_merged,filtered_metadata,color_by,plot_replicates,fig_layout)
-    table_df = hf.show_table(filtered_metadata)
+    fig = utils.plot_data(df_merged, filtered_metadata, color_by, plot_replicates)
+    table_df = utils.show_table(filtered_metadata)
 
-    return (fig,table_df,False)
+    return (fig, table_df, False)
+
 
 # Callback for updating the dropdowns in the View Data tab
 @callback(
@@ -187,6 +188,7 @@ def update_dropwdown(chosen_project):
     else:
         df = df[df["project"] == chosen_project[0]]
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+
 
 # Callback for downloading the data
 @callback(
@@ -228,6 +230,7 @@ def download_data(n_clicks):
     zip_buffer.seek(0)
     return dcc.send_bytes(zip_buffer.getvalue(), "downloaded_data.zip")
 
+
 @callback(
     [Output("collapse-table", "is_open")],
     [Output("collapse-button", "children")],
@@ -241,4 +244,3 @@ def toggle_collapse(n, is_open):
         return not is_open, ["Show meta data"]
     elif n % 2 != 0:
         return not is_open, ["Hide meta data"]
-
