@@ -105,26 +105,24 @@ def add_trace(fig,cur_time,cur_measurement,color_dict,legendgroup,name,hovertext
         )
     )
 
-def generate_legend_params(cur_sp,cur_cs,color_by,plot_replicates,i,j,k,l=None):
+def generate_legend_params(cur_sp,cur_cs,color_by,used_legendgroups):
     if(color_by == "Carbon Source"):
-        if(plot_replicates == None or len(plot_replicates) == 0):
-            showlegend= True if (i==0 and k==0) else False
-        else:
-            showlegend=  True if (i==0 and k==0 and l == 0) else False
         legendgroup,name = cur_cs,cur_cs
+        showlegend = True if cur_cs not in used_legendgroups else False
     else:
-        if(plot_replicates == None or len(plot_replicates) == 0):
-            showlegend=  True if (j==0 and k==0) else False
-        else:
-            showlegend=  True if (j==0 and k==0 and  l == 0) else False
         legendgroup,name = cur_sp,cur_sp
-    return showlegend,legendgroup,name
+        showlegend = True if cur_sp not in used_legendgroups else False
 
-def plot_data(df_merged,filtered_metadata,color_by,plot_replicates):
+    if showlegend:
+        used_legendgroups.append(legendgroup)
+    return showlegend,legendgroup,name,used_legendgroups
+
+def plot_data(df_merged,filtered_metadata,color_by,plot_replicates,fig_layout):
     projects_present,species_selected, carbon_source_selected, concentrations_present, lg_replicates = restructure_metadata(filtered_metadata)
     color_palette = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728","#9467bd", "#8c564b", "#e377c2", "#7f7f7f","#bcbd22", "#17becf"]
 
-    fig = go.Figure()
+    fig = go.Figure(layout=fig_layout)
+    used_legendgrouos = []
     for i_0 in range(len(projects_present)):
         cur_project = projects_present[i_0]
         for i in range(len(species_selected)):
@@ -136,20 +134,16 @@ def plot_data(df_merged,filtered_metadata,color_by,plot_replicates):
                     cur_conc = concentrations_present[i_0][i][j][k]
                     cur_lgs = lg_replicates[i_0][i][j][k]
                     experimenter = df_merged[df_merged["linegroup"] == cur_lgs[0]]["Experimenter"].values[0]
-                    hovertext = f"<b>Species:</b> {cur_sp}<br><b>Carbon Source:</b> {cur_cs}<br>CS Concentration: {cur_conc}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>Experimenter: {experimenter}<extra></extra>"
+                    hovertext = f"<b>Species:</b> {cur_sp}<br><b>Carbon Source:</b> {cur_cs}<br>CS Concentration: {cur_conc}<br>Time: %{{x}}<br>Measurement: %{{y}}<br>Experimenter: {experimenter}<br><Project: {cur_project}<extra></extra>"
                     if(plot_replicates == None or len(plot_replicates) == 0):
-                        showlegend,legendgroup,name = generate_legend_params(cur_sp,cur_cs,color_by,plot_replicates,i,j,k)
-                        try:
-                            common_time = np.array([df_merged[df_merged["linegroup"] == cur_lgs[i]]["time"] for i in range(len(cur_lgs))])
-                        except:
-                            print(cur_lgs)
-                            common_time = np.array([df_merged[df_merged["linegroup"] == cur_lgs[i]]["time"] for i in range(len(cur_lgs))])
+                        showlegend,legendgroup,name,used_legendgrouos = generate_legend_params(cur_sp,cur_cs,color_by,used_legendgrouos)
+                        common_time = np.array([df_merged[df_merged["linegroup"] == cur_lgs[i]]["time"] for i in range(len(cur_lgs))])
                         common_measurement = np.array([df_merged[df_merged["linegroup"] == cur_lgs[i]]["measurement"] for i in range(len(cur_lgs))])
                         add_trace(fig,common_time[0],np.mean(common_measurement,axis=0),color_dict,legendgroup,name,hovertext,showlegend)
 
                     else:
                         for l in range(len(cur_lgs)):
-                            showlegend,legendgroup,name = generate_legend_params(cur_sp,cur_cs,color_by,plot_replicates,i,j,k,l)
+                            showlegend,legendgroup,name,used_legendgrouos = generate_legend_params(cur_sp,cur_cs,color_by,used_legendgrouos)
                             cur_lg = cur_lgs[l]
                             cur_time = df_merged[df_merged["linegroup"] == cur_lg]["time"]
                             cur_measurement = df_merged[df_merged["linegroup"] == cur_lg]["measurement"]
