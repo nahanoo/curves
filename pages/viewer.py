@@ -136,6 +136,11 @@ layout = html.Div(
     ],
 )
 def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_by,plot_replicates):
+    fig_layout = go.Layout(
+        margin=dict(l=0, r=10, t=20, b=10),
+        xaxis=dict(title="Time [h]"),
+        yaxis=dict(title="OD"),  # Reducing margins
+    )
     parsed_data_dir = "export"  
     if proj_chosen == "Select Project" or proj_chosen == None:
         return go.Figure(), [],False
@@ -147,7 +152,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
     args = projects[1:],species,cs,pooled_df_joint_metadata,parsed_data_dir
     filtered_metadata = hf.load_selected_metadata(proj_chosen, chosen_carbon_sources, chosen_species,args)
     if(len(filtered_metadata) == 0):
-        fig = go.Figure()
+        fig = go.Figure(layout=fig_layout)
         fig.update_layout(title="No data found")
         return fig, [],False
 
@@ -158,7 +163,7 @@ def update_graph_view(proj_chosen, chosen_carbon_sources, chosen_species, color_
     global loaded_metadata
     loaded_metadata = filtered_metadata.copy()
 
-    fig = hf.plot_data(df_merged,filtered_metadata,color_by,plot_replicates)
+    fig = hf.plot_data(df_merged,filtered_metadata,color_by,plot_replicates,fig_layout)
     table_df = hf.show_table(filtered_metadata)
 
     return (fig,table_df,False)

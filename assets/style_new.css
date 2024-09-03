@@ -1,19 +1,13 @@
 body {
     font-family:Verdana, Geneva, Tahoma, sans-serif;
-    background-color: #f1fcff;
+    background-color: #ffffff00;
     margin: 0;
     padding: 0;
 }
 
-.container {
-    padding-top: 5vh;
-    background-color: rgba(241, 250, 255, 0.9);
-    border-radius: 10px;
-}
 
 h1 {
-    text-align: center;
-    color: #343a40;
+    text-align: left;
 }
 
 .dropdown {
@@ -21,13 +15,4 @@ h1 {
     padding-top: 10px;
     border-top: 1px solid #dee2e6;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.graph {
-    margin: 20px 0;
-}
-
-.table {
-    margin: 20px 0;
-    font-family: Helvetica, sans-serif;
 }
