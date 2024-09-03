@@ -6,4 +6,4 @@ register_page(__name__, path="/Documentation", name="Documentation")  # '/' is h
 with open("documentation/documentation.md", "r") as handle:
     docs = handle.read()
 
-layout = dcc.Markdown(docs)
+layout = dcc.Markdown(docs,dangerously_allow_html=True)
