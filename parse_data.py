@@ -210,9 +210,12 @@ def parse_raw_data(dir, logger):
         elif type(i) is str:
             hour, minute, second = i.split(":")
             ts.append(int(hour) * 60 * 60 + int(minute) * 60 + int(second))
+        # Bioreader outputs as fraction of days, this could cause issues in the future
+        elif type(i) is float:
+            ts.append(i * 86400)
         else:
             logger.error("Format of time stamps is not recognized")
-            sys.exist()
+            sys.exit()
     df["Time"] = np.array(ts) / 60 / 60
     return df
 
@@ -316,24 +319,31 @@ def parse_meta_to_df(meta, raw, project, plate_name):
         df_measurement,
     )
 
-def pool_metadata(export_dfs,logger):
+
+def pool_metadata(export_dfs, logger):
     try:
         pooled_df_joint_metadata = pd.read_csv("metadata/pooled_df_joint_metadata.csv")
         file_present = True
     except FileNotFoundError:
         pooled_df_joint_metadata = pd.DataFrame()
         file_present = False
-    df_technical,df_species,df_carbon_source,df_comments,df_run,df_inhibitor = export_dfs
+    df_technical, df_species, df_carbon_source, df_comments, df_run, df_inhibitor = (
+        export_dfs
+    )
     df_joint_technical = df_run.merge(df_technical, on="exp_ID", how="outer")
     df_joint_metadata = reduce(
         lambda x, y: pd.merge(x, y, on="linegroup", how="outer"),
-        [df_joint_technical, df_species, df_carbon_source,df_inhibitor, df_comments],
+        [df_joint_technical, df_species, df_carbon_source, df_inhibitor, df_comments],
     )
 
     new_exp_IDs = df_technical["exp_ID"].unique()
     if not file_present:
-        pooled_df_joint_metadata = pd.concat([pooled_df_joint_metadata, df_joint_metadata])
-        pooled_df_joint_metadata.to_csv("metadata/pooled_df_joint_metadata.csv", index=False)
+        pooled_df_joint_metadata = pd.concat(
+            [pooled_df_joint_metadata, df_joint_metadata]
+        )
+        pooled_df_joint_metadata.to_csv(
+            "metadata/pooled_df_joint_metadata.csv", index=False
+        )
         logger.info("Updated metadata successfully")
         return True
 
@@ -341,14 +351,21 @@ def pool_metadata(export_dfs,logger):
     to_add_exp_IDs = list(set(new_exp_IDs) - set(existing_exp_IDs))
 
     if len(to_add_exp_IDs) > 0:
-        df_joint_metadata = df_joint_metadata[df_joint_metadata["exp_ID"].isin(to_add_exp_IDs)]
-        pooled_df_joint_metadata = pd.concat([pooled_df_joint_metadata, df_joint_metadata])
-        pooled_df_joint_metadata.to_csv("metadata/pooled_df_joint_metadata.csv", index=False)
+        df_joint_metadata = df_joint_metadata[
+            df_joint_metadata["exp_ID"].isin(to_add_exp_IDs)
+        ]
+        pooled_df_joint_metadata = pd.concat(
+            [pooled_df_joint_metadata, df_joint_metadata]
+        )
+        pooled_df_joint_metadata.to_csv(
+            "metadata/pooled_df_joint_metadata.csv", index=False
+        )
         logger.info("Updated metadata successfully")
         return True
-    
+
     logger.info("No new metadata to add")
     return False
+
 
 def main(data_dir, project):
     # Main function to parse the data of the different experiments of the same project. Stores parsed tables in export directory.
@@ -403,8 +420,15 @@ def main(data_dir, project):
     comment_data.to_csv(join(save_folder, "comment_data.csv"), index=False)
     measurement_data.to_csv(join(save_folder, "measurement_data.csv"), index=False)
 
-    export_dfs = [technical_data,species_data,carbon_source_data,comment_data,run_data,inhibitor_data]
-    metadata_updated = pool_metadata(export_dfs,logger)
+    export_dfs = [
+        technical_data,
+        species_data,
+        carbon_source_data,
+        comment_data,
+        run_data,
+        inhibitor_data,
+    ]
+    metadata_updated = pool_metadata(export_dfs, logger)
 
 
 if __name__ == "__main__":

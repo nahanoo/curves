@@ -3,6 +3,7 @@ dash>=2.1.0
 dash_bootstrap_components>=1.5.0
 pandas>=2.1.0
 gunicorn
+openpyxl
 
 # Uncomment these lines to use a Postgres database. Both are needed, since in production
 # (which uses Linux) we want to install from source, so that security updates from the
