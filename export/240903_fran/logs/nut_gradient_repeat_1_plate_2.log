@@ -1,0 +1,9 @@
+2024-09-05 09:41:30,496 - INFO - Plate: nut_gradient_repeat_1_plate_2 - Detected 44 samples and 11 blanks.
+2024-09-05 09:41:30,514 - INFO - Plate: nut_gradient_repeat_1_plate_2 - Succesfully parsed Species metadata.
+2024-09-05 09:41:30,540 - INFO - Plate: nut_gradient_repeat_1_plate_2 - Succesfully parsed Carbon Source metadata.
+2024-09-05 09:41:30,559 - INFO - Plate: nut_gradient_repeat_1_plate_2 - Succesfully parsed CS Concentration metadata.
+2024-09-05 09:41:30,576 - INFO - Plate: nut_gradient_repeat_1_plate_2 - Succesfully parsed Base Media metadata.
+2024-09-05 09:41:30,594 - INFO - Plate: nut_gradient_repeat_1_plate_2 - Succesfully parsed Inhibitor metadata.
+2024-09-05 09:41:30,613 - INFO - Plate: nut_gradient_repeat_1_plate_2 - Succesfully parsed Inhibitor Conc metadata.
+2024-09-05 09:41:30,633 - INFO - Plate: nut_gradient_repeat_1_plate_2 - Succesfully parsed Comments metadata.
+2024-09-05 09:41:30,646 - INFO - Plate: nut_gradient_repeat_1_plate_2 - Succesfully parsed technical metadata.
