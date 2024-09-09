@@ -370,7 +370,7 @@ def pool_metadata(export_dfs, logger):
 
 
 def parse_project_description(data_dir, project):
-    f = join(data_dir, project, "description.md")
+    f = join(data_dir, project, "description.txt")
     if exists(f):
         with open(f, "r") as handle:
             text = handle.read()
@@ -443,7 +443,6 @@ def main(data_dir, project):
     metadata_updated = pool_metadata(export_dfs, logger)
     with open(join(save_folder, "description.txt"), "w") as handle:
         description = parse_project_description(data_dir, project)
-        print(description)
         handle.write(description)
 
 
