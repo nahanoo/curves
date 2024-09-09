@@ -1,9 +1,9 @@
-2024-09-05 09:41:30,843 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Detected 77 samples and 11 blanks.
-2024-09-05 09:41:30,862 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Species metadata.
-2024-09-05 09:41:30,887 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Carbon Source metadata.
-2024-09-05 09:41:30,903 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed CS Concentration metadata.
-2024-09-05 09:41:30,926 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Base Media metadata.
-2024-09-05 09:41:30,948 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Inhibitor metadata.
-2024-09-05 09:41:30,962 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Inhibitor Conc metadata.
-2024-09-05 09:41:30,981 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Comments metadata.
-2024-09-05 09:41:30,998 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed technical metadata.
+2024-09-09 19:54:12,069 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Detected 77 samples and 11 blanks.
+2024-09-09 19:54:12,085 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Species metadata.
+2024-09-09 19:54:12,105 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Carbon Source metadata.
+2024-09-09 19:54:12,121 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed CS Concentration metadata.
+2024-09-09 19:54:12,139 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Base Media metadata.
+2024-09-09 19:54:12,155 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Inhibitor metadata.
+2024-09-09 19:54:12,174 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Inhibitor Conc metadata.
+2024-09-09 19:54:12,189 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed Comments metadata.
+2024-09-09 19:54:12,209 - INFO - Plate: nut_gradient_repeat_2_plate_1 - Succesfully parsed technical metadata.

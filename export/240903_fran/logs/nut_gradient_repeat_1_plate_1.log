@@ -1,10 +1,10 @@
-2024-09-05 09:41:31,322 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Detected 77 samples and 11 blanks.
-2024-09-05 09:41:31,341 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Species metadata.
-2024-09-05 09:41:31,366 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Carbon Source metadata.
-2024-09-05 09:41:31,379 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed CS Concentration metadata.
-2024-09-05 09:41:31,403 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Base Media metadata.
-2024-09-05 09:41:31,419 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Inhibitor metadata.
-2024-09-05 09:41:31,441 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Inhibitor Conc metadata.
-2024-09-05 09:41:31,460 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Comments metadata.
-2024-09-05 09:41:31,479 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed technical metadata.
-2024-09-05 09:41:31,926 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Updated metadata successfully
+2024-09-09 19:54:12,524 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Detected 77 samples and 11 blanks.
+2024-09-09 19:54:12,540 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Species metadata.
+2024-09-09 19:54:12,562 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Carbon Source metadata.
+2024-09-09 19:54:12,578 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed CS Concentration metadata.
+2024-09-09 19:54:12,600 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Base Media metadata.
+2024-09-09 19:54:12,615 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Inhibitor metadata.
+2024-09-09 19:54:12,635 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Inhibitor Conc metadata.
+2024-09-09 19:54:12,650 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed Comments metadata.
+2024-09-09 19:54:12,668 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Succesfully parsed technical metadata.
+2024-09-09 19:54:13,099 - INFO - Plate: nut_gradient_repeat_1_plate_1 - Updated metadata successfully
