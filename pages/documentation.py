@@ -3,7 +3,9 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 from os.path import join
 
-register_page(__name__, path="/Documentation", name="Documentation")  # '/' is home page
+register_page(
+    __name__, path="/Documentation", name="Documentation", order=3
+)  # '/' is home page
 f_meta = join("data", "240623_growth_phenotyping", "at", "combined_metadata.xlsx")
 f_data = join("data", "240623_growth_phenotyping", "at", "data.xlsx")
 
