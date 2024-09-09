@@ -1,5 +1,5 @@
 import pandas as pd
-from os.path import join
+from os.path import join, exists
 from os import walk, makedirs
 from datetime import time, timedelta
 import numpy as np
@@ -43,6 +43,7 @@ def parse_technical_data(data_dir, project, plate_name, logger):
     )
     exp_ID = project + "_" + plate_name
     experimenter = df["Experimenter's Name"]
+    experiment_description = df["Experiment description"]
     date = df["Date of Experiment (DD/MM/YY)"]
     device = df["Device Used"]
     temperature = df["Temperature"]
@@ -52,6 +53,7 @@ def parse_technical_data(data_dir, project, plate_name, logger):
         {
             "exp_ID": exp_ID,
             "Experimenter": experimenter,
+            "Experiment description": experiment_description,
             "Date": date,
             "Device": device,
             "Temperature": temperature,
@@ -367,6 +369,16 @@ def pool_metadata(export_dfs, logger):
     return False
 
 
+def parse_project_description(data_dir, project):
+    f = join(data_dir, project, "description.md")
+    if exists(f):
+        with open(f, "r") as handle:
+            text = handle.read()
+    else:
+        text = ""
+    return text
+
+
 def main(data_dir, project):
     # Main function to parse the data of the different experiments of the same project. Stores parsed tables in export directory.
     # Creating necessary folders
@@ -429,6 +441,10 @@ def main(data_dir, project):
         inhibitor_data,
     ]
     metadata_updated = pool_metadata(export_dfs, logger)
+    with open(join(save_folder, "description.txt"), "w") as handle:
+        description = parse_project_description(data_dir, project)
+        print(description)
+        handle.write(description)
 
 
 if __name__ == "__main__":
