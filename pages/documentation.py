@@ -21,10 +21,22 @@ layout = html.Div(
         # Table of Contents
         html.Div(
             [
-                html.H2("Table of Contents"),
+                html.H2("Documentation"),
                 html.Ul(
                     [
-                        html.Li(html.A("Introduction", href="#Introduction")),
+                        html.Li(
+                            [
+                                html.A("Introduction", href="#Introduction"),
+                                html.Ul(
+                                    html.Li(
+                                        html.A(
+                                            "Code availability",
+                                            href="#Code-availability",
+                                        )
+                                    )
+                                ),
+                            ]
+                        ),
                         html.Li(
                             [
                                 html.A(
@@ -35,13 +47,13 @@ layout = html.Div(
                                     [  # Sublist for the second main section
                                         html.Li(
                                             html.A(
-                                                "Preparing data submission",
+                                                "Submitting data",
                                                 href="#Preparing-data-submission",
                                             )
                                         ),
                                         html.Li(
                                             html.A(
-                                                "Filling out the combined_metadata table",
+                                                "Filling out the combined_metadata sheet",
                                                 href="#Filling-out-the-combined-metadata-table",
                                             )
                                         ),
@@ -105,7 +117,7 @@ layout = html.Div(
                                         ),
                                         html.Li(
                                             html.A(
-                                                "Submitting data to the databasse",
+                                                "Adding the data to the web dashboard",
                                                 href="#Submitting-data-to-the-database",
                                             ),
                                         ),
@@ -132,18 +144,22 @@ layout = html.Div(
         # Content with Headers
         html.Div(
             [
-                html.H1("Introduction", id="Introduction"),
+                html.H3("Introduction", id="Introduction"),
                 dcc.Markdown("""Curves lets you parse 96-well plate OD time series along with relevant metadata. Adding metadata to your growth curves not only simplifies data analysis but also enhances the reproducibility of your experiments. Additionally, Curves makes your data accessible and downloadable online through an interactive dashboard, enabling quick analysis and easy data sharing.  
                 You can also use the dashboard to browse existing growth curve data for various bacteria and carbon sources, allowing you to streamline your experimental planning and assisting in deciding on conditions to test your hypothesis experimentally.
                 Future versions will also include the ability to fit various growth models, with the goal of creating a database of experimentally determined growth parameters that can be used for theoretical modeling.
                 """),
-                html.H1(
+                html.H4("Code availability", id="Code-availability"),
+                dcc.Markdown(
+                    """The code for `curves` is on [GitHub](https://github.com/nahanoo/curves). Bugs and issues can be submitted on the `Issues` page."""
+                ),
+                html.H3(
                     "Adding data within the Mitri lab",
                     id="Adding-data-within-the-Mitri-lab",
                 ),
-                html.H2("Preparing data submission", id="Preparing-data-submission"),
-                dcc.Markdown("""The code for `curves` is on [GitHub](https://github.com/nahanoo/curves). This repository is cloned in the `NAS` from where data is submitted. If you want to parse and visualize data yourself without submitting it, clone the repository locally. See the section [Local data parsing and plotting](#Local-data-parsing-and-plotting). 
-                `Curves` treats each 96-well plate as a single experiment. For every experiment, you are required to complete a metadata file called `combined_metadata.xlsx` and a data file called `data.xlsx`. Multiple experiments can be grouped into projects, with data parsed on a per-project basis. This grouping is reflected in the file structure as follows:"""),
+                dcc.Markdown(
+                    """The following sections explain how to add growth curve data for members of the Mitri lab. The tutorial uses the growth phenotyping data for *Agrobacterium Tumefaciens* which you can browse under the `240623_growth_phenotyping` projcet in the dashboard.  `Curves` treats each 96-well plate as a single experiment. For every experiment, you are required to complete a metadata file called `combined_metadata.xlsx` and a data file called `data.xlsx`. Experiments are grouped by projects by following a certain file structure:"""
+                ),
                 dcc.Markdown("""
                 ```bash                 
                 data/
@@ -151,81 +167,175 @@ layout = html.Div(
                 │  ├─ experiment/
                 │  │  ├─ combined_metadata.xlsx
                 │  │  ├─ data.xlsx
+                ├─ ├─ description.txt
                 ```
+                Multiple experiments can belong to the same project. `description.txt` holds a small description which is displayed in the dashboard under the project description.
                 """),
+                html.H4("Submitting data", id="Preparing-data-submission"),
                 dcc.Markdown("""
-                To submit data, navigate the curves `data` directory on the `NAS` located in `FAC/FBM/DMF/smitri/default/D2c/curves/data`. Within the data directory, create a new folder for your project.  It is recommended to include the date in YY/MM/DD format along with a short, meaningful name. For example, you might name the folder `240820_at_phenotyping`. Within the project folder create a new folder for your experiment with a meaningful name, for example `acetate_adenosine_cysteine_arabinose`. Within the experiment folder, copy the `combined_metadata.xlsx` and the `data.xlsx` data from the templates located in:"""),
-                dcc.Markdown("""
-                ```bash
-                data/
-                ├─ TEMPLATE_PROJECT
-                │  ├─ TEMPLATE_EXPERIMENT
-                │  │  ├─ combined_metadata.xlsx
-                │  │  ├─ data.xlsx
-                ``` 
-                """),
-                html.H2(
-                    "Filling out the combined_metadata",
+                To submit data, navigate the curves `data` directory on the `NAS` located in `FAC/FBM/DMF/smitri/default/D2c/curves/data`. Within the data directory, create a new folder for your project. It is recommended to include the date in YY/MM/DD format along with a short, meaningful name. In our example, the project is called `240623_growth_phenotyping`. Within the project folder, create a new folder for your experiment with a meaningful name. In our example the growth phenoytpying is for *Agrobacterium Tumefaciens* which is why we call our experiment folder `at`. Within the experiment folder, copy the `combined_metadata.xlsx` and the `data.xlsx` data from the templates located in `FAC/FBM/DMF/smitri/default/D2c/curves/data/TEMPLATE_PROJECT/TEMPLATE_EXPERIMENT/`. Copy or create the `description.txt` file in the project folder and fill out a small project description."""),
+                html.H4(
+                    "Filling out the combined_metadata sheet",
                     id="Filling-out-the-combined-metadata-table",
                 ),
                 dcc.Markdown("""
-                The `combined_metadata.xlsx` contains multiple sheets which includes all the metadata of your experiment. Below is explained how each sheet needs to be filled out.
+                The `combined_metadata.xlsx` contains multiple sheets which include all metadata of your experiment. Below is explained how each sheet needs to be filled out using the `240623_growth_phenotyping` project for *Agrobacterium Tumefaciens*.
                 """),
-                html.H3("Metadata", id="Metadata"),
-                dcc.Markdown("""The Metadata sheet contains mandatory information about the technical aspects of your experiment.
+                html.H5("Metadata", id="Metadata"),
+                dcc.Markdown("""The Metadata sheet contains mandatory information about the technical aspects of your experiment as well as a short description of your experiment.
                 """),
-                dbc.Table.from_dataframe(pd.read_excel(f_meta, sheet_name="Metadata")),
-                html.H3("Groups", id="Groups"),
-                dcc.Markdown("""In this sheet, you specify in which wells replicates of a sample and the corresponding blanks are located. Sample IDs must start with `S`, followed by the blank ID, which must start with `B`, for example, S1B1. Replicates of the same sample share the same name. Wells that are not used must be left empty.  
+                html.Details(
+                    [
+                        html.Summary(html.Span("Show table")),
+                        html.Span(
+                            dbc.Table.from_dataframe(
+                                pd.read_excel(f_meta, sheet_name="Metadata")
+                            ),
+                        ),
+                    ],
+                ),
+                html.Br(),
+                html.H5("Groups", id="Groups"),
+                dcc.Markdown("""In this sheet, you specify in which wells replicates of a sample and the corresponding blanks are located. Sample IDs must start with `S`, followed by the blank ID, which must start with `B`, for example, S1B1. Replicates of the same sample share the same name. This applies also across experiments. Wells that are not used must be left empty.  
                 In the example below, Sample 1 has three replicates in A1-A3, with corresponding blanks in H10-H12"""),
-                dbc.Table.from_dataframe(pd.read_excel(f_meta, sheet_name="Groups")),
-                html.H3("Species", id="Species"),
-                dcc.Markdown(
-                    """The Species sheet is used to indicate which species was grown in each well. Currently, Curves only supports monoculture data. For every well specified in the `Groups` sheet, you must define the full name of the grown bacteria. In the example below, all samples previously specified in Groups are Agrobacterium tumefaciens. """
+                html.Details(
+                    [
+                        html.Summary(html.Span("Show table")),
+                        html.Span(
+                            dbc.Table.from_dataframe(
+                                pd.read_excel(f_meta, sheet_name="Groups")
+                            ),
+                        ),
+                    ],
                 ),
-                html.H3("Base media", id="Base-media"),
-                dcc.Markdown("""If you conduct your experiments in simple media, a base media containing all necessary resources in excess—except for the carbon source—is used. This base media is specified in this sheet. You can provide additional information in the `Comments` sheet. In the example above, the experiment was done in a simple media with M9 and HMB as base media.  
+                html.Br(),
+                html.H5("Species", id="Species"),
+                dcc.Markdown(
+                    """The Species sheet is used to indicate which species was grown in which well. Currently, Curves only supports monoculture data."""
+                ),
+                html.Details(
+                    [
+                        html.Summary(html.Span("Show table")),
+                        html.Span(
+                            dbc.Table.from_dataframe(
+                                pd.read_excel(f_meta, sheet_name="Species")
+                            ),
+                        ),
+                    ],
+                ),
+                html.Br(),
+                html.H5("Base media", id="Base-media"),
+                dcc.Markdown("""If you conduct your experiments in simple media, a base media containing all necessary resources in excess except for the carbon source is used. This base media is specified in this sheet. You can provide additional information in the `Comments` sheet. In the example above, the experiment was done in a simple media with M9 and HMB as base media.  
                 If you did your experiments in rich media such as TSB, enter TSB."""),
-                dbc.Table.from_dataframe(
-                    pd.read_excel(f_meta, sheet_name="Base Media")
+                html.Details(
+                    [
+                        html.Summary(html.Span("Show table")),
+                        html.Span(
+                            dbc.Table.from_dataframe(
+                                pd.read_excel(f_meta, sheet_name="Base Media")
+                            ),
+                        ),
+                    ],
                 ),
-                html.H3("Carbon source", id="Carbon-source"),
+                html.Br(),
+                html.H5("Carbon source", id="Carbon-source"),
                 dcc.Markdown(
                     """This sheet stores the information which carbon source was used in which well. If the experiment was done in rich media, enter the name of the rich media."""
                 ),
-                dbc.Table.from_dataframe(
-                    pd.read_excel(f_meta, sheet_name="Carbon Source")
+                html.Details(
+                    [
+                        html.Summary(html.Span("Show table")),
+                        html.Span(
+                            dbc.Table.from_dataframe(
+                                pd.read_excel(f_meta, sheet_name="Carbon Source")
+                            ),
+                        ),
+                    ],
                 ),
-                html.H3("CS concentration", id="CS-Concentration"),
+                html.Br(),
+                html.H5("CS concentration", id="CS-Concentration"),
                 dcc.Markdown(
-                    """This sheet stores the information which carbon source was used in which well. If the experiment was done in rich media, enter the name of the rich media."""
+                    """In this sheet you enter the concentration of the carbon source you used in millimolar. If the experiment was done in rich media, enter the name of the rich media."""
                 ),
-                html.H3(
+                html.Details(
+                    [
+                        html.Summary(html.Span("Show table")),
+                        html.Span(
+                            dbc.Table.from_dataframe(
+                                pd.read_excel(f_meta, sheet_name="CS Concentration")
+                            ),
+                        ),
+                    ],
+                ),
+                html.Br(),
+                html.H5(
                     "Inhibitor and Inhibitor Conc", id="Inhibitor-and-Inhibitor-Conc"
                 ),
                 dcc.Markdown(
                     """If you used inhibitors for your experiments, such as antibiotics, enter the names of the inhibitors in the according wells and state the concentration in the `Inhibitor Conc` sheet. The concentration in the `Inhibitor Conc` is in µM. If you didn't use any inhibitors, enter None in the `Inhibitor` and 0 in the `Inhibitor Conc` sheets for the wells you used."""
                 ),
-                html.H3("Comments", id="Comments"),
+                html.Details(
+                    [
+                        html.Summary(html.Span("Show table")),
+                        html.Span(
+                            dbc.Table.from_dataframe(
+                                pd.read_excel(f_meta, sheet_name="Inhibitor")
+                            ),
+                        ),
+                    ],
+                ),
+                html.Details(
+                    [
+                        html.Summary(html.Span("Show table")),
+                        html.Span(
+                            dbc.Table.from_dataframe(
+                                pd.read_excel(f_meta, sheet_name="Inhibitor Conc")
+                            ),
+                        ),
+                    ],
+                ),
+                html.Br(),
+                html.H5("Comments", id="Comments"),
                 dcc.Markdown(
                     """Here you can provide additional information for the different wells, such as protocols, observations or other useful information. If you have no comments, add None for the used wells."""
                 ),
-                html.H2("Filling out the data table", id="Filling-out-the-data-table"),
+                html.Details(
+                    [
+                        html.Summary(html.Span("Show table")),
+                        html.Span(
+                            dbc.Table.from_dataframe(
+                                pd.read_excel(f_meta, sheet_name="Comments")
+                            ),
+                        ),
+                    ],
+                ),
+                html.Br(),
+                html.H4("Filling out the data table", id="Filling-out-the-data-table"),
                 dcc.Markdown(
                     """The `data.xlsx` contains the time series OD data with time and the different wells as columns. You can find the data in this format for most plate readers if you export your data in excel.  
                     Below you can find an example for three wells for the first 5 hours."""
                 ),
-                dbc.Table.from_dataframe(
-                    pd.read_excel(f_data)[["Time", "A1", "A2", "A3"]].loc[:9]
+                html.Details(
+                    [
+                        html.Summary(html.Span("Show table")),
+                        html.Span(
+                            dbc.Table.from_dataframe(
+                                pd.read_excel(f_data)[["Time", "A1", "A2", "A3"]].loc[
+                                    :9
+                                ]
+                            ),
+                        ),
+                    ],
                 ),
-                html.H1(
-                    "Submitting data to the database",
+                html.Br(),
+                html.H3(
+                    "Adding the data to the web dashboard",
                     id="Submitting-data-to-the-database",
                 ),
                 dcc.Markdown(
-                    """For now you can contact [Prajwal Padmanabha](https://applicationspub.unil.ch/interpub/noauth/php/Un/UnPers.php?PerNum=1262133&LanCode=8) or [Eric Ulrich](https://applicationspub.unil.ch/interpub/noauth/php/Un/UnPers.php?PerNum=1242399&LanCode=8) to add the data to the dashboard for visualization and exporting. Shortly after, the data will be available for exploration and exportation under [https://curves.onrender.com/](https://curves.onrender.com/)."""
+                    """Once you have filled out the `combined_metadata.xlsx` and the `data.xlsx` sheet and placed them in the desired experiment and project folder, you can contact one of the two administrators [Prajwal Padmanabha](https://applicationspub.unil.ch/interpub/noauth/php/Un/UnPers.php?PerNum=1262133&LanCode=8) or [Eric Ulrich](https://applicationspub.unil.ch/interpub/noauth/php/Un/UnPers.php?PerNum=1242399&LanCode=8) to add the data to the web dashboard."""
                 ),
-                html.H1(
+                html.H3(
                     "Local data parsing and plotting",
                     id="Local-data-parsing-and-plotting",
                 ),
@@ -239,18 +349,14 @@ layout = html.Div(
                 ```
                 """),
                 dcc.Markdown("""
-                You fill out the `combined_metadata.xlsx` and the `data.xlsx` file as explained in the section [Adding data within the Mitri lab](#Adding-data-within-the-Mitri-lab).
-                within an experiment folder belonging to a project. Next, execute the `parse_data.py` script with the project name as an argument."""),
+                You fill out the `combined_metadata.xlsx` and the `data.xlsx` file as explained in the section [Adding data within the Mitri lab](#Adding-data-within-the-Mitri-lab). Next, execute the `parse_data.py` script with the project name as an argument."""),
                 dcc.Markdown("""
                 ```python
                 python parse_data.py your_project_name
                 ```
                 """),
                 dcc.Markdown(
-                    """The logger of the script will provide you with information about the success of the parsing and tell you if you forgot to provide certain information for a well in the `combined_metadata.xlsx` file."""
-                ),
-                dcc.Markdown(
-                    """The exported parsed data is located in several files under the following directory."""
+                    """The logger of the script will provide you with information about the success of the parsing and tell you if you forgot to provide certain information for a well in the `combined_metadata.xlsx` file. The exported parsed data is located in several files under the following directory which is used by the dashboard for visualization."""
                 ),
                 dcc.Markdown("""
                 ```
@@ -265,22 +371,20 @@ layout = html.Div(
                 │  ├─ technical_data.csv
                 ```
                 """),
-                dcc.Markdown("""This acts as a backbone for the dasbhoard and is for now a little bit clumsy to work with directly. You can join the different tables via the `linegroup` column. For now it's easier to work with the data exported from the dashboard. See also [Working with data exported via the dasboard](#working-with-data-exported-via-the-dasboard).
-                After you parsed your data, you can execute the `dashboard.py` script for data visualization."""),
+                dcc.Markdown(
+                    """To visualize the data you can execute the `dashboard.py` script."""
+                ),
                 dcc.Markdown("""
                 ```python
                 python dashboard.py
                 ```
                 """),
-                dcc.Markdown(
-                    """Select your project and start exploring the data. You can export the data buy clicking the `Download` button."""
-                ),
-                html.H2(
+                html.H3(
                     "Working with data exported via the dashboard",
                     id="Working-with-data-exported-via-the-dashboard",
                 ),
                 dcc.Markdown(
-                    """After you selected the conditions that are interesting for you in the `Export Data` tab, you can download the data by clicking the Download Data button.
+                    """After you selected the conditions that are interesting for you, you can download the data by clicking the Download Data button.
                     This gives you a zip file containing two files, `measurements.csv` and `metadata.csv`. You can filter the Metadata according to your interests and mask the measurements. Below is a short example how this can be done."""
                 ),
                 dcc.Markdown(
@@ -291,10 +395,15 @@ layout = html.Div(
                 raw = pd.read_csv(join(path, "measurements.csv"))
                 # Filtering meta data for species and carbon source
                 mask = (meta["species"] == 'Agrobacterium tumefaciens') & (meta["carbon_source"] == 'Acetate')
-                # This stores all unique wells across experiment and projects that fulfill your filtering criteria. 
+                # This stores all wells across experiments and projects that fulfill your filtering criteria. 
                 columns = list(set(meta[mask]["linegroup"]))
-                # Filter measurements data according to the fitler
-                df_acetate =  raw[["time"] + columns].dropna()
+                dfs = []
+                for column in columns:
+                    # Create a dataframe for each well
+                    df pd.DataFrame(columns=['Time',column])
+                    # Wells across different experiments might have different timestamps
+                    df['Time'],df[column] = raw[column + '_time'], raw[column]
+                    dfs.append(df)
                 ```
                 """
                 ),
