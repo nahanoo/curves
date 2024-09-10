@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, callback, Output, Input, State,no_update
+from dash import dcc, html, callback, Output, Input, State, no_update
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import pandas as pd
@@ -12,16 +12,17 @@ projects, cs, species = utils.load_dropdown_data(pooled_df_joint_metadata)
 
 loaded_data = []
 loaded_metadata = []
-
 # Dash layout
-dash.register_page(__name__, path="/", name="Home")  # '/' is home page
+dash.register_page(__name__, path="/", name="Home", order=1)  # '/' is home page
 
 layout = html.Div(
     [
+        dbc.Row(html.H2("Data viewer"), class_name="pb-2"),
         dbc.Col(
             [
                 dbc.Row(
-                    html.Span("Select projects and conditions:"), class_name="pb-1"
+                    html.Span("Select projects and conditions:"),
+                    class_name="pb-1",
                 ),
                 dbc.Row(
                     dcc.Dropdown(
@@ -55,7 +56,7 @@ layout = html.Div(
         ),
         dbc.Col(
             [
-                dbc.Row(html.Span("Color graph by:"), class_name="pt-4"),
+                dbc.Row(html.H6("Color graph by:"), class_name="pt-4"),
                 dbc.Row(
                     dcc.Dropdown(
                         options=["Carbon Source", "Species"],
@@ -72,50 +73,58 @@ layout = html.Div(
             width=3,
         ),
         dbc.Col(
-            dbc.Row(
-                [
-                    dcc.Graph(
-                        figure={},
-                        id="controls-and-graph",
-                    ),
-                ]
+            dcc.Graph(
+                figure={},
+                id="controls-and-graph",
             ),
-            class_name="",
-            width=10,
-        ),
-        dbc.Row(
-            [
-                dbc.Col(
-                    dbc.Button(
-                        children=["Show meta data"],
-                        id="collapse-button",
-                        n_clicks=0,
-                        disabled=True,
-                    ),
-                    width="auto",
-                    class_name="pt-3",
-                ),
-                dbc.Col(
-                    [
-                        dbc.Button("Download Data", id="download-btn"),
-                        dcc.Download(id="download-data"),
-                    ],
-                    width="auto",
-                    class_name="pt-3",
-                ),
-            ]
+            width=11,
+            class_name="pb-3",
         ),
         dbc.Col(
-            dbc.Row(
-                dbc.Collapse(
-                    id="collapse-table",
-                    class_name="data-table",
-                    is_open=False,
-                    children=[],
-                ),
-                class_name="pt-3",
+            html.Details(
+                [
+                    html.Summary(html.Span("Project description")),
+                    html.Span(
+                        children=[""],
+                        id="project-description",
+                    ),
+                ],
             ),
-            width=12,
+            class_name="pb-1",
+            width=11,
+        ),
+        dbc.Col(
+            html.Details(
+                [
+                    html.Summary(html.Span("Experiment description")),
+                    html.Span(
+                        children=[""],
+                        id="experiment-description",
+                    ),
+                ],
+            ),
+            class_name="pb-1",
+            width=11,
+        ),
+        dbc.Col(
+            html.Details(
+                [
+                    html.Summary(html.Span("Metadata")),
+                    html.Span(
+                        children=[""],
+                        id="metadata-table",
+                    ),
+                ],
+            ),
+            width=11,
+        ),
+        dbc.Col(
+            [
+                dbc.Button("Download Data", id="download-btn"),
+                dcc.Download(id="download-data"),
+            ],
+            class_name="pt-3 pb-4",
+            width="auto",
         ),
     ]
 )
@@ -125,8 +134,9 @@ layout = html.Div(
 @callback(
     [
         Output(component_id="controls-and-graph", component_property="figure"),
-        Output(component_id="collapse-table", component_property="children"),
-        Output(component_id="collapse-button", component_property="disabled"),
+        Output(component_id="metadata-table", component_property="children"),
+        Output(component_id="project-description", component_property="children"),
+        Output(component_id="experiment-description", component_property="children"),
     ],
     [
         Input(component_id="proj-dropdown", component_property="value"),
@@ -140,14 +150,21 @@ def update_graph_view(
     proj_chosen, chosen_carbon_sources, chosen_species, color_by, plot_replicates
 ):
     fig_layout = go.Layout(
-        margin=dict(l=0, r=10, t=100, b=10),
+        margin=dict(l=0, r=50, t=50, b=10),
         xaxis=dict(title="Time [h]"),
         yaxis=dict(title="OD"),
     )
     parsed_data_dir = "export"
-    if(proj_chosen == "Select Project" or proj_chosen == None or chosen_carbon_sources == "Select Carbon Source" or chosen_carbon_sources == None or chosen_species == "Select Species" or chosen_species == None):
+    if (
+        proj_chosen == "Select Project"
+        or proj_chosen == None
+        or chosen_carbon_sources == "Select Carbon Source"
+        or chosen_carbon_sources == None
+        or chosen_species == "Select Species"
+        or chosen_species == None
+    ):
         fig = go.Figure(layout=fig_layout)
-        return fig, [], True
+        return fig, [], "", ""
 
     args = projects[1:], species, cs, pooled_df_joint_metadata, parsed_data_dir
     filtered_metadata = utils.load_selected_metadata(
@@ -155,8 +172,7 @@ def update_graph_view(
     )
     if len(filtered_metadata) == 0:
         fig = go.Figure(layout=fig_layout)
-        fig.update_layout(title="No data found")
-        return fig, [], False
+        return fig, [], "", ""
 
     df_merged = utils.load_data_from_metadata(filtered_metadata, args)
 
@@ -165,10 +181,17 @@ def update_graph_view(
     global loaded_metadata
     loaded_metadata = filtered_metadata.copy()
 
-    fig = utils.plot_data(df_merged, filtered_metadata, color_by, plot_replicates,fig_layout)
+    fig = utils.plot_data(
+        df_merged, filtered_metadata, color_by, plot_replicates, fig_layout
+    )
     table_df = utils.show_table(filtered_metadata)
 
-    return (fig, table_df, False)
+    return (
+        fig,
+        table_df,
+        utils.show_project_descriptions(filtered_metadata),
+        utils.show_experiment_descriptions(filtered_metadata),
+    )
 
 
 # Callback for updating the dropdowns in the View Data tab
@@ -188,7 +211,7 @@ def update_dropwdown(chosen_project):
     elif "All" in chosen_project:
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
     else:
-        df = df[df["project"] == chosen_project[0]]
+        df = df[df["project"].isin(chosen_project)]
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
 
 
@@ -231,18 +254,3 @@ def download_data(n_clicks):
 
     zip_buffer.seek(0)
     return dcc.send_bytes(zip_buffer.getvalue(), "downloaded_data.zip")
-
-
-@callback(
-    [Output("collapse-table", "is_open")],
-    [Output("collapse-button", "children")],
-    [Input("collapse-button", "n_clicks")],
-    [State("collapse-table", "is_open")],
-)
-def toggle_collapse(n, is_open):
-    if n == 0:
-        return is_open, ["Show meta data"]
-    elif n % 2 == 0:
-        return not is_open, ["Show meta data"]
-    elif n % 2 != 0:
-        return not is_open, ["Hide meta data"]

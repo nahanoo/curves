@@ -1,7 +1,7 @@
-exp_ID,Experimenter,Date,Device,Temperature,Shaking,CO2
-240903_fran_nut_gradient_repeat_3_plate_1,Fran Gilis,03.09.2024,BIOREADER,37,Y,N
-240903_fran_nut_gradient_repeat_2_plate_2,Fran Gilis,03.09.2024,BIOREADER,37,Y,N
-240903_fran_nut_gradient_repeat_3_plate_2,Fran Gilis,03.09.2024,BIOREADER,37,Y,N
-240903_fran_nut_gradient_repeat_1_plate_2,Fran Gilis,03.09.2024,BIOREADER,37,Y,N
-240903_fran_nut_gradient_repeat_2_plate_1,Fran Gilis,03.09.2024,BIOREADER,37,Y,N
-240903_fran_nut_gradient_repeat_1_plate_1,Fran Gilis,03.09.2024,BIOREADER,37,Y,N
+exp_ID,Experimenter,Experiment description,Date,Device,Temperature,Shaking,CO2
+240903_fran_nut_gradient_repeat_3_plate_1,Fran Gilis,Repeat 3 of TSB gradient experiment with all strains.,03.09.2024,BIOREADER,37,Y,N
+240903_fran_nut_gradient_repeat_2_plate_2,Fran Gilis,Repeat 2 of TSB gradient experiment with all strains.,03.09.2024,BIOREADER,37,Y,N
+240903_fran_nut_gradient_repeat_3_plate_2,Fran Gilis,Repeat 3 of TSB gradient experiment with all strains.,03.09.2024,BIOREADER,37,Y,N
+240903_fran_nut_gradient_repeat_1_plate_2,Fran Gilis,Repeat 1 of TSB gradient experiment with all strains.,03.09.2024,BIOREADER,37,Y,N
+240903_fran_nut_gradient_repeat_2_plate_1,Fran Gilis,Repeat 2 of TSB gradient experiment with all strains.,03.09.2024,BIOREADER,37,Y,N
+240903_fran_nut_gradient_repeat_1_plate_1,Fran Gilis,Repeat 1 of TSB gradient experiment with all strains.,03.09.2024,BIOREADER,37,Y,N

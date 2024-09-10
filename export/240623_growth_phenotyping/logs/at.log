@@ -1,9 +1,9 @@
-2024-09-03 12:15:07,370 - INFO - Plate: at - Detected 31 samples and 3 blanks.
-2024-09-03 12:15:07,375 - INFO - Plate: at - Succesfully parsed Species metadata.
-2024-09-03 12:15:07,381 - INFO - Plate: at - Succesfully parsed Carbon Source metadata.
-2024-09-03 12:15:07,386 - INFO - Plate: at - Succesfully parsed CS Concentration metadata.
-2024-09-03 12:15:07,391 - INFO - Plate: at - Succesfully parsed Base Media metadata.
-2024-09-03 12:15:07,396 - INFO - Plate: at - Succesfully parsed Inhibitor metadata.
-2024-09-03 12:15:07,402 - INFO - Plate: at - Succesfully parsed Inhibitor Conc metadata.
-2024-09-03 12:15:07,407 - INFO - Plate: at - Succesfully parsed Comments metadata.
-2024-09-03 12:15:07,412 - INFO - Plate: at - Succesfully parsed technical metadata.
+2024-09-10 11:27:44,787 - INFO - Plate: at - Detected 31 samples and 3 blanks.
+2024-09-10 11:27:44,803 - INFO - Plate: at - Succesfully parsed Species metadata.
+2024-09-10 11:27:44,823 - INFO - Plate: at - Succesfully parsed Carbon Source metadata.
+2024-09-10 11:27:44,841 - INFO - Plate: at - Succesfully parsed CS Concentration metadata.
+2024-09-10 11:27:44,859 - INFO - Plate: at - Succesfully parsed Base Media metadata.
+2024-09-10 11:27:44,874 - INFO - Plate: at - Succesfully parsed Inhibitor metadata.
+2024-09-10 11:27:44,892 - INFO - Plate: at - Succesfully parsed Inhibitor Conc metadata.
+2024-09-10 11:27:44,907 - INFO - Plate: at - Succesfully parsed Comments metadata.
+2024-09-10 11:27:44,925 - INFO - Plate: at - Succesfully parsed technical metadata.

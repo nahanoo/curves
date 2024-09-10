@@ -29,7 +29,7 @@ app.layout = dbc.Container(
     [
         dbc.Col(
             dbc.Row(
-                html.H1("MonOD - Interactive growth curve exploration"),
+                html.H1("Interactive growth curve exploration"),
                 class_name="pt-4",
             ),
             class_name="ps-5",
@@ -37,7 +37,7 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col([sidebar], class_name="ps-5 pt-4", width=2),
-                dbc.Col([dash.page_container], class_name="ps-5 pt-4", width=8),
+                dbc.Col([dash.page_container], class_name="ps-5 pt-4", width=10),
             ]
         ),
     ],
