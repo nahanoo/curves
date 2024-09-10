@@ -245,7 +245,7 @@ def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, fig_layou
 def show_table(filtered_metadata):
     to_show_in_table = [
         "Experimenter",
-        "Device",
+        "exp_ID",
         "Temperature",
         "species",
         "carbon_source",
@@ -259,7 +259,7 @@ def show_table(filtered_metadata):
         pd.DataFrame(table_data, index=range(len(table_data))),
         header=[
             "Experimenter",
-            "Device",
+            "Experiment",
             "Temperature",
             "Species",
             "Carbon source",
