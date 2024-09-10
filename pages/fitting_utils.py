@@ -30,7 +30,7 @@ def restructure_metadata_fitting(df_metadata):
             unique_cs_concs = unique_cs_concs[np.argsort(unique_cs_concs)[::-1]]
             projects_present = cs_filtered_metadata["project"].unique()
             if(len(projects_present)>1):
-                cur_sp_comments.append("Data from multiple projects. Verify protocols")
+                cur_sp_comments.append("Data from multiple projects. Verify protocols.")
             else:
                 cur_sp_comments.append("")
             lg_conc_replicates = []
@@ -249,7 +249,7 @@ def generate_run_samples(used_conc):
     return run_samples
 
 
-def main_fit_function(df_data,concentrations_present,lg_replicates):
+def main_fit_function(df_data,concentrations_present,lg_replicates,fitting_comments):
     dfs_fitted = []
     fit_values = []
 
@@ -289,6 +289,8 @@ def main_fit_function(df_data,concentrations_present,lg_replicates):
                 df_sp_fit.append([simulation_df])
                 val_sp_fit.append([cur_v_est, cur_Km_est])
 
+                fitting_comments[i][j] += "Single concentration fit."
+
             elif(concNum > 1):
                 args_dict = {"t_array": [], "n_array": [], "c0_array": [], "n0_array": [], "yield_array": [], "achieved_v_array": []}
                 used_conc = []
@@ -321,7 +323,7 @@ def main_fit_function(df_data,concentrations_present,lg_replicates):
         dfs_fitted.append(df_sp_fit)
         fit_values.append(val_sp_fit)
 
-    return dfs_fitted,fit_values
+    return dfs_fitted,fit_values,fitting_comments
 
 def fig_to_base64(fig):
     buf = BytesIO()
@@ -359,7 +361,7 @@ def generate_figure(df_data,cur_df,concentrations,linegroups):
 
 def table_generator(df_data,df_metadata):
     species_selected, carbon_source_selected,concentrations_present,lg_replicates,fitting_comments = restructure_metadata_fitting(df_metadata) 
-    dfs_fitted,fit_values = main_fit_function(df_data,concentrations_present,lg_replicates)
+    dfs_fitted,fit_values,fitting_comments = main_fit_function(df_data,concentrations_present,lg_replicates,fitting_comments)
     table_header = [html.Thead(html.Tr([html.Th("Species"),html.Th("Carbon Source"),html.Th("v_max"),html.Th("Km"),html.Th("Fits"),html.Th("Comments")]))]
 
     for i in range(len(species_selected)):
