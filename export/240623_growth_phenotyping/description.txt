@@ -1,0 +1,1 @@
+Growth characterization project of the 4 MWF species, Agrobacterium tumefaciens, Comamonas testosteroni, Microbacterium liquefaciens and Ochrobactrum anthropi using 31 different carbon sources.

@@ -211,7 +211,7 @@ def update_dropwdown(chosen_project):
     elif "All" in chosen_project:
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
     else:
-        df = df[df["project"] == chosen_project[0]]
+        df = df[df["project"].isin(chosen_project)]
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
 
 
