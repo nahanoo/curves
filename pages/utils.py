@@ -241,6 +241,26 @@ def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, fig_layou
 
     return fig
 
+def export_restructuring(df_measurements,filter_metadata):
+    df_export = pd.DataFrame()
+    lg_list = filter_metadata["linegroup"].unique()
+    for lg in lg_list:
+        time_values = df_measurements[df_measurements["linegroup"] == lg][
+            "time"
+        ].to_numpy()
+        measurement_values = df_measurements[df_measurements["linegroup"] == lg][
+            "measurement"
+        ].to_numpy()
+        df_export = pd.concat(
+            [
+                df_export,
+                pd.DataFrame(
+                    {f"{lg}_time": time_values, f"{lg}_measurement": measurement_values}
+                ),
+            ],
+            axis=1,
+        )
+    return df_export
 
 def show_table(filtered_metadata):
     to_show_in_table = [

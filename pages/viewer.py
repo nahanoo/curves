@@ -228,24 +228,7 @@ def download_data(n_clicks):
     df_measurements = loaded_data.copy()
     filter_metadata = loaded_metadata.copy()
 
-    df_export = pd.DataFrame()
-    lg_list = filter_metadata["linegroup"].unique()
-    for lg in lg_list:
-        time_values = df_measurements[df_measurements["linegroup"] == lg][
-            "time"
-        ].to_numpy()
-        measurement_values = df_measurements[df_measurements["linegroup"] == lg][
-            "measurement"
-        ].to_numpy()
-        df_export = pd.concat(
-            [
-                df_export,
-                pd.DataFrame(
-                    {f"{lg}_time": time_values, f"{lg}_measurement": measurement_values}
-                ),
-            ],
-            axis=1,
-        )
+    df_export = utils.export_restructuring(df_measurements, filter_metadata)
 
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
