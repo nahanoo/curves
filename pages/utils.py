@@ -55,7 +55,7 @@ def load_data_from_metadata(filtered_metadata, args):
     for project in projects_common:
         dfs.append(pd.read_csv(join(parsed_data_dir, project, "measurement_data.csv")))
     df_data = pd.concat(dfs)
-    df_data = df_data[df_data["linegroup"].isin(common_lg)].sort_values(by="time")
+    df_data = df_data[df_data["linegroup"].isin(common_lg)].sort_values(by="time").drop_duplicates()
 
     # Merge the measurement data with the filtered metadata to include carbon source and species info
     df_merged = df_data.merge(filtered_metadata, on="linegroup")
