@@ -193,7 +193,10 @@ layout = html.Div(
                                 html.Summary(html.Span("Show table")),
                                 html.Span(
                                     dbc.Table.from_dataframe(
-                                        pd.read_excel(f_meta, sheet_name="Metadata")
+                                        pd.read_excel(
+                                            f_meta,
+                                            sheet_name="Metadata",
+                                        )
                                     ),
                                 ),
                             ],
@@ -288,7 +291,11 @@ layout = html.Div(
                                 html.Summary(html.Span("Show table")),
                                 html.Span(
                                     dbc.Table.from_dataframe(
-                                        pd.read_excel(f_meta, sheet_name="Inhibitor")
+                                        pd.read_excel(
+                                            f_meta,
+                                            sheet_name="Inhibitor",
+                                            keep_default_na=False,
+                                        )
                                     ),
                                 ),
                             ],
@@ -315,7 +322,11 @@ layout = html.Div(
                                 html.Summary(html.Span("Show table")),
                                 html.Span(
                                     dbc.Table.from_dataframe(
-                                        pd.read_excel(f_meta, sheet_name="Comments")
+                                        pd.read_excel(
+                                            f_meta,
+                                            sheet_name="Comments",
+                                            keep_default_na=False,
+                                        )
                                     ),
                                 ),
                             ],
