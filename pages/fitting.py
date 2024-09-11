@@ -119,11 +119,9 @@ def fit_parameters(chosen_projects, chosen_carbon_sources, chosen_species, nclic
         ), True
 
     parsed_data_dir = "export"
-    df_merged = utils.load_data_from_metadata(
-        filtered_metadata, args
-    )
+    df_merged = utils.load_data_from_metadata(filtered_metadata, args)
 
-    df_restructured = utils.export_restructuring(df_merged,filtered_metadata)
-    parameters_table = fitting_utils.table_generator(df_restructured,filtered_metadata)
+    df_restructured = utils.export_restructuring(df_merged, filtered_metadata)
+    parameters_table = fitting_utils.table_generator(df_restructured, filtered_metadata)
 
     return parameters_table, True

@@ -139,7 +139,7 @@ def generate_legend_params(cur_sp, cur_cs, color_by, used_legendgroups):
     return showlegend, legendgroup, name, used_legendgroups
 
 
-def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, fig_layout):
+def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, plot_type, fig_layout):
     (
         projects_present,
         species_selected,
@@ -214,6 +214,7 @@ def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, fig_layou
                             showlegend,
                         )
 
+
                     else:
                         for l in range(len(cur_lgs)):
                             showlegend, legendgroup, name, used_legendgrouos = (
@@ -238,6 +239,8 @@ def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, fig_layou
                                 hovertext,
                                 showlegend,
                             )
+    if(plot_type == "log-scale"):
+        fig.update_yaxes(type="log",range=[-3, 1])
 
     return fig
 
