@@ -66,7 +66,18 @@ layout = html.Div(
                     class_name="pt-1",
                 ),
                 dbc.Row(
-                    dcc.Checklist([" Plot replicates"], id="plot-replicates"),
+                    dbc.Checklist(options={"label":" Plot replicates"}, id="plot-replicates"),
+                    class_name="pt-1",
+                ),
+                dbc.Row(
+                    dbc.RadioItems(
+                        options=[
+                            {"label": "Linear y-axis", "value": "linear-scale"},
+                            {"label": "Log-scale y-axis", "value": "log-scale"},
+                        ],
+                        value="linear-scale",
+                        id="plot-type",
+                    ),
                     class_name="pt-1",
                 ),
             ],
@@ -144,10 +155,11 @@ layout = html.Div(
         Input("species-dropdown", "value"),
         Input("color-by", "value"),
         Input("plot-replicates", "value"),
+        Input("plot-type", "value"),
     ],
 )
 def update_graph_view(
-    proj_chosen, chosen_carbon_sources, chosen_species, color_by, plot_replicates
+    proj_chosen, chosen_carbon_sources, chosen_species, color_by, plot_replicates,plot_type
 ):
     fig_layout = go.Layout(
         margin=dict(l=0, r=50, t=50, b=10),
@@ -182,7 +194,7 @@ def update_graph_view(
     loaded_metadata = filtered_metadata.copy()
 
     fig = utils.plot_data(
-        df_merged, filtered_metadata, color_by, plot_replicates, fig_layout
+        df_merged, filtered_metadata, color_by, plot_replicates, plot_type,fig_layout
     )
     table_df = utils.show_table(filtered_metadata)
 

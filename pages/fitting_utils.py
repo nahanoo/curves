@@ -511,8 +511,8 @@ def table_generator(df_data, df_metadata):
                 if len(cur_df) == 0:
                     continue
                 vmax_table, Km_table = (
-                    np.round(fit_values[i][j][0], 4),
-                    np.round(fit_values[i][j][1], 4),
+                    np.round(fit_values[i][j][0], 3),
+                    np.round(fit_values[i][j][1], 3),
                 )
                 comments = fitting_comments[i][j]
                 fig_base64 = generate_figure(
