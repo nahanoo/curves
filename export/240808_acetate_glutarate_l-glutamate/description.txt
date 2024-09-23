@@ -1,0 +1,1 @@
+Determining vmax and Km for Comamonas testosteroni and Ochrobactrum anthropi for different carbon sources.

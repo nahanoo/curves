@@ -1,2 +1,2 @@
-exp_ID,Experimenter,Date,Device,Temperature,Shaking,CO2
-240808_acetate_glutarate_l-glutamate_240808,Eric Ulrich,08.08.2024,Biotek Synergy H1 2416,28,Y,N
+exp_ID,Experimenter,Experiment description,Date,Device,Temperature,Shaking,CO2
+240808_acetate_glutarate_l-glutamate_240808,Eric Ulrich,Three concentration gradient for measuring v max and Km.,08.08.2024,Biotek Synergy H1 2416,28,Y,N

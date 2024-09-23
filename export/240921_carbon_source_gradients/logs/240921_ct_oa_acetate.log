@@ -1,0 +1,10 @@
+2024-09-23 10:22:11,145 - INFO - Plate: 240921_ct_oa_acetate - Detected 18 samples and 6 blanks.
+2024-09-23 10:22:11,159 - INFO - Plate: 240921_ct_oa_acetate - Succesfully parsed Species metadata.
+2024-09-23 10:22:11,172 - INFO - Plate: 240921_ct_oa_acetate - Succesfully parsed Carbon Source metadata.
+2024-09-23 10:22:11,186 - INFO - Plate: 240921_ct_oa_acetate - Succesfully parsed CS Concentration metadata.
+2024-09-23 10:22:11,199 - INFO - Plate: 240921_ct_oa_acetate - Succesfully parsed Base Media metadata.
+2024-09-23 10:22:11,212 - INFO - Plate: 240921_ct_oa_acetate - Succesfully parsed Inhibitor metadata.
+2024-09-23 10:22:11,225 - INFO - Plate: 240921_ct_oa_acetate - Succesfully parsed Inhibitor Conc metadata.
+2024-09-23 10:22:11,240 - INFO - Plate: 240921_ct_oa_acetate - Succesfully parsed Comments metadata.
+2024-09-23 10:22:11,254 - INFO - Plate: 240921_ct_oa_acetate - Succesfully parsed technical metadata.
+2024-09-23 10:22:11,510 - INFO - Plate: 240921_ct_oa_acetate - Updated metadata successfully
