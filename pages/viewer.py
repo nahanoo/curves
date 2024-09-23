@@ -8,7 +8,9 @@ from io import BytesIO
 from . import utils
 
 pooled_df_joint_metadata = pd.read_csv("metadata/pooled_df_joint_metadata.csv")
-projects, cs, species = utils.load_dropdown_data(pooled_df_joint_metadata)
+projects, cs, species, concentrations = utils.load_dropdown_data(
+    pooled_df_joint_metadata
+)
 
 loaded_data = []
 loaded_metadata = []
@@ -50,6 +52,14 @@ layout = html.Div(
                         multi=True,
                     ),
                     class_name="pb-1",
+                ),
+                dbc.Row(
+                    dcc.Dropdown(
+                        options=concentrations,
+                        placeholder="Select concentration",
+                        id="concentration-dropdown",
+                        multi=True,
+                    ),
                 ),
             ],
             width=6,
@@ -144,10 +154,16 @@ layout = html.Div(
         Input("species-dropdown", "value"),
         Input("color-by", "value"),
         Input("plot-replicates", "value"),
+        Input("concentration-dropdown", "value"),
     ],
 )
 def update_graph_view(
-    proj_chosen, chosen_carbon_sources, chosen_species, color_by, plot_replicates
+    proj_chosen,
+    chosen_carbon_sources,
+    chosen_species,
+    color_by,
+    plot_replicates,
+    chosen_concentration,
 ):
     fig_layout = go.Layout(
         margin=dict(l=0, r=50, t=50, b=10),
@@ -162,13 +178,21 @@ def update_graph_view(
         or chosen_carbon_sources == None
         or chosen_species == "Select Species"
         or chosen_species == None
+        or chosen_concentration == None
     ):
         fig = go.Figure(layout=fig_layout)
         return fig, [], "", ""
 
-    args = projects[1:], species, cs, pooled_df_joint_metadata, parsed_data_dir
+    args = (
+        projects[1:],
+        species,
+        cs,
+        concentrations,
+        pooled_df_joint_metadata,
+        parsed_data_dir,
+    )
     filtered_metadata = utils.load_selected_metadata(
-        proj_chosen, chosen_carbon_sources, chosen_species, args
+        proj_chosen, chosen_carbon_sources, chosen_species, chosen_concentration, args
     )
     if len(filtered_metadata) == 0:
         fig = go.Figure(layout=fig_layout)
@@ -198,6 +222,7 @@ def update_graph_view(
 @callback(
     [Output(component_id="cs-dropdown", component_property="options")],
     [Output(component_id="species-dropdown", component_property="options")],
+    [Output(component_id="concentration-dropdown", component_property="options")],
     [
         Input("proj-dropdown", "value"),
     ],
@@ -205,14 +230,30 @@ def update_graph_view(
 def update_dropwdown(chosen_project):
     df = pooled_df_joint_metadata
     if chosen_project is None:
-        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+        return (
+            sorted(list(set(df["carbon_source"]))),
+            sorted(list(set(df["species"]))),
+            sorted(list(set(df["cs_conc"]))),
+        )
     if len(chosen_project) == 0:
-        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+        return (
+            sorted(list(set(df["carbon_source"]))),
+            sorted(list(set(df["species"]))),
+            sorted(list(set(df["cs_conc"]))),
+        )
     elif "All" in chosen_project:
-        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+        return (
+            sorted(list(set(df["carbon_source"]))),
+            sorted(list(set(df["species"]))),
+            sorted(list(set(df["cs_conc"]))),
+        )
     else:
         df = df[df["project"] == chosen_project[0]]
-        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+        return (
+            sorted(list(set(df["carbon_source"]))),
+            sorted(list(set(df["species"]))),
+            sorted(list(set(df["cs_conc"]))),
+        )
 
 
 # Callback for downloading the data

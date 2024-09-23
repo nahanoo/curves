@@ -12,35 +12,57 @@ def load_dropdown_data(pooled_df_joint_metadata):
     cs = list(set(pooled_df_joint_metadata["carbon_source"]))
     species = list(set(pooled_df_joint_metadata["species"]))
     projects = list(set(pooled_df_joint_metadata["project"]))
+    concentrations = list(set(pooled_df_joint_metadata["cs_conc"]))
 
     cs.sort()
     species.sort()
+    concentrations.sort()
     cs.insert(0, "All")
     species.insert(0, "All")
     projects.insert(0, "All")
-    return projects, cs, species
+    concentrations.insert(0, "All")
+    return projects, cs, species, concentrations
 
 
-def load_selected_metadata(proj_chosen, chosen_carbon_sources, chosen_species, args):
-    parsed_projects, species, cs, pooled_df_joint_metadata, parsed_data_dir = args
+def load_selected_metadata(
+    proj_chosen, chosen_carbon_sources, chosen_species, chosen_concentration, args
+):
+    (
+        parsed_projects,
+        species,
+        cs,
+        concentrations,
+        pooled_df_joint_metadata,
+        parsed_data_dir,
+    ) = args
     if "All" in proj_chosen:
         proj_chosen = parsed_projects.copy()
     if "All" in chosen_carbon_sources:
         chosen_carbon_sources = cs[1:]
     if "All" in chosen_species:
         chosen_species = species[1:]
+    if "All" in chosen_concentration:
+        chosen_concentration = concentrations[1:]
 
     # Filter metadata based on selected carbon sources and species
     filtered_metadata = pooled_df_joint_metadata[
         (pooled_df_joint_metadata["species"].isin(chosen_species))
         & (pooled_df_joint_metadata["carbon_source"].isin(chosen_carbon_sources))
         & (pooled_df_joint_metadata["project"].isin(proj_chosen))
+        & (pooled_df_joint_metadata["cs_conc"].isin(chosen_concentration))
     ]
     return filtered_metadata
 
 
 def load_data_from_metadata(filtered_metadata, args):
-    parsed_projects, species, cs, pooled_df_joint_metadata, parsed_data_dir = args
+    (
+        parsed_projects,
+        species,
+        cs,
+        concentrations,
+        pooled_df_joint_metadata,
+        parsed_data_dir,
+    ) = args
 
     # Obtain the relevant linegroups from the filtered metadata
     common_lg = filtered_metadata["linegroup"].unique()

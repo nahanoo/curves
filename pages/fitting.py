@@ -14,8 +14,9 @@ dash.register_page(
 )  # '/' is home page
 
 pooled_df_joint_metadata = pd.read_csv("metadata/pooled_df_joint_metadata.csv")
-projects, cs, species = utils.load_dropdown_data(pooled_df_joint_metadata)
-
+projects, cs, species, concentrations = utils.load_dropdown_data(
+    pooled_df_joint_metadata
+)
 
 layout = html.Div(
     [
