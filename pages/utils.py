@@ -159,6 +159,7 @@ def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, plot_type
         "#bcbd22",
         "#17becf",
     ]
+    max_colors = len(color_palette)
 
     fig = go.Figure(layout=fig_layout)
     used_legendgrouos = []
@@ -169,9 +170,9 @@ def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, plot_type
             for j in range(len(carbon_source_selected)):
                 cur_cs = carbon_source_selected[j]
                 color_dict = {
-                    "color": color_palette[j]
+                    "color": color_palette[j%max_colors]
                     if color_by == "Carbon Source"
-                    else color_palette[i]
+                    else color_palette[i%max_colors]
                 }
                 for k in range(len(concentrations_present[i_0][i][j])):
                     cur_conc = concentrations_present[i_0][i][j][k]
