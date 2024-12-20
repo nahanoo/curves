@@ -47,7 +47,7 @@ def parse_technical_data(data_dir, project, plate_name, logger):
     date = df["Date of Experiment (DD/MM/YY)"]
     device = df["Device Used"]
     temperature = df["Temperature"]
-    shaking = df["Shaking (Y/N)"]
+    shaking = df["Shaking (rpm)"]
     co2 = df["CO2 (Y/N)"]
     technical_data = pd.DataFrame(
         {
