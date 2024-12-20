@@ -1,0 +1,10 @@
+2024-12-20 20:43:29,226 - INFO - Plate: Pf_114 - Detected 32 samples and 0 blanks.
+2024-12-20 20:43:29,226 - WARNING - Plate: Pf_114 - No blanks found in the Groups sheet.
+2024-12-20 20:43:29,231 - INFO - Plate: Pf_114 - Succesfully parsed Species metadata.
+2024-12-20 20:43:29,235 - INFO - Plate: Pf_114 - Succesfully parsed Carbon Source metadata.
+2024-12-20 20:43:29,240 - INFO - Plate: Pf_114 - Succesfully parsed CS Concentration metadata.
+2024-12-20 20:43:29,244 - INFO - Plate: Pf_114 - Succesfully parsed Base Media metadata.
+2024-12-20 20:43:29,255 - INFO - Plate: Pf_114 - Succesfully parsed Inhibitor metadata.
+2024-12-20 20:43:29,260 - INFO - Plate: Pf_114 - Succesfully parsed Inhibitor Conc metadata.
+2024-12-20 20:43:29,264 - INFO - Plate: Pf_114 - Succesfully parsed Comments metadata.
+2024-12-20 20:43:29,269 - INFO - Plate: Pf_114 - Succesfully parsed technical metadata.

@@ -1,0 +1,10 @@
+2024-12-20 20:43:28,608 - INFO - Plate: Ea_108 - Detected 32 samples and 0 blanks.
+2024-12-20 20:43:28,608 - WARNING - Plate: Ea_108 - No blanks found in the Groups sheet.
+2024-12-20 20:43:28,613 - INFO - Plate: Ea_108 - Succesfully parsed Species metadata.
+2024-12-20 20:43:28,617 - INFO - Plate: Ea_108 - Succesfully parsed Carbon Source metadata.
+2024-12-20 20:43:28,621 - INFO - Plate: Ea_108 - Succesfully parsed CS Concentration metadata.
+2024-12-20 20:43:28,626 - INFO - Plate: Ea_108 - Succesfully parsed Base Media metadata.
+2024-12-20 20:43:28,637 - INFO - Plate: Ea_108 - Succesfully parsed Inhibitor metadata.
+2024-12-20 20:43:28,641 - INFO - Plate: Ea_108 - Succesfully parsed Inhibitor Conc metadata.
+2024-12-20 20:43:28,647 - INFO - Plate: Ea_108 - Succesfully parsed Comments metadata.
+2024-12-20 20:43:28,651 - INFO - Plate: Ea_108 - Succesfully parsed technical metadata.
