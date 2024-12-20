@@ -225,6 +225,8 @@ def parse_raw_data(dir, logger):
             logger.error("Format of time stamps is not recognized")
             sys.exit()
     df["Time"] = np.array(ts) / 60 / 60
+    non_nan_time_loc = df["Time"].notna()
+    df = df[non_nan_time_loc]
     return df
 
 
