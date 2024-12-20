@@ -47,7 +47,13 @@ def parse_technical_data(data_dir, project, plate_name, logger):
     date = df["Date of Experiment (DD/MM/YY)"]
     device = df["Device Used"]
     temperature = df["Temperature"]
-    shaking = df["Shaking (rpm)"]
+    try:
+        shaking = df["Shaking (rpm)"]
+    except:
+        try:
+            shaking = df["Shaking (Y/N)"]
+        except:
+            raise KeyError("Shaking field not found in the Metadata sheet.")
     co2 = df["CO2 (Y/N)"]
     technical_data = pd.DataFrame(
         {
