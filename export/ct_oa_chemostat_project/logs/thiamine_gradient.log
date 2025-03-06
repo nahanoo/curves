@@ -1,0 +1,10 @@
+2025-03-06 10:30:25,686 - INFO - Plate: thiamine_gradient - Detected 16 samples and 8 blanks.
+2025-03-06 10:30:25,704 - INFO - Plate: thiamine_gradient - Succesfully parsed Species metadata.
+2025-03-06 10:30:25,721 - INFO - Plate: thiamine_gradient - Succesfully parsed Carbon Source metadata.
+2025-03-06 10:30:25,736 - INFO - Plate: thiamine_gradient - Succesfully parsed CS Concentration metadata.
+2025-03-06 10:30:25,752 - INFO - Plate: thiamine_gradient - Succesfully parsed Base Media metadata.
+2025-03-06 10:30:25,762 - INFO - Plate: thiamine_gradient - Succesfully parsed Inhibitor metadata.
+2025-03-06 10:30:25,780 - INFO - Plate: thiamine_gradient - Succesfully parsed Inhibitor Conc metadata.
+2025-03-06 10:30:25,791 - INFO - Plate: thiamine_gradient - Succesfully parsed Comments metadata.
+2025-03-06 10:30:25,809 - INFO - Plate: thiamine_gradient - Succesfully parsed technical metadata.
+2025-03-06 10:31:22,995 - INFO - Plate: thiamine_gradient - No new metadata to add

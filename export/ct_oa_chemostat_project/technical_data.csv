@@ -1,0 +1,2 @@
+exp_ID,Experimenter,Experiment description,Date,Device,Temperature,Shaking,CO2
+ct_oa_chemostat_project_thiamine_gradient,Eric Ulrich,Gradient with different Thiamine concentrations with staved Oa in 7.5 mM acetate. Check comments for thiamine concentrations,28.2.2025,Biotek platereader,28,Y,N
