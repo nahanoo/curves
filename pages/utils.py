@@ -77,7 +77,7 @@ def load_data_from_metadata(filtered_metadata, args):
     for project in projects_common:
         dfs.append(pd.read_csv(join(parsed_data_dir, project, "measurement_data.csv")))
     df_data = pd.concat(dfs)
-    df_data = df_data[df_data["linegroup"].isin(common_lg)].sort_values(by="time")
+    df_data = df_data[df_data["linegroup"].isin(common_lg)].sort_values(by="time").drop_duplicates()
 
     # Merge the measurement data with the filtered metadata to include carbon source and species info
     df_merged = df_data.merge(filtered_metadata, on="linegroup")
@@ -161,7 +161,7 @@ def generate_legend_params(cur_sp, cur_cs, color_by, used_legendgroups):
     return showlegend, legendgroup, name, used_legendgroups
 
 
-def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, fig_layout):
+def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, plot_type, fig_layout):
     (
         projects_present,
         species_selected,
@@ -236,6 +236,7 @@ def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, fig_layou
                             showlegend,
                         )
 
+
                     else:
                         for l in range(len(cur_lgs)):
                             showlegend, legendgroup, name, used_legendgrouos = (
@@ -260,14 +261,36 @@ def plot_data(df_merged, filtered_metadata, color_by, plot_replicates, fig_layou
                                 hovertext,
                                 showlegend,
                             )
+    if(plot_type == "log-scale"):
+        fig.update_yaxes(type="log",range=[-3, 1])
 
     return fig
 
+def export_restructuring(df_measurements,filter_metadata):
+    df_export = pd.DataFrame()
+    lg_list = filter_metadata["linegroup"].unique()
+    for lg in lg_list:
+        time_values = df_measurements[df_measurements["linegroup"] == lg][
+            "time"
+        ].to_numpy()
+        measurement_values = df_measurements[df_measurements["linegroup"] == lg][
+            "measurement"
+        ].to_numpy()
+        df_export = pd.concat(
+            [
+                df_export,
+                pd.DataFrame(
+                    {f"{lg}_time": time_values, f"{lg}_measurement": measurement_values}
+                ),
+            ],
+            axis=1,
+        )
+    return df_export
 
 def show_table(filtered_metadata):
     to_show_in_table = [
         "Experimenter",
-        "Device",
+        "exp_ID",
         "Temperature",
         "species",
         "carbon_source",
@@ -281,7 +304,7 @@ def show_table(filtered_metadata):
         pd.DataFrame(table_data, index=range(len(table_data))),
         header=[
             "Experimenter",
-            "Device",
+            "Experiment",
             "Temperature",
             "Species",
             "Carbon source",

@@ -6,6 +6,7 @@ import pandas as pd
 import zipfile
 from io import BytesIO
 from . import utils
+from . import fitting_utils
 
 
 # Dash layout
@@ -109,8 +110,9 @@ def fit_parameters(chosen_projects, chosen_carbon_sources, chosen_species, nclic
     ):
         return no_update, False
 
+    args = projects[1:], species, cs, pooled_df_joint_metadata, "export"
     filtered_metadata = utils.load_selected_metadata(
-        chosen_projects, chosen_carbon_sources, chosen_species, pooled_df_joint_metadata
+        chosen_projects, chosen_carbon_sources, chosen_species, args
     )
     if len(filtered_metadata) == 0:
         return dbc.Alert(
@@ -118,10 +120,9 @@ def fit_parameters(chosen_projects, chosen_carbon_sources, chosen_species, nclic
         ), True
 
     parsed_data_dir = "export"
-    df_merged = utils.load_data_from_metadata(
-        filtered_metadata, pooled_df_joint_metadata, parsed_data_dir
-    )
+    df_merged = utils.load_data_from_metadata(filtered_metadata, args)
 
-    return dbc.Alert(
-        "Data found but fitting still under construction", color="warning"
-    ), True
+    df_restructured = utils.export_restructuring(df_merged, filtered_metadata)
+    parameters_table = fitting_utils.table_generator(df_restructured, filtered_metadata)
+
+    return parameters_table, True

@@ -76,7 +76,20 @@ layout = html.Div(
                     class_name="pt-1",
                 ),
                 dbc.Row(
-                    dcc.Checklist([" Plot replicates"], id="plot-replicates"),
+                    dbc.Checklist(
+                        options={"label": " Plot replicates"}, id="plot-replicates"
+                    ),
+                    class_name="pt-1",
+                ),
+                dbc.Row(
+                    dbc.RadioItems(
+                        options=[
+                            {"label": "Linear y-axis", "value": "linear-scale"},
+                            {"label": "Log-scale y-axis", "value": "log-scale"},
+                        ],
+                        value="linear-scale",
+                        id="plot-type",
+                    ),
                     class_name="pt-1",
                 ),
             ],
@@ -154,7 +167,7 @@ layout = html.Div(
         Input("species-dropdown", "value"),
         Input("color-by", "value"),
         Input("plot-replicates", "value"),
-        Input("concentration-dropdown", "value"),
+        Input("plot-type", "value"),
     ],
 )
 def update_graph_view(
@@ -163,7 +176,7 @@ def update_graph_view(
     chosen_species,
     color_by,
     plot_replicates,
-    chosen_concentration,
+    plot_type,
 ):
     fig_layout = go.Layout(
         margin=dict(l=0, r=50, t=50, b=10),
@@ -206,7 +219,7 @@ def update_graph_view(
     loaded_metadata = filtered_metadata.copy()
 
     fig = utils.plot_data(
-        df_merged, filtered_metadata, color_by, plot_replicates, fig_layout
+        df_merged, filtered_metadata, color_by, plot_replicates, plot_type, fig_layout
     )
     table_df = utils.show_table(filtered_metadata)
 
@@ -248,12 +261,8 @@ def update_dropwdown(chosen_project):
             sorted(list(set(df["cs_conc"]))),
         )
     else:
-        df = df[df["project"] == chosen_project[0]]
-        return (
-            sorted(list(set(df["carbon_source"]))),
-            sorted(list(set(df["species"]))),
-            sorted(list(set(df["cs_conc"]))),
-        )
+        df = df[df["project"].isin(chosen_project)]
+        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
 
 
 # Callback for downloading the data
@@ -269,24 +278,7 @@ def download_data(n_clicks):
     df_measurements = loaded_data.copy()
     filter_metadata = loaded_metadata.copy()
 
-    df_export = pd.DataFrame()
-    lg_list = filter_metadata["linegroup"].unique()
-    for lg in lg_list:
-        time_values = df_measurements[df_measurements["linegroup"] == lg][
-            "time"
-        ].to_numpy()
-        measurement_values = df_measurements[df_measurements["linegroup"] == lg][
-            "measurement"
-        ].to_numpy()
-        df_export = pd.concat(
-            [
-                df_export,
-                pd.DataFrame(
-                    {f"{lg}_time": time_values, f"{lg}_measurement": measurement_values}
-                ),
-            ],
-            axis=1,
-        )
+    df_export = utils.export_restructuring(df_measurements, filter_metadata)
 
     zip_buffer = BytesIO()
     with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
