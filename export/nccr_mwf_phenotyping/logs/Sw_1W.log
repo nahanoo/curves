@@ -1,0 +1,11 @@
+2024-12-20 20:43:29,424 - INFO - Plate: Sw_1W - Detected 32 samples and 0 blanks.
+2024-12-20 20:43:29,424 - WARNING - Plate: Sw_1W - No blanks found in the Groups sheet.
+2024-12-20 20:43:29,428 - INFO - Plate: Sw_1W - Succesfully parsed Species metadata.
+2024-12-20 20:43:29,433 - INFO - Plate: Sw_1W - Succesfully parsed Carbon Source metadata.
+2024-12-20 20:43:29,437 - INFO - Plate: Sw_1W - Succesfully parsed CS Concentration metadata.
+2024-12-20 20:43:29,442 - INFO - Plate: Sw_1W - Succesfully parsed Base Media metadata.
+2024-12-20 20:43:29,446 - INFO - Plate: Sw_1W - Succesfully parsed Inhibitor metadata.
+2024-12-20 20:43:29,450 - INFO - Plate: Sw_1W - Succesfully parsed Inhibitor Conc metadata.
+2024-12-20 20:43:29,455 - INFO - Plate: Sw_1W - Succesfully parsed Comments metadata.
+2024-12-20 20:43:29,459 - INFO - Plate: Sw_1W - Succesfully parsed technical metadata.
+2024-12-20 20:43:29,947 - INFO - Plate: Sw_1W - Updated metadata successfully

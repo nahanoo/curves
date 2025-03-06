@@ -177,7 +177,6 @@ def update_graph_view(
     ):
         fig = go.Figure(layout=fig_layout)
         return fig, [], "", ""
-
     args = projects[1:], species, cs, pooled_df_joint_metadata, parsed_data_dir
     filtered_metadata = utils.load_selected_metadata(
         proj_chosen, chosen_carbon_sources, chosen_species, args
@@ -221,10 +220,10 @@ def update_dropwdown(chosen_project):
     if len(chosen_project) == 0:
         return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
     elif "All" in chosen_project:
-        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+        return ["All"] + sorted(list(set(df["carbon_source"]))), ["All"] + sorted(list(set(df["species"])))
     else:
         df = df[df["project"].isin(chosen_project)]
-        return sorted(list(set(df["carbon_source"]))), sorted(list(set(df["species"])))
+        return ["All"] +sorted( list(set(df["carbon_source"]))),["All"] +  sorted(list(set(df["species"])))
 
 
 # Callback for downloading the data
